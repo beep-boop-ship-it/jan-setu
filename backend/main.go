@@ -22,7 +22,9 @@ func main() {
 	log.Println("PostgreSQL connected successfully!")
 
 	http.HandleFunc("/api/reports", createReport(db))
-	http.Handle("/", http.FileServer(http.Dir(".")))
+
+
+	http.Handle("/", http.FileServer(http.Dir("../frontend")))
 
 	port := os.Getenv("PORT")
 	if port == "" {
