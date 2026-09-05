@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Track Problem | JAN SETU</title>
+
+    <!-- Existing JAN SETU styles -->
+    <link rel="stylesheet" href="style.css">
+
+    <!-- Track page styles -->
+    <link rel="stylesheet" href="track-problem-final.css">
+
+    <!-- Icons -->
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Same JAN SETU navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Initiatives</a>
+            <a href="#">Explore Jharkhand</a>
+            <a href="#">Stories</a>
+            <a href="#">Resources</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+
+    <!-- Notification button -->
+    <button class="notif-toggle-btn" id="notifToggleBtn">
+        <i class="fa-regular fa-bell"></i>
+        Notifications
+        <span>3</span>
+    </button>
+
+
+    <main class="track-page-final">
+
+        <section class="track-card-final">
+
+            <p class="track-eyebrow">TRACK YOUR REPORT</p>
+
+            <h1>
+                Your Problem is <span>In Progress</span>
+            </h1>
+
+            <p class="track-subtitle">
+                Here's the latest update on your reported issue.
+            </p>
+
+
+            <!-- Problem ID -->
+            <div class="problem-id-card">
+                <span>Problem ID</span>
+
+                <div class="problem-id-row">
+                    <strong id="problemId">JS-2026-9186</strong>
+
+                    <button class="copy-id-btn" id="copyIdBtn" title="Copy ID">
+                        <i class="fa-regular fa-copy"></i>
+                    </button>
+                </div>
+            </div>
+
+
+            <!-- Report details -->
+            <div class="problem-details-grid">
+
+                <div class="detail-card">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-layer-group"></i>
+                    </div>
+
+                    <div>
+                        <span>Category</span>
+                        <strong>Infrastructure</strong>
+                    </div>
+                </div>
+
+
+                <div class="detail-card">
+                    <div class="detail-icon priority-icon">
+                        <i class="fa-solid fa-flag"></i>
+                    </div>
+
+                    <div>
+                        <span>Priority</span>
+                        <strong>High</strong>
+                    </div>
+                </div>
+
+
+                <div class="detail-card">
+                    <div class="detail-icon">
+                        <i class="fa-regular fa-calendar"></i>
+                    </div>
+
+                    <div>
+                        <span>Last Updated</span>
+                        <strong>5 Sep 2026, 10:30 AM</strong>
+                    </div>
+                </div>
+
+
+                <div class="detail-card">
+                    <div class="detail-icon">
+                        <i class="fa-solid fa-location-dot"></i>
+                    </div>
+
+                    <div>
+                        <span>Location</span>
+                        <strong>Ranchi, Jharkhand</strong>
+                    </div>
+                </div>
+
+            </div>
+
+
+            <!-- Current status -->
+            <div class="current-status-card">
+
+                <div class="status-icon">
+                    <i class="fa-solid fa-gear"></i>
+                </div>
+
+                <div>
+                    <span>Current Status</span>
+                    <strong>In Progress</strong>
+                    <p>Your issue is currently being worked on.</p>
+                </div>
+
+            </div>
+
+
+            <!-- Progress -->
+            <div class="progress-timeline">
+
+                <div class="progress-step completed">
+                    <div class="progress-circle">✓</div>
+                    <p>Submitted</p>
+                    <small>5 Sep</small>
+                </div>
+
+                <div class="progress-line completed"></div>
+
+                <div class="progress-step completed">
+                    <div class="progress-circle">✓</div>
+                    <p>Verified</p>
+                    <small>5 Sep</small>
+                </div>
+
+                <div class="progress-line completed"></div>
+
+                <div class="progress-step active">
+                    <div class="progress-circle">3</div>
+                    <p>In Progress</p>
+                    <small class="current-badge">Current</small>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <div class="progress-circle">4</div>
+                    <p>Validation</p>
+                </div>
+
+                <div class="progress-line"></div>
+
+                <div class="progress-step">
+                    <div class="progress-circle">5</div>
+                    <p>Resolved</p>
+                </div>
+
+            </div>
+
+
+            <a href="index.html" class="back-home-btn">
+                <i class="fa-solid fa-house"></i>
+                Back to Home
+            </a>
+
+        </section>
+
+    </main>
+
+
+    <!-- Notification drawer -->
+    <aside class="track-notifications" id="trackNotifications">
+
+        <div class="notifications-top">
+            <h2>
+                <i class="fa-regular fa-bell"></i>
+                Notifications
+            </h2>
+
+            <button class="notif-close-btn" id="notifCloseBtn">×</button>
+        </div>
+
+
+        <div class="notification-row current">
+            <span class="notification-marker"></span>
+
+            <div>
+                <strong>Your issue is now in progress.</strong>
+                <small>2 hours ago</small>
+                
+            </div>
+        </div>
+
+
+        <div class="notification-row completed">
+            <span class="notification-marker">✓</span>
+
+            <div>
+                <strong>Your report has been verified.</strong>
+                <small>5 Sep 2026, 10:30 AM</small>
+                
+            </div>
+        </div>
+
+
+        <div class="notification-row completed">
+            <span class="notification-marker">✓</span>
+
+            <div>
+                <strong>Your report was submitted.</strong>
+                <small>5 Sep 2026, 09:15 AM</small>
+            
+            </div>
+        </div>
+
+    </aside>
+
+
+    <!-- Same faded background -->
+    <div class="track-final-landscape"></div>
+
+
+    <script>
+        const problemId = document.getElementById("problemId");
+        const savedId = localStorage.getItem("problemId");
+
+        // Show accepted Problem ID if available
+        if (savedId) {
+            problemId.textContent = savedId;
+        }
+
+
+        // Copy Problem ID
+        document.getElementById("copyIdBtn").addEventListener("click", function () {
+            navigator.clipboard.writeText(problemId.textContent);
+        });
+
+
+        // Notification drawer
+        const drawer = document.getElementById("trackNotifications");
+
+        document.getElementById("notifToggleBtn").addEventListener("click", function () {
+            drawer.classList.add("open");
+        });
+
+        document.getElementById("notifCloseBtn").addEventListener("click", function () {
+            drawer.classList.remove("open");
+        });
+    </script>
+
+</body>
+</html>

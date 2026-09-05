@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>AI Analysis | JAN SETU</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Same navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Initiatives</a>
+            <a href="#">Explore Jharkhand</a>
+            <a href="#">Stories</a>
+            <a href="#">Resources</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+
+    <!-- AI analysis -->
+    <main class="analysis-page">
+
+        <div class="analysis-card">
+
+            <p class="analysis-label">AI ANALYSIS</p>
+
+            <h1>
+                Analyzing your <span>report</span>
+            </h1>
+
+            <p class="analysis-text">
+                JAN SETU is checking your report before accepting it.
+                This may take a few seconds.
+            </p>
+
+
+            <!-- Analysis steps -->
+            <div class="analysis-steps">
+
+                <div class="analysis-step done" id="step1">
+                    <span class="step-icon">✓</span>
+                    <div>
+                        <strong>Checking duplicate reports</strong>
+                        <p>No similar reports found.</p>
+                    </div>
+                </div>
+
+                <div class="analysis-step done" id="step2">
+                    <span class="step-icon">✓</span>
+                    <div>
+                        <strong>Checking report validity</strong>
+                        <p>Report is valid.</p>
+                    </div>
+                </div>
+
+                <div class="analysis-step active" id="step3">
+                    <span class="step-icon">○</span>
+                    <div>
+                        <strong>Identifying category and priority</strong>
+                        <p>Analyzing content...</p>
+                    </div>
+                </div>
+
+
+            </div>
+
+
+            <!-- Status -->
+            <div class="analysis-status" id="analysisStatus">
+                <strong>Analysis in progress...</strong>
+                <span>Please do not close this page.</span>
+            </div>
+
+        </div>
+
+    </main>
+
+
+    <!-- Same landscape -->
+    <div class="analysis-landscape"></div>
+
+
+    <script>
+
+        const step3 = document.getElementById("step3");
+        const step4 = document.getElementById("step4");
+        const status = document.getElementById("analysisStatus");
+
+
+        // Demo progress only
+        setTimeout(function () {
+
+            step3.classList.remove("active");
+            step3.classList.add("done");
+
+            step3.querySelector(".step-icon").textContent = "✓";
+            step3.querySelector("p").textContent =
+                "Category and priority identified.";
+
+            step4.classList.add("active");
+
+        }, 1500);
+
+
+        setTimeout(function () {
+
+            step4.classList.remove("active");
+            step4.classList.add("done");
+
+            step4.querySelector(".step-icon").textContent = "✓";
+            step4.querySelector("p").textContent =
+                "Required skills identified.";
+
+            status.innerHTML =
+                "<strong>Analysis complete.</strong><span>Preparing result...</span>";
+
+        }, 3000);
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify Phone | JAN SETU</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Same navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Initiatives</a>
+            <a href="#">Explore Jharkhand</a>
+            <a href="#">Stories</a>
+            <a href="#">Resources</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+    <!-- Phone verification card -->
+    <main class="otp-page">
+        <div class="otp-card">
+
+            <p class="otp-label">REPORT A PROBLEM</p>
+
+            <h1>
+                Verify your phone <span>number</span>
+            </h1>
+
+            <p class="otp-text">
+                Enter your phone number to receive an OTP.
+            </p>
+
+            <!-- Phone input -->
+            <div class="phone-box">
+                <span>🇮🇳 +91 </span>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    maxlength="10"
+                    inputmode="numeric"
+                    placeholder="98XXX XXXXX"
+                >
+            </div>
+
+            <!-- SMS is default -->
+            <button id="smsBtn" class="sms-btn">
+                Send OTP via SMS
+            </button>
+
+            <p class="or-text">OR</p>
+
+            <!-- WhatsApp alternative -->
+            <button id="whatsappBtn" class="whatsapp-btn">
+                Use WhatsApp Instead
+            </button>
+
+            <p class="safe-text">
+                Your number will only be used for verification.
+            </p>
+
+        </div>
+    </main>
+
+    <!-- Background image -->
+    <div class="otp-landscape"></div>
+
+    <script>
+        // Get input and buttons
+        const phone = document.getElementById("phone");
+        const smsBtn = document.getElementById("smsBtn");
+        const whatsappBtn = document.getElementById("whatsappBtn");
+
+        // Check if phone number is valid
+        function validPhone() {
+            const number = phone.value.replace(/\D/g, "");
+
+            if (number.length !== 10) {
+                alert("Enter a valid 10-digit phone number.");
+                return false;
+            }
+
+            return true;
+        }
+
+        // SMS OTP
+        smsBtn.addEventListener("click", function () {
+            if (!validPhone()) return;
+
+            localStorage.setItem("phone", phone.value);
+            localStorage.setItem("otpMethod", "sms");
+
+            window.location.href = "verify-otp.html";
+        });
+
+        // WhatsApp OTP
+        whatsappBtn.addEventListener("click", function () {
+            if (!validPhone()) return;
+
+            localStorage.setItem("phone", phone.value);
+            localStorage.setItem("otpMethod", "whatsapp");
+
+            window.location.href = "verify-otp.html";
+        });
+    </script>
+
+</body>
+</html>

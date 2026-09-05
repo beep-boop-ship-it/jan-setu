@@ -1,0 +1,13 @@
+# Secrets
+.env
+
+# Go
+*.exe
+*.out
+t
+
+# OS
+.DS_Store
+
+# Editor
+.vscode/

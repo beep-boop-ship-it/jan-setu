@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verify OTP | JAN SETU</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <!-- Same navbar -->
+    <header class="navbar">
+        <a href="index.html" class="brand">
+            <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
+        </a>
+
+        <nav class="nav-links">
+            <a href="index.html">Home</a>
+            <a href="#">About</a>
+            <a href="#">Initiatives</a>
+            <a href="#">Explore Jharkhand</a>
+            <a href="#">Stories</a>
+            <a href="#">Resources</a>
+            <a href="#">Contact</a>
+        </nav>
+    </header>
+
+
+    <main class="verify-page">
+
+        <div class="verify-card">
+
+            <p class="otp-label">PHONE VERIFICATION</p>
+
+            <h1>Enter your <span>OTP</span></h1>
+
+            <p class="verify-text" id="otpInfo">
+                Enter the 6-digit code sent to your phone.
+            </p>
+
+
+            <!-- OTP input boxes -->
+            <div class="otp-inputs">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+                <input maxlength="1" inputmode="numeric">
+            </div>
+
+
+            <!-- Timer -->
+            <p class="timer-text" id="timer">
+                OTP expires in 60s
+            </p>
+
+
+            <!-- Verify -->
+            <button class="verify-btn" id="verifyBtn">
+                Verify & Continue
+            </button>
+
+
+            <!-- Resend -->
+            <button class="resend-btn" id="resendBtn" disabled>
+                Resend OTP
+            </button>
+
+        </div>
+
+    </main>
+
+
+    <div class="otp-landscape"></div>
+
+
+    <script>
+
+        // Read phone and method from previous page
+        const phone = localStorage.getItem("phone") || "";
+        const method = localStorage.getItem("otpMethod") || "sms";
+
+        const otpInfo = document.getElementById("otpInfo");
+        const inputs = document.querySelectorAll(".otp-inputs input");
+        const timer = document.getElementById("timer");
+        const verifyBtn = document.getElementById("verifyBtn");
+        const resendBtn = document.getElementById("resendBtn");
+
+        // Show masked number
+        if (phone) {
+            const masked = phone.slice(0, 2) + "XXX" + phone.slice(-5);
+            otpInfo.textContent =
+                `OTP sent via ${method.toUpperCase()} to +91 ${masked}`;
+        }
+
+
+        // Move automatically to next OTP box
+        inputs.forEach((input, index) => {
+
+            input.addEventListener("input", function () {
+
+                input.value = input.value.replace(/\D/g, "");
+
+                if (input.value && index < inputs.length - 1) {
+                    inputs[index + 1].focus();
+                }
+
+            });
+
+            // Backspace goes to previous box
+            input.addEventListener("keydown", function (event) {
+
+                if (
+                    event.key === "Backspace" &&
+                    !input.value &&
+                    index > 0
+                ) {
+                    inputs[index - 1].focus();
+                }
+
+            });
+
+        });
+
+
+        // OTP timer
+        let timeLeft = 60;
+        let otpExpired = false;
+        let countdown;
+
+        function startTimer() {
+
+            clearInterval(countdown);
+
+            timeLeft = 60;
+            otpExpired = false;
+
+            resendBtn.disabled = true;
+            timer.textContent = "OTP expires in 60s";
+
+            countdown = setInterval(function () {
+
+                timeLeft--;
+
+                timer.textContent = `OTP expires in ${timeLeft}s`;
+
+                if (timeLeft <= 0) {
+
+                    clearInterval(countdown);
+
+                    otpExpired = true;
+
+                    timer.textContent = "OTP expired";
+                    resendBtn.disabled = false;
+                }
+
+            }, 1000);
+
+        }
+
+        startTimer();
+
+
+        // Demo OTP verification
+        verifyBtn.addEventListener("click", function () {
+
+            if (otpExpired) {
+                alert("OTP expired. Please resend OTP.");
+                return;
+            }
+
+            const enteredOtp =
+                Array.from(inputs)
+                .map(input => input.value)
+                .join("");
+
+            if (enteredOtp.length !== 6) {
+                alert("Please enter the complete 6-digit OTP.");
+                return;
+            }
+
+            // Temporary demo OTP
+            if (enteredOtp === "123456") {
+
+                localStorage.setItem("reporterVerified", "true");
+
+                window.location.href = "report.html";
+
+            } else {
+
+                alert("Invalid OTP. For demo, use 123456.");
+            }
+
+        });
+
+
+        // Resend OTP and restart timer
+        resendBtn.addEventListener("click", function () {
+
+            inputs.forEach(input => input.value = "");
+
+            inputs[0].focus();
+
+            alert("New OTP sent.");
+
+            startTimer();
+
+        });
+
+    </script>
+
+</body>
+</html>
