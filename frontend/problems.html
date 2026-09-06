@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>List of Problems | JAN SETU</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<header class="navbar">
+  <a href="index.html" class="brand"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="problems.html" class="active">List of Problems</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#initiatives">Initiatives</a>
+    <a href="index.html#explore">Explore Jharkhand</a>
+    <a href="index.html#stories">Stories</a>
+    <a href="index.html#resources">Resources</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
+</header>
+
+<main class="problems-page">
+  <section class="problems-top">
+    <div>
+      <p class="section-eyebrow">COMMUNITY PROBLEMS</p>
+      <h1>List of Problems</h1>
+      <p>Open problems appear first. Resolved problems move to the bottom automatically.</p>
+    </div>
+    <a href="reporter-login.html" class="problems-report-btn"><i class="fa-solid fa-plus"></i> Report a Problem</a>
+  </section>
+
+  <div class="problems-toolbar">
+    <div class="problem-search">
+      <i class="fa-solid fa-magnifying-glass"></i>
+      <input id="problemSearch" type="search" placeholder="Search by problem, location or category">
+    </div>
+    <select id="statusFilter" aria-label="Filter by status">
+      <option value="all">All Statuses</option>
+      <option value="Verified">New / Open</option>
+      <option value="In Progress">In Progress</option>
+      <option value="Validation">Validation</option>
+      <option value="Resolved">Resolved</option>
+    </select>
+  </div>
+
+  <section id="problemList" class="public-problem-list"></section>
+  <p id="emptyProblems" class="public-empty" hidden>No matching problems found.</p>
+  <p id="loadingProblems" class="public-empty">Loading problems...</p>
+</main>
+
+<div class="modal" id="trackIdModal">
+  <div class="track-id-modal-card">
+    <button class="modal-close" id="trackModalClose" type="button" aria-label="Close">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="track-id-icon">
+      <i class="fa-solid fa-shield-halved"></i>
+    </div>
+
+    <h2>Enter your Track ID</h2>
+    <p>Enter the private ID received for this problem.</p>
+
+    <input id="trackIdInput" type="text" placeholder="JS-2026-001" autocomplete="off">
+    <small id="trackIdError"></small>
+    <button id="openTrackBtn" class="track-open-btn" type="button">View Status</button>
+
+  </div>
+</div>
+
+<script>
+    const API_BASE =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? window.location.origin
+    : "https://jan-setu-bf03.onrender.com";
+
+
+const statusOrder = {
+  "Submitted": 0,
+  "Verified": 1,
+  "In Progress": 2,
+  "Validation": 3,
+  "Resolved": 4
+};
+
+const list = document.getElementById("problemList");
+const searchInput = document.getElementById("problemSearch");
+const statusFilter = document.getElementById("statusFilter");
+const emptyState = document.getElementById("emptyProblems");
+const loadingState = document.getElementById("loadingProblems");
+
+const trackModal = document.getElementById("trackIdModal");
+const trackInput = document.getElementById("trackIdInput");
+const trackError = document.getElementById("trackIdError");
+
+let problems = [];
+let selectedProblem = null;
+
+function formatDate(value) {
+  if (!value) return "Recently";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Recently";
+  }
+
+  return date.toLocaleDateString("en-IN", {
+    day: "numeric",
+    month: "short",
+    year: "numeric"
+  });
+}
+
+function statusClass(status) {
+  return String(status || "Submitted")
+    .toLowerCase()
+    .replaceAll(" ", "-");
+}
+
+function publicStatus(status) {
+  if (status === "Verified") return "New / Open";
+  if (status === "Submitted") return "New / Submitted";
+  return status;
+}
+
+async function loadProblems() {
+  loadingState.hidden = false;
+  emptyState.hidden = true;
+  list.innerHTML = "";
+
+  try {
+    const response = await fetch("${API_BASE}/api/reports/all", {
+      headers: {
+        "Accept": "application/json"
+      },
+      cache: "no-store"
+    });
+
+    if (!response.ok) {
+      throw new Error("Unable to load problems.");
+    }
+
+    const result = await response.json();
+
+    problems =
+      Array.isArray(result)
+        ? result
+        : Array.isArray(result.reports)
+          ? result.reports
+          : Array.isArray(result.data)
+            ? result.data
+            : [];
+
+    renderProblems();
+
+  } catch (error) {
+    console.error("Problems load error:", error);
+
+    list.innerHTML = "";
+
+    loadingState.hidden = true;
+    emptyState.hidden = false;
+    emptyState.textContent =
+      "Could not load problems. Please make sure the server is running and try again.";
+
+  } finally {
+    loadingState.hidden = true;
+  }
+}
+
+function renderProblems() {
+  const query = searchInput.value.trim().toLowerCase();
+  const filter = statusFilter.value;
+
+  const filteredProblems = problems
+    .filter(problem => {
+      const text =
+        `${problem.title || ""}
+         ${problem.location || ""}
+         ${problem.category || ""}`.toLowerCase();
+
+      return (
+        text.includes(query) &&
+        (filter === "all" || problem.status === filter)
+      );
+    })
+    .sort((a, b) => {
+      const statusDifference =
+        (statusOrder[a.status] ?? 9) -
+        (statusOrder[b.status] ?? 9);
+
+      if (statusDifference !== 0) {
+        return statusDifference;
+      }
+
+      return new Date(b.postedAt || b.created_at || 0) -
+        new Date(a.postedAt || a.created_at || 0);
+    });
+
+  list.innerHTML = "";
+  emptyState.hidden = filteredProblems.length > 0;
+
+  filteredProblems.forEach(problem => {
+    const card = document.createElement("article");
+    card.className = "public-problem-card";
+
+    let photoURL = "assets/jharkhand-landscape.jpg";
+
+    if (Array.isArray(problem.photo_urls) && problem.photo_urls.length > 0) {
+      photoURL = problem.photo_urls[0];
+    } else if (typeof problem.photo_urls === "string") {
+      try {
+        const photoURLs = JSON.parse(problem.photo_urls);
+
+        if (Array.isArray(photoURLs) && photoURLs.length > 0) {
+          photoURL = photoURLs[0];
+        }
+      } catch {
+        photoURL = "assets/jharkhand-landscape.jpg";
+      }
+    }
+
+    card.innerHTML = `
+      <img
+        src="${photoURL}"
+        alt="${problem.title || "Problem"}"
+      >
+
+      <div class="public-problem-body">
+        <div class="public-problem-title-row">
+          <div>
+            <span class="status-pill ${statusClass(problem.status)}">
+              ${publicStatus(problem.status)}
+            </span>
+
+            <h2>${problem.title || "Untitled Problem"}</h2>
+          </div>
+
+          <span class="problem-date">
+            ${formatDate(problem.postedAt || problem.created_at)}
+          </span>
+        </div>
+
+        <p>${problem.description || ""}</p>
+
+        <div class="public-problem-meta">
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            ${problem.location || problem.district || "Jharkhand"}
+          </span>
+
+          <span>
+            <i class="fa-solid fa-layer-group"></i>
+            ${problem.category || "General"}
+          </span>
+        </div>
+      </div>
+
+      <button class="public-view-btn" type="button">
+        View Details
+      </button>
+    `;
+
+    card
+      .querySelector(".public-view-btn")
+      .addEventListener("click", () => requestTrackId(problem));
+
+    list.appendChild(card);
+  });
+}
+
+async function requestTrackId(problem) {
+  selectedProblem = problem;
+
+  trackInput.value = "";
+  trackError.textContent = "";
+  trackModal.classList.add("show");
+
+  try {
+    const response = await fetch(
+      `${API_BASE}/api//reports/${encodeURIComponent(problem.id)}`,
+      {
+        headers: {
+          "Accept": "application/json"
+        },
+        cache: "no-store"
+      }
+    );
+
+    if (!response.ok) {
+      throw new Error("Unable to load this problem.");
+    }
+
+    const result = await response.json();
+
+    selectedProblem =
+      result.report ||
+      result.data ||
+      result;
+
+    trackInput.focus();
+
+  } catch (error) {
+    console.error("Report detail load error:", error);
+
+    trackError.textContent =
+      error.message ||
+      "Unable to load this problem.";
+  }
+}
+
+async function verifyTrackId() {
+  if (!selectedProblem) return;
+
+  const entered =
+    trackInput.value.trim().toUpperCase();
+
+  if (!entered) {
+    trackError.textContent =
+      "Please enter your Track ID.";
+    return;
+  }
+
+  trackError.textContent = "";
+
+  const openButton =
+    document.getElementById("openTrackBtn");
+
+  openButton.disabled = true;
+  openButton.textContent = "Verifying...";
+
+  try {
+    const response = await fetch(
+      "${API_BASE}/api/reports/verify-track",
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        body: JSON.stringify({
+          report_id: selectedProblem.id,
+          track_id: entered
+        })
+      }
+    );
+
+    if (!response.ok) {
+      let errorMessage = "Track ID does not match this problem.";
+
+      try {
+        const errorText = await response.text();
+
+        if (errorText.trim()) {
+          errorMessage = errorText.trim();
+        }
+      } catch {
+        // Keep default error message.
+      }
+
+      throw new Error(errorMessage);
+    }
+
+    const verifiedReport = await response.json();
+
+    sessionStorage.setItem(
+      "verifiedReport",
+      JSON.stringify(verifiedReport)
+    );
+
+    localStorage.setItem(
+      "activeTrackProblemId",
+      selectedProblem.id
+    );
+
+    window.location.href =
+      "track-problem-final.html";
+
+  } catch (error) {
+    console.error("Track ID verification error:", error);
+
+    trackError.textContent =
+      error.message ||
+      "Track ID does not match this problem.";
+
+    openButton.disabled = false;
+    openButton.textContent = "View Status";
+  }
+}
+
+searchInput.addEventListener(
+  "input",
+  renderProblems
+);
+
+statusFilter.addEventListener(
+  "change",
+  renderProblems
+);
+
+document
+  .getElementById("openTrackBtn")
+  .addEventListener(
+    "click",
+    verifyTrackId
+  );
+
+document
+  .getElementById("trackModalClose")
+  .addEventListener(
+    "click",
+    () => {
+      trackModal.classList.remove("show");
+      selectedProblem = null;
+    }
+  );
+
+trackInput.addEventListener(
+  "keydown",
+  event => {
+    if (event.key === "Enter") {
+      verifyTrackId();
+    }
+  }
+);
+
+trackModal.addEventListener(
+  "click",
+  event => {
+    if (event.target === trackModal) {
+      trackModal.classList.remove("show");
+      selectedProblem = null;
+    }
+  }
+);
+
+loadProblems();
+</script>
+
+</body>
+</html>

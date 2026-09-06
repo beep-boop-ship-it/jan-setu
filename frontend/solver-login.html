@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Solver Login | JAN SETU</title>
+
+    <link rel="stylesheet" href="style.css">
+    <link
+        rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+    >
+</head>
+
+<body>
+
+<main class="solver-login-page">
+    <div class="solver-login-card">
+
+        <div class="login-topbar">
+            <img
+                src="assets/jansetu-logo.jpg"
+                alt="JAN SETU"
+                class="login-logo"
+            >
+
+            <button
+                class="login-back-btn"
+                type="button"
+                onclick="history.back()"
+            >
+                ← Back
+            </button>
+        </div>
+
+        <div class="login-role-icon" id="loginRoleIcon">
+            <i class="fa-solid fa-graduation-cap"></i>
+        </div>
+
+        <h1 id="loginTitle">Student Login</h1>
+
+        <p class="login-subtitle" id="loginSubtitle">
+            Welcome back. Continue your journey with JAN SETU.
+        </p>
+
+        <form id="solverLoginForm">
+
+            <div class="login-input">
+                <i class="fa-regular fa-envelope"></i>
+
+                <input
+                    type="email"
+                    id="loginEmail"
+                    placeholder="Email"
+                    autocomplete="email"
+                    required
+                >
+            </div>
+
+            <div class="login-input">
+                <i class="fa-solid fa-lock"></i>
+
+                <input
+                    type="password"
+                    id="loginPassword"
+                    placeholder="Password"
+                    autocomplete="current-password"
+                    required
+                >
+
+                <i
+                    class="fa-regular fa-eye login-password-toggle"
+                    id="passwordToggle"
+                    role="button"
+                    tabindex="0"
+                    aria-label="Show password"
+                ></i>
+            </div>
+
+            <div class="login-options">
+                <label>
+                    <input
+                        type="checkbox"
+                        id="rememberMe"
+                    >
+                    Remember me
+                </label>
+
+                <span class="login-forgot-disabled">
+                    Forgot Password?
+                </span>
+            </div>
+
+            <button
+                type="submit"
+                class="login-submit-btn"
+                id="loginSubmitBtn"
+            >
+                Login →
+            </button>
+
+        </form>
+
+        <p
+            id="loginMessage"
+            style="
+                display: none;
+                margin-top: 14px;
+                text-align: center;
+                font-size: 14px;
+            "
+        ></p>
+
+        <p class="login-signup-text">
+            Don't have an account?
+            <a href="solver-signup.html">Sign Up</a>
+        </p>
+
+    </div>
+</main>
+
+<div class="login-landscape"></div>
+
+<script>
+
+const API_BASE =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? window.location.origin
+    : "https://jan-setu-bf03.onrender.com";
+
+/* =========================================================
+   PASSWORD VISIBILITY
+   ========================================================= */
+
+const passwordInput =
+    document.getElementById("loginPassword");
+
+const passwordToggle =
+    document.getElementById("passwordToggle");
+
+function toggleLoginPassword() {
+
+    const isPassword =
+        passwordInput.type === "password";
+
+    passwordInput.type =
+        isPassword ? "text" : "password";
+
+    passwordToggle.classList.toggle(
+        "fa-eye",
+        !isPassword
+    );
+
+    passwordToggle.classList.toggle(
+        "fa-eye-slash",
+        isPassword
+    );
+
+    passwordToggle.setAttribute(
+        "aria-label",
+        isPassword
+            ? "Hide password"
+            : "Show password"
+    );
+}
+
+passwordToggle.addEventListener(
+    "click",
+    toggleLoginPassword
+);
+
+passwordToggle.addEventListener(
+    "keydown",
+    function (event) {
+
+        if (
+            event.key === "Enter" ||
+            event.key === " "
+        ) {
+            event.preventDefault();
+            toggleLoginPassword();
+        }
+
+    }
+);
+
+
+/* =========================================================
+   SOLVER ROLE
+   ========================================================= */
+
+const role =
+    localStorage.getItem("solverRole") || "student";
+
+const roleData = {
+
+    student: {
+        title: "Student Login",
+        subtitle:
+            "Welcome back. Continue solving real-world problems with JAN SETU.",
+        icon: "fa-graduation-cap",
+        color: "#4f7df3"
+    },
+
+    researcher: {
+        title: "Researcher Login",
+        subtitle:
+            "Welcome back. Continue contributing your research expertise.",
+        icon: "fa-flask",
+        color: "#8b5cf6"
+    },
+
+    startup: {
+        title: "Startup Login",
+        subtitle:
+            "Welcome back. Continue building scalable solutions with JAN SETU.",
+        icon: "fa-rocket",
+        color: "#f97316"
+    },
+
+    company: {
+        title: "Company Login",
+        subtitle:
+            "Welcome back. Continue contributing industry expertise and resources.",
+        icon: "fa-building",
+        color: "#3b82f6"
+    },
+
+    msme: {
+        title: "MSME Login",
+        subtitle:
+            "Welcome back. Continue supporting practical and local solutions.",
+        icon: "fa-industry",
+        color: "#22c55e"
+    },
+
+    csr: {
+        title: "CSR Login",
+        subtitle:
+            "Welcome back. Continue supporting meaningful social impact initiatives.",
+        icon: "fa-people-group",
+        color: "#ef4444"
+    },
+
+    "research-lab": {
+        title: "Research Lab Login",
+        subtitle:
+            "Welcome back. Continue enabling research, testing and validation.",
+        icon: "fa-microscope",
+        color: "#7c3aed"
+    },
+
+    "innovation-hub": {
+        title: "Innovation Hub Login",
+        subtitle:
+            "Welcome back. Continue mentoring and scaling innovative solutions.",
+        icon: "fa-lightbulb",
+        color: "#d9a514"
+    }
+};
+
+const data =
+    roleData[role] || roleData.student;
+
+
+/* =========================================================
+   APPLY ROLE INFORMATION TO UI
+   ========================================================= */
+
+document.getElementById(
+    "loginTitle"
+).textContent = data.title;
+
+document.getElementById(
+    "loginSubtitle"
+).textContent = data.subtitle;
+
+const roleIcon =
+    document.getElementById("loginRoleIcon");
+
+roleIcon.innerHTML = `
+    <i class="fa-solid ${data.icon}"></i>
+`;
+
+roleIcon.style.color = data.color;
+roleIcon.style.background =
+    data.color + "18";
+
+
+/* =========================================================
+   LOGIN MESSAGE
+   ========================================================= */
+
+const loginMessage =
+    document.getElementById("loginMessage");
+
+function showLoginMessage(message, isError = true) {
+
+    loginMessage.textContent = message;
+
+    loginMessage.style.display = "block";
+
+    loginMessage.style.color =
+        isError ? "#dc2626" : "#16a34a";
+}
+
+
+/* =========================================================
+   REAL BACKEND LOGIN
+   ========================================================= */
+
+const solverLoginForm =
+    document.getElementById("solverLoginForm");
+
+const loginSubmitBtn =
+    document.getElementById("loginSubmitBtn");
+
+
+solverLoginForm.addEventListener(
+    "submit",
+    async function (event) {
+
+        event.preventDefault();
+
+        loginMessage.style.display = "none";
+
+        const email =
+            document
+                .getElementById("loginEmail")
+                .value
+                .trim();
+
+        const password =
+            document
+                .getElementById("loginPassword")
+                .value;
+
+        const rememberMe =
+            document
+                .getElementById("rememberMe")
+                .checked;
+
+
+        if (!email || !password) {
+            showLoginMessage(
+                "Please enter your email and password."
+            );
+            return;
+        }
+
+
+        /* Disable button while request is running */
+
+        loginSubmitBtn.disabled = true;
+        loginSubmitBtn.textContent = "Logging in...";
+
+
+        try {
+
+            /* =========================================
+               STEP 1 — AUTHENTICATE ACCOUNT
+               ========================================= */
+
+            const loginResponse =
+                await fetch("${API_BASE}/api/auth/login", {
+
+                    method: "POST",
+
+                    headers: {
+                        "Content-Type":
+                            "application/json"
+                    },
+
+                    body: JSON.stringify({
+                        email: email,
+                        password: password
+                    })
+
+                });
+
+
+            const loginText =
+                await loginResponse.text();
+
+
+            let loginResult = {};
+
+            try {
+                loginResult =
+                    JSON.parse(loginText);
+            } catch {
+                loginResult = {};
+            }
+
+
+            if (!loginResponse.ok) {
+
+                throw new Error(
+                    loginText ||
+                    loginResult.error ||
+                    "Invalid email or password"
+                );
+
+            }
+
+
+            /* =========================================
+               STEP 2 — STORE AUTHENTICATED ACCOUNT
+               ========================================= */
+
+            localStorage.setItem(
+                "solverLoggedIn",
+                "true"
+            );
+
+            localStorage.setItem(
+                "solverAccountId",
+                String(loginResult.id)
+            );
+
+            localStorage.setItem(
+                "solverEmail",
+                email
+            );
+
+            localStorage.setItem(
+                "solverRole",
+                loginResult.role || role
+            );
+
+            localStorage.setItem(
+                "solverFullName",
+                loginResult.full_name || ""
+            );
+
+
+            if (rememberMe) {
+
+                localStorage.setItem(
+                    "solverRememberMe",
+                    "true"
+                );
+
+            } else {
+
+                localStorage.removeItem(
+                    "solverRememberMe"
+                );
+
+            }
+
+
+            /* =========================================
+               STEP 3 — CHECK FOR EXISTING PROFILE
+               ========================================= */
+
+            const profileResponse =
+                await fetch(
+                    `${API_BASE}/api/solver/profile/${loginResult.id}`
+                );
+
+
+            /* =========================================
+               PROFILE EXISTS
+               ========================================= */
+
+            if (profileResponse.ok) {
+
+                const profile =
+                    await profileResponse.json();
+
+                localStorage.setItem(
+                    "solverProfile",
+                    JSON.stringify(profile)
+                );
+
+                window.location.href =
+                    "solver-profile.html";
+
+                return;
+            }
+
+
+            /* =========================================
+               PROFILE DOES NOT EXIST
+               ========================================= */
+
+            if (
+                profileResponse.status === 404
+            ) {
+
+                localStorage.removeItem(
+                    "solverProfile"
+                );
+
+                window.location.href =
+                    "solver-profile.html";
+
+                return;
+            }
+
+
+            /* =========================================
+               OTHER PROFILE ERROR
+               ========================================= */
+
+            throw new Error(
+                "Unable to check your profile. Please try again."
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Login error:",
+                error
+            );
+
+            localStorage.removeItem(
+                "solverLoggedIn"
+            );
+
+            showLoginMessage(
+                error.message ||
+                "Login failed. Please try again."
+            );
+
+        } finally {
+
+            loginSubmitBtn.disabled = false;
+            loginSubmitBtn.textContent =
+                "Login →";
+
+        }
+
+    }
+);
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Settings | JAN SETU</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar"><i class="fa-solid fa-angles-left"></i></button>
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item" data-nav="home"><i class="fa-solid fa-house"></i><span>Home</span></a>
+      <a href="#" class="nav-item" id="aiMatchesNav" data-nav="matches"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span></a>
+      <a href="projects.html" class="nav-item" data-nav="projects"><i class="fa-regular fa-folder-open"></i><span>Projects</span></a>
+      <a href="team.html" class="nav-item" data-nav="team"><i class="fa-solid fa-users"></i><span>Team</span></a>
+      <a href="solver-profile.html" class="nav-item" data-nav="profile"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+      <a href="settings.html" class="nav-item active" data-nav="settings"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+    </nav>
+    <div class="sidebar-landscape"><p>A STRONGER<br>JHARKHAND<br>TOGETHER</p></div>
+  </aside>
+
+  <main class="main solver-page settings-page">
+    <header class="page-header">
+      <div><h1>Settings</h1><p>Only essential account and privacy preferences.</p></div>
+    </header>
+
+```
+<!-- Account details come from the signup/profile data already stored by the prototype. -->
+<section class="settings-card">
+  <h2>Account</h2>
+  <div class="settings-row"><div><strong id="settingsName">Your Account</strong><span id="settingsRole">Solver</span></div><a href="solver-profile.html">Edit Profile</a></div>
+  <div class="settings-row"><div><strong>Email</strong><span id="settingsEmail">Not available</span></div></div>
+  <div class="settings-row"><div><strong>Phone</strong><span id="settingsPhone">Not available</span></div></div>
+</section>
+
+<!-- This preference is relevant only to Student / Researcher accounts and updates profile consent. -->
+<section class="settings-card" id="privacyCard">
+  <h2>Privacy</h2>
+  <label class="settings-toggle-row">
+    <div>
+      <strong>Contact Sharing After Selection</strong>
+      <span>Allow your contact number to be shared with the assigned mentor / organization only after project selection.</span>
+    </div>
+    <input type="checkbox" id="contactSharing">
+  </label>
+</section>
+
+<section class="settings-card settings-danger-zone">
+  <h2>Session</h2>
+  <div class="settings-row">
+    <div><strong>Sign out</strong><span>Your saved prototype profile and project data stay on this browser.</span></div>
+    <button id="signOutBtn" type="button">Sign Out</button>
+  </div>
+</section>
+```
+
+  </main>
+</div>
+
+<script>
+const validRoles = ["student", "researcher", "startup", "company", "msme", "csr", "research-lab", "innovation-hub"];
+const storedRole = localStorage.getItem("solverRole");
+const role = validRoles.includes(storedRole) ? storedRole : "student";
+
+let account = {};
+let profile = {};
+
+try {
+  account = JSON.parse(localStorage.getItem("solverAccount") || "{}");
+} catch {
+  account = {};
+}
+
+try {
+  profile = JSON.parse(localStorage.getItem("solverProfileData") || "{}");
+} catch {
+  profile = {};
+}
+
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const settingsName = document.getElementById("settingsName");
+const settingsRole = document.getElementById("settingsRole");
+const settingsEmail = document.getElementById("settingsEmail");
+const settingsPhone = document.getElementById("settingsPhone");
+const contactSharing = document.getElementById("contactSharing");
+const privacyCard = document.getElementById("privacyCard");
+const signOutBtn = document.getElementById("signOutBtn");
+
+const roleLabels = {
+  student: "Student",
+  researcher: "Researcher",
+  startup: "Startup",
+  company: "Company",
+  msme: "MSME",
+  csr: "CSR",
+  "research-lab": "Research Lab",
+  "innovation-hub": "Innovation Hub"
+};
+
+function setRoleAwareNavigation() {
+  const matchesLink = document.getElementById("aiMatchesNav");
+  if (!matchesLink) return;
+
+  matchesLink.href = (role === "student" || role === "researcher")
+    ? "ai-matches-student.html"
+    : "ai-matches-industry.html";
+}
+
+setRoleAwareNavigation();
+
+settingsName.textContent = profile.fullName || account.primaryName || "Your Account";
+settingsRole.textContent = roleLabels[role] || "Solver";
+settingsEmail.textContent = account.email || "Not available";
+settingsPhone.textContent = account.phone || "Not available";
+
+const isStudentResearcher = role === "student" || role === "researcher";
+privacyCard.hidden = !isStudentResearcher;
+contactSharing.checked = !!profile.consent;
+
+contactSharing.addEventListener("change", () => {
+  let currentProfile = {};
+
+  try {
+    currentProfile = JSON.parse(localStorage.getItem("solverProfileData") || "{}");
+  } catch {
+    currentProfile = {};
+  }
+
+  currentProfile.consent = contactSharing.checked;
+
+  try {
+    localStorage.setItem("solverProfileData", JSON.stringify(currentProfile));
+  } catch {
+    alert("Could not save this privacy preference.");
+    contactSharing.checked = !contactSharing.checked;
+  }
+});
+
+signOutBtn.addEventListener("click", () => {
+  localStorage.removeItem("solverLoggedIn");
+  window.location.href = "index.html";
+});
+
+sidebarToggle.addEventListener("click", () => {
+  sidebar.classList.toggle("collapsed");
+  document.querySelector(".app").classList.toggle("sidebar-collapsed");
+  sidebarToggle.querySelector("i").className = sidebar.classList.contains("collapsed")
+    ? "fa-solid fa-angles-right"
+    : "fa-solid fa-angles-left";
+});
+</script>
+
+</body>
+</html>

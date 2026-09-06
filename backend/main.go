@@ -21,8 +21,13 @@ func main() {
 
 	log.Println("PostgreSQL connected successfully!")
 
+	http.HandleFunc("/api/auth/signup", signup(db))
+	http.HandleFunc("/api/auth/login", login(db))
+	http.HandleFunc("/api/solver/profile/", solverProfile(db))
 	http.HandleFunc("/api/reports", createReport(db))
-
+	http.HandleFunc("/api/reports/verify-track", verifyTrackID(db))
+	http.HandleFunc("/api/reports/all", getReports(db))
+	http.HandleFunc("/api/reports/{id}", getReportByID(db))
 
 	http.Handle("/", http.FileServer(http.Dir("../frontend")))
 

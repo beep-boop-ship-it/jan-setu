@@ -3,57 +3,46 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
     <title>Report a Problem | JAN SETU</title>
 
     <link rel="stylesheet" href="style.css">
-
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
 
 <body>
 
 <script>
-    if (localStorage.getItem("reporterVerified") !== "true") {
-        window.location.href = "reporter-login.html";
-    }
+if (localStorage.getItem("reporterVerified") !== "true") {
+    window.location.href = "reporter-login.html";
+}
 </script>
 
 <header class="navbar">
-
     <a href="index.html" class="brand">
         <img src="assets/jansetu-logo.jpg" alt="Jan Setu logo">
     </a>
 
     <nav class="nav-links">
         <a href="index.html">Home</a>
-        <a href="#">About</a>
-        <a href="#">Initiatives</a>
-        <a href="#">Explore Jharkhand</a>
-        <a href="#">Stories</a>
-        <a href="#">Resources</a>
-        <a href="#">Contact</a>
+        <a href="problems.html">List of Problems</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#initiatives">Initiatives</a>
+        <a href="index.html#explore">Explore Jharkhand</a>
+        <a href="index.html#stories">Stories</a>
+        <a href="index.html#resources">Resources</a>
+        <a href="index.html#contact">Contact</a>
     </nav>
-
 </header>
-
 
 <main class="report-page">
 
     <section class="report-heading">
-
         <p>COMMUNITY ACTION</p>
-
         <h1>Report a Problem</h1>
-
-        <span>
-            Help us identify problems in your community.
-        </span>
-
+        <span>Help us identify problems in your community.</span>
     </section>
-
 
     <section class="report-layout">
 
@@ -61,60 +50,40 @@
 
             <h2>Tell us about the problem</h2>
 
-
-            <label>
-                Problem Title
-                <span class="required-star">*</span>
-            </label>
-
-            <input
-                type="text"
-                name="title"
-                placeholder="e.g. Damaged road near school"
-                required
-            >
-
+            <label for="problemTitle">Problem Title <span class="required-star">*</span></label>
+            <input type="text" id="problemTitle" placeholder="e.g. Damaged road near school" required>
 
             <div class="report-row">
 
                 <div>
+                    <label for="problemCategory">Category <span class="required-star">*</span></label>
 
-                    <label>
-                        Category
-                        <span class="required-star">*</span>
-                    </label>
-
-                    <select name="category" required>
-
-                        <option value="">
-                            Select category
-                        </option>
-
+                    <select id="problemCategory" required>
+                        <option value="">Select category</option>
                         <option>Road</option>
                         <option>Water</option>
                         <option>Electricity</option>
                         <option>Education</option>
                         <option>Health</option>
                         <option>Waste</option>
-
+                        <option>Sanitation</option>
+                        <option>Public Safety</option>
+                        <option>Agriculture</option>
+                        <option>Employment</option>
+                        <option>Environment</option>
+                        <option>Transportation</option>
+                        <option>Public Infrastructure</option>
+                        <option>Women & Child Welfare</option>
+                        <option>Digital Services</option>
+                        <option>Other</option>
                     </select>
-
                 </div>
 
-
                 <div>
+                    <label for="problemDistrict">District <span class="required-star">*</span></label>
 
-                    <label>
-                        District
-                        <span class="required-star">*</span>
-                    </label>
-
-                    <select name="district" required>
-
-                        <option value="">
-                            Select district
-                        </option>
-
+                    <select id="problemDistrict" required>
+                        <option value="">Select district</option>
                         <option>Ranchi</option>
                         <option>Bokaro</option>
                         <option>Chatra</option>
@@ -139,248 +108,99 @@
                         <option>Seraikela-Kharsawan</option>
                         <option>Simdega</option>
                         <option>West Singhbhum</option>
-
                     </select>
-
                 </div>
 
             </div>
 
+            <label for="problemArea">Location / Area <span class="required-star">*</span></label>
+            <input type="text" id="problemArea" placeholder="Enter locality or landmark" required>
 
-            <label>
-                Location / Area
-                <span class="required-star">*</span>
-            </label>
+            <label for="problemPin">PIN Code <span class="required-star">*</span></label>
+            <input type="text" id="problemPin" placeholder="Enter 6-digit PIN code"
+                   inputmode="numeric" pattern="[0-9]{6}" maxlength="6" required>
 
-            <input
-                type="text"
-                name="location"
-                placeholder="Enter locality or landmark"
-                required
-            >
+            <label for="problemDescription">Description <span class="required-star">*</span></label>
+            <textarea id="problemDescription" placeholder="Describe the problem..." required></textarea>
 
+            <label for="photo1">Photo 1 <span class="required-star">*</span></label>
+            <input type="file" id="photo1" accept="image/*" required>
 
-            <label>
-                PIN Code
-                <span class="required-star">*</span>
-            </label>
+            <label for="photo2">Photo 2 <span class="required-star">*</span></label>
+            <input type="file" id="photo2" accept="image/*" required>
 
-            <input
-                type="text"
-                name="pin_code"
-                placeholder="Enter 6-digit PIN code"
-                inputmode="numeric"
-                pattern="[0-9]{6}"
-                maxlength="6"
-                required
-            >
+            <label for="photo3">Photo 3 <small>(optional)</small></label>
+            <input type="file" id="photo3" accept="image/*">
 
+            <label for="photo4">Photo 4 <small>(optional)</small></label>
+            <input type="file" id="photo4" accept="image/*">
 
-            <label>
-                Description
-                <span class="required-star">*</span>
-            </label>
+            <label for="photo5">Photo 5 <small>(optional)</small></label>
+            <input type="file" id="photo5" accept="image/*">
 
-            <textarea
-                name="description"
-                placeholder="Describe the problem..."
-                required
-            ></textarea>
-
-
-            <label>
-                Photo 1
-                <span class="required-star">*</span>
-            </label>
-
-            <input
-                type="file"
-                accept="image/*"
-            >
-
-
-            <label>
-                Photo 2
-                <span class="required-star">*</span>
-            </label>
-
-            <input
-                type="file"
-                accept="image/*"
-            >
-
-
-            <label>
-                Photo 3
-                <small>(optional)</small>
-            </label>
-
-            <input
-                type="file"
-                accept="image/*"
-            >
-
-
-            <label>
-                Photo 4
-                <small>(optional)</small>
-            </label>
-
-            <input
-                type="file"
-                accept="image/*"
-            >
-
-
-            <label>
-                Photo 5
-                <small>(optional)</small>
-            </label>
-
-            <input
-                type="file"
-                accept="image/*"
-            >
-
-
-            <button
-                type="submit"
-                class="report-submit"
-            >
-
-                <i class="fa-regular fa-circle-check"></i>
-
-                Submit Problem
-
+            <button type="submit" class="report-submit">
+                <i class="fa-regular fa-circle-check"></i> Submit Problem
             </button>
 
         </form>
 
-
         <aside class="report-side">
 
-
             <div class="report-info-card guidelines-card">
-
                 <h3>Reporting Guidelines</h3>
 
-
                 <div class="guideline-item">
-
                     <span class="guideline-icon location-icon">
                         <i class="fa-solid fa-location-dot"></i>
                     </span>
-
-                    <span>
-                        Give accurate location details.
-                    </span>
-
+                    <span>Give accurate location details.</span>
                 </div>
 
-
                 <div class="guideline-item">
-
                     <span class="guideline-icon description-icon">
                         <i class="fa-solid fa-file-lines"></i>
                     </span>
-
-                    <span>
-                        Clearly describe the problem.
-                    </span>
-
+                    <span>Clearly describe the problem.</span>
                 </div>
 
-
                 <div class="guideline-item">
-
                     <span class="guideline-icon photo-icon">
                         <i class="fa-solid fa-camera"></i>
                     </span>
-
-                    <span>
-                        Upload a photo if possible.
-                    </span>
-
+                    <span>Upload a photo if possible.</span>
                 </div>
 
-
                 <div class="guideline-item">
-
                     <span class="guideline-icon duplicate-icon">
                         <i class="fa-regular fa-file"></i>
                     </span>
-
-                    <span>
-                        Avoid duplicate reports.
-                    </span>
-
+                    <span>Avoid duplicate reports.</span>
                 </div>
-
             </div>
-
 
             <div class="report-info-card">
-
                 <h3>Popular Categories</h3>
 
-
                 <div class="categories">
-
-                    <span>
-                        <i class="fa-solid fa-road"></i>
-                        Roads
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-graduation-cap"></i>
-                        Education
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-droplet"></i>
-                        Water
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-heart-pulse"></i>
-                        Health
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-bolt"></i>
-                        Electricity
-                    </span>
-
-                    <span>
-                        <i class="fa-solid fa-trash"></i>
-                        Waste
-                    </span>
-
+                    <span><i class="fa-solid fa-road"></i> Roads</span>
+                    <span><i class="fa-solid fa-graduation-cap"></i> Education</span>
+                    <span><i class="fa-solid fa-droplet"></i> Water</span>
+                    <span><i class="fa-solid fa-heart-pulse"></i> Health</span>
+                    <span><i class="fa-solid fa-bolt"></i> Electricity</span>
+                    <span><i class="fa-solid fa-trash"></i> Waste</span>
                 </div>
-
             </div>
 
-
             <div class="report-support">
-
                 <div class="support-icon">
                     <i class="fa-solid fa-people-group"></i>
                 </div>
 
                 <div>
-
-                    <h3>
-                        Every report matters.
-                    </h3>
-
-                    <p>
-                        Together, we can make our communities better.
-                    </p>
-
+                    <h3>Every report matters.</h3>
+                    <p>Together, we can make our communities better.</p>
                 </div>
-
             </div>
-
 
         </aside>
 
@@ -388,117 +208,144 @@
 
 </main>
 
-
 <div class="report-landscape"></div>
 
-
 <script>
+const API_BASE =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? window.location.origin
+    : "https://jan-setu-bf03.onrender.com";
 
 const form = document.getElementById("reportForm");
-
 const submitBtn = document.querySelector(".report-submit");
+const pinInput = document.getElementById("problemPin");
 
+pinInput.addEventListener("input", () => {
+    pinInput.value = pinInput.value.replace(/\D/g, "").slice(0, 6);
+});
 
-form.addEventListener("submit", async function (e) {
+form.addEventListener("submit", async event => {
+    event.preventDefault();
 
-    e.preventDefault();
+    if (!form.reportValidity()) return;
 
+    const formData = new FormData();
+
+    formData.append(
+        "title",
+        document.getElementById("problemTitle").value.trim()
+    );
+
+    formData.append(
+        "category",
+        document.getElementById("problemCategory").value
+    );
+
+    formData.append(
+        "district",
+        document.getElementById("problemDistrict").value
+    );
+
+    formData.append(
+        "location",
+        document.getElementById("problemArea").value.trim()
+    );
+
+    formData.append(
+        "pin_code",
+        document.getElementById("problemPin").value.trim()
+    );
+
+    formData.append(
+        "description",
+        document.getElementById("problemDescription").value.trim()
+    );
+
+    for (let i = 1; i <= 5; i++) {
+        const input = document.getElementById(`photo${i}`);
+
+        if (input.files.length > 0) {
+            formData.append(`photo${i}`, input.files[0]);
+        }
+    }
 
     submitBtn.disabled = true;
-
-    submitBtn.innerHTML = "Processing...";
-
-
-    const formData = new FormData(form);
-
-
-    const report = {
-
-        title: formData.get("title"),
-
-        category: formData.get("category"),
-
-        district: formData.get("district"),
-
-        location: formData.get("location"),
-
-        pin_code: formData.get("pin_code"),
-
-        description: formData.get("description")
-
-    };
-
+    submitBtn.innerHTML =
+        '<i class="fa-solid fa-spinner fa-spin"></i> Processing...';
 
     try {
+        const response = await fetch(`${API_BASE}/api/reports`, {
+            method: "POST",
+            body: formData
+        });
 
-        const response = await fetch(
-            "https://jan-setu-bf03.onrender.com/api/reports",
-            {
-                method: "POST",
-
-                headers: {
-                    "Content-Type": "application/json"
-                },
-
-                body: JSON.stringify(report)
-            }
-        );
-
-
-        const text = await response.text();
-
-
-        let result;
+        let result = {};
 
         try {
-
-            result = JSON.parse(text);
-
+            result = await response.json();
         } catch {
-
-            throw new Error(
-                text || "Something went wrong"
-            );
-
+            result = {};
         }
-
 
         if (!response.ok) {
-
             throw new Error(
                 result.error ||
-                "Failed to submit report"
+                "Failed to submit report. Please try again."
             );
-
         }
 
+        if (!result.id) {
+            throw new Error(
+                "Report was submitted but no report ID was returned."
+            );
+        }
+
+        if (!result.track_id) {
+            throw new Error(
+                "Report was submitted but no Track ID was returned."
+            );
+        }
+
+        localStorage.setItem(
+            "pendingReport",
+            JSON.stringify({
+                title: document.getElementById("problemTitle").value.trim(),
+                category: document.getElementById("problemCategory").value,
+                district: document.getElementById("problemDistrict").value,
+                location: document.getElementById("problemArea").value.trim(),
+                pin_code: document.getElementById("problemPin").value.trim(),
+                description: document.getElementById("problemDescription").value.trim(),
+                id: result.id,
+                status: result.status || "submitted",
+                submittedAt: new Date().toISOString()
+            })
+        );
+
+        sessionStorage.setItem(
+            "newReportTrackId",
+            result.track_id
+        );
 
         window.location.href =
             `report-result.html?status=accepted&id=${result.id}`;
 
-    }
+    } catch (error) {
 
-
-    catch (error) {
-
-        console.error(error);
+        console.error("Report submission error:", error);
 
         alert(
-            "Unable to submit your report. Please try again."
+            error.message ||
+            "Unable to submit the report. Please check your connection and try again."
         );
-
 
         submitBtn.disabled = false;
 
         submitBtn.innerHTML =
             '<i class="fa-regular fa-circle-check"></i> Submit Problem';
-
     }
-
 });
-
 </script>
-
 
 </body>
 </html>

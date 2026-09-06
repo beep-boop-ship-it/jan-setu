@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Solver Signup | JAN SETU</title>
+
+    <link rel="stylesheet" href="style.css">
+
+    <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+
+<body>
+
+    <main class="solver-signup-page">
+
+        <div class="solver-signup-card">
+
+            <!-- TOP BAR -->
+            <div class="signup-topbar">
+
+                <a href="index.html">
+    <img
+        src="assets/jansetu-logo.jpg"
+        alt="JAN SETU"
+        class="signup-logo"
+    >
+</a>
+
+                <button type="button"
+                    class="signup-back-btn"
+                    onclick="history.back()">
+
+                    <i class="fa-solid fa-arrow-left"></i>
+                    Back
+
+                </button>
+
+            </div>
+
+
+            <!-- ROLE HEADER -->
+            <div class="solver-signup-header">
+
+                <div class="signup-role-icon" id="roleIcon">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+
+                <h1 id="signupTitle">
+                    Student Signup
+                </h1>
+
+                <p class="signup-subtitle" id="signupSubtitle">
+                    Join JAN SETU and contribute your skills.
+                </p>
+
+            </div>
+
+
+            <!-- SIGNUP FORM -->
+            <form id="solverSignupForm">
+
+                <!-- DYNAMIC ROLE FIELDS -->
+                <div id="dynamicFields"></div>
+
+
+                <!-- EMAIL -->
+                <div class="signup-input">
+
+                    <i class="fa-solid fa-envelope"></i>
+
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        placeholder="Enter your email address"
+                        aria-label="Email Address"
+                        autocomplete="email"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PHONE -->
+                <div class="signup-input">
+
+                    <i class="fa-solid fa-phone"></i>
+
+                    <input
+                        type="tel"
+                        id="phone"
+                        name="phone"
+                        placeholder="Enter your phone number"
+                        aria-label="Phone Number"
+                        inputmode="numeric"
+                        autocomplete="tel"
+                        maxlength="10"
+                        required
+                    >
+
+                </div>
+
+
+                <!-- PASSWORD -->
+                <div class="signup-input">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        placeholder="Create a password"
+                        aria-label="Password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <i
+                        class="fa-solid fa-eye password-toggle"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Show password"
+                        data-password-target="password">
+                    </i>
+
+                </div>
+
+
+                <!-- CONFIRM PASSWORD -->
+                <div class="signup-input">
+
+                    <i class="fa-solid fa-lock"></i>
+
+                    <input
+                        type="password"
+                        id="confirmPassword"
+                        name="confirmPassword"
+                        placeholder="Confirm your password"
+                        aria-label="Confirm Password"
+                        autocomplete="new-password"
+                        required
+                    >
+
+                    <i
+                        class="fa-solid fa-eye password-toggle"
+                        role="button"
+                        tabindex="0"
+                        aria-label="Show password"
+                        data-password-target="confirmPassword">
+                    </i>
+
+                </div>
+
+
+                <!-- SUBMIT -->
+                <button
+                    type="submit"
+                    class="create-account-btn">
+
+                    Create Account
+
+                    <i class="fa-solid fa-arrow-right"></i>
+
+                </button>
+
+            </form>
+
+
+            <!-- LOGIN -->
+            <div class="signup-login-text">
+
+                Already have an account?
+
+                <a href="solver-login.html">
+                    Login
+                </a>
+
+            </div>
+
+        </div>
+
+
+        <!-- BACKGROUND -->
+        <div class="signup-landscape"></div>
+
+    </main>
+
+
+    <script>
+
+        const API_BASE =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? window.location.origin
+    : "https://jan-setu-bf03.onrender.com";
+
+        /* =========================================
+           PASSWORD TOGGLE
+        ========================================= */
+
+        function togglePassword(inputId, eyeIcon) {
+
+            const input =
+                document.getElementById(inputId);
+
+            if (!input) {
+                return;
+            }
+
+            if (input.type === "password") {
+
+                input.type = "text";
+
+                eyeIcon.classList.remove("fa-eye");
+                eyeIcon.classList.add("fa-eye-slash");
+
+                eyeIcon.setAttribute(
+                    "aria-label",
+                    "Hide password"
+                );
+
+            } else {
+
+                input.type = "password";
+
+                eyeIcon.classList.remove("fa-eye-slash");
+                eyeIcon.classList.add("fa-eye");
+
+                eyeIcon.setAttribute(
+                    "aria-label",
+                    "Show password"
+                );
+
+            }
+        }
+
+
+        /* =========================================
+           PASSWORD TOGGLE - MOUSE + KEYBOARD
+        ========================================= */
+
+        document
+            .querySelectorAll(".password-toggle")
+            .forEach(toggle => {
+
+                toggle.addEventListener("click", () => {
+
+                    const inputId =
+                        toggle.dataset.passwordTarget;
+
+                    togglePassword(
+                        inputId,
+                        toggle
+                    );
+
+                });
+
+
+                toggle.addEventListener("keydown", event => {
+
+                    if (
+                        event.key === "Enter" ||
+                        event.key === " "
+                    ) {
+
+                        event.preventDefault();
+
+                        const inputId =
+                            toggle.dataset.passwordTarget;
+
+                        togglePassword(
+                            inputId,
+                            toggle
+                        );
+
+                    }
+
+                });
+
+            });
+
+
+        /* =========================================
+           ROLE CONFIGURATION
+        ========================================= */
+
+        const storedRole =
+            localStorage.getItem("solverRole") || "student";
+
+
+        const roleData = {
+
+            student: {
+
+                title: "Student Signup",
+
+                subtitle:
+                    "Join JAN SETU and contribute your skills.",
+
+                icon: "fa-graduation-cap",
+
+                color: "#4f7df3",
+
+                fields: [
+
+                    [
+                        "Full Name",
+                        "Enter your full name"
+                    ],
+
+                    [
+                        "University / College",
+                        "Enter your university or college"
+                    ],
+
+                    [
+                        "Enrollment / Student ID",
+                        "Enter your enrollment or student ID"
+                    ]
+
+                ]
+
+            },
+
+
+            researcher: {
+
+                title: "Researcher Signup",
+
+                subtitle:
+                    "Share your research and expertise with JAN SETU.",
+
+                icon: "fa-flask",
+
+                color: "#8b5cf6",
+
+                fields: [
+
+                    [
+                        "Full Name",
+                        "Enter your full name"
+                    ],
+
+                    [
+                        "Institution / Organization",
+                        "Enter your institution or organization"
+                    ],
+
+                    [
+                        "Research Domain",
+                        "Enter your research domain"
+                    ]
+
+                ]
+
+            },
+
+
+            startup: {
+
+                title: "Startup Signup",
+
+                subtitle:
+                    "Bring innovative solutions to real civic problems.",
+
+                icon: "fa-rocket",
+
+                color: "#f97316",
+
+                fields: [
+
+                    [
+                        "Startup Name",
+                        "Enter your startup name"
+                    ],
+
+                    [
+                        "Founder / Mentor Name",
+                        "Enter founder or mentor name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ]
+
+                ]
+
+            },
+
+
+            company: {
+
+                title: "Company Signup",
+
+                subtitle:
+                    "Help solve civic challenges through your organization.",
+
+                icon: "fa-building",
+
+                color: "#3b82f6",
+
+                fields: [
+
+                    [
+                        "Company Name",
+                        "Enter your company name"
+                    ],
+
+                    [
+                        "Mentor / Representative Name",
+                        "Enter mentor or representative name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ]
+
+                ]
+
+            },
+
+
+            msme: {
+
+                title: "MSME Signup",
+
+                subtitle:
+                    "Connect your business expertise with civic needs.",
+
+                icon: "fa-industry",
+
+                color: "#22c55e",
+
+                fields: [
+
+                    [
+                        "Business Name",
+                        "Enter your business name"
+                    ],
+
+                    [
+                        "Mentor / Representative Name",
+                        "Enter mentor or representative name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ],
+
+                    [
+                        "Udyam Registration No. (Optional)",
+                        "Enter Udyam registration number"
+                    ]
+
+                ]
+
+            },
+
+
+            csr: {
+
+                title: "CSR Signup",
+
+                subtitle:
+                    "Partner with JAN SETU to create meaningful civic impact.",
+
+                icon: "fa-people-group",
+
+                color: "#ef4444",
+
+                fields: [
+
+                    [
+                        "Organization Name",
+                        "Enter your organization name"
+                    ],
+
+                    [
+                        "CSR Head / Mentor Name",
+                        "Enter CSR head or mentor name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ],
+
+                    [
+                        "CSR Department / Program Name",
+                        "Enter CSR department or program name"
+                    ]
+
+                ]
+
+            },
+
+
+            "research-lab": {
+
+                title: "Research Lab Signup",
+
+                subtitle:
+                    "Apply research and technology to real-world civic challenges.",
+
+                icon: "fa-microscope",
+
+                color: "#7c3aed",
+
+                fields: [
+
+                    [
+                        "Lab / Organization Name",
+                        "Enter lab or organization name"
+                    ],
+
+                    [
+                        "Research Mentor / Lead Name",
+                        "Enter research mentor or lead name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ],
+
+                    [
+                        "Research Areas",
+                        "Enter your research areas"
+                    ]
+
+                ]
+
+            },
+
+
+            "innovation-hub": {
+
+                title: "Innovation Hub Signup",
+
+                subtitle:
+                    "Build and support innovative solutions for Jharkhand.",
+
+                icon: "fa-lightbulb",
+
+                color: "#d9a514",
+
+                fields: [
+
+                    [
+                        "Hub Name",
+                        "Enter your hub name"
+                    ],
+
+                    [
+                        "Mentor / Coordinator Name",
+                        "Enter mentor or coordinator name"
+                    ],
+
+                    [
+                        "Designation",
+                        "Enter designation"
+                    ],
+
+                    [
+                        "Programs / Focus Areas",
+                        "Enter programs or focus areas"
+                    ]
+
+                ]
+
+            }
+
+        };
+
+
+        /* =========================================
+           SAFE ROLE FALLBACK
+        ========================================= */
+
+        const role =
+            roleData[storedRole]
+                ? storedRole
+                : "student";
+
+
+        localStorage.setItem(
+            "solverRole",
+            role
+        );
+
+
+        const data =
+            roleData[role];
+
+
+        /* =========================================
+           ROLE HEADER
+        ========================================= */
+
+        const roleIcon =
+            document.getElementById("roleIcon");
+
+        const signupTitle =
+            document.getElementById("signupTitle");
+
+        const signupSubtitle =
+            document.getElementById("signupSubtitle");
+
+
+        signupTitle.textContent =
+            data.title;
+
+        signupSubtitle.textContent =
+            data.subtitle;
+
+
+        roleIcon.innerHTML = "";
+
+
+        const icon =
+            document.createElement("i");
+
+        icon.className =
+            `fa-solid ${data.icon}`;
+
+
+        roleIcon.appendChild(icon);
+
+
+        roleIcon.style.color =
+            data.color;
+
+        roleIcon.style.backgroundColor =
+            `${data.color}18`;
+
+
+        /* =========================================
+           DYNAMIC ROLE FIELDS
+        ========================================= */
+
+        const dynamicFields =
+            document.getElementById("dynamicFields");
+
+
+        data.fields.forEach((field, index) => {
+
+            const labelText =
+                field[0];
+
+            const placeholder =
+                field[1];
+
+            const isOptional =
+                labelText.includes("(Optional)");
+
+
+            const wrapper =
+                document.createElement("div");
+
+            wrapper.className =
+                "signup-input";
+
+
+            const fieldIcon =
+                document.createElement("i");
+
+            fieldIcon.className =
+                "fa-solid fa-user";
+
+
+            const input =
+                document.createElement("input");
+
+
+            const inputId =
+                `dynamicField${index}`;
+
+
+            input.type = "text";
+
+            input.id = inputId;
+
+            input.name =
+                `dynamicField${index}`;
+
+            input.placeholder =
+                placeholder;
+
+            input.setAttribute(
+                "aria-label",
+                labelText
+            );
+
+            input.autocomplete =
+                "off";
+
+            input.required =
+                !isOptional;
+
+
+            /*
+             * Store the original label so
+             * the submit handler retains
+             * the field meaning.
+             */
+
+            input.dataset.label =
+                labelText;
+
+
+            wrapper.appendChild(
+                fieldIcon
+            );
+
+            wrapper.appendChild(
+                input
+            );
+
+
+            dynamicFields.appendChild(
+                wrapper
+            );
+
+        });
+        /* =========================================
+   FORM SUBMISSION
+========================================= */
+
+const form =
+    document.getElementById("solverSignupForm");
+
+const submitButton =
+    form.querySelector(".create-account-btn");
+
+form.addEventListener("submit", async function (event) {
+
+    event.preventDefault();
+
+    const email =
+        document.getElementById("email").value.trim();
+
+    const phone =
+        document.getElementById("phone").value.trim();
+
+    const password =
+        document.getElementById("password").value;
+
+    const confirmPassword =
+        document.getElementById("confirmPassword").value;
+
+
+    /* PASSWORD MATCH */
+
+    if (password !== confirmPassword) {
+        alert("Passwords do not match.");
+        return;
+    }
+
+
+    /* PHONE VALIDATION */
+
+    const normalizedPhone =
+        phone.replace(/\D/g, "");
+
+    if (normalizedPhone.length !== 10) {
+        alert("Please enter a valid 10-digit phone number.");
+        return;
+    }
+
+
+    /* COLLECT ROLE-SPECIFIC FIELDS */
+
+    const signupFields = [];
+
+    dynamicFields
+        .querySelectorAll("input")
+        .forEach(input => {
+
+            signupFields.push({
+                label: input.dataset.label,
+                value: input.value.trim()
+            });
+
+        });
+
+
+    const primaryName =
+        signupFields.length > 0
+            ? signupFields[0].value
+            : "";
+
+    const secondaryName =
+        signupFields.length > 1
+            ? signupFields[1].value
+            : "";
+
+    const tertiaryValue =
+        signupFields.length > 2
+            ? signupFields[2].value
+            : "";
+
+
+    /* REQUIRED FIELDS */
+
+    if (
+        !primaryName ||
+        !secondaryName ||
+        !tertiaryValue
+    ) {
+        alert("Please complete all required signup fields.");
+        return;
+    }
+
+
+    /* DISABLE BUTTON */
+
+    submitButton.disabled = true;
+
+    submitButton.innerHTML =
+        "Creating Account...";
+
+
+    try {
+
+        /* =====================================
+           CREATE ACCOUNT IN DATABASE
+        ===================================== */
+
+        const response = await fetch(
+            "/api/auth/signup",
+            {
+                method: "POST",
+
+                headers: {
+                    "Content-Type": "application/json"
+                },
+
+                body: JSON.stringify({
+
+                    full_name: primaryName,
+
+                    institution: secondaryName,
+
+                    enrollment_id: tertiaryValue,
+
+                    email: email,
+
+                    phone: normalizedPhone,
+
+                    password: password,
+
+                    role: role
+
+                })
+            }
+        );
+
+
+        const responseText =
+            await response.text();
+
+
+        let result = {};
+
+        try {
+            result = JSON.parse(responseText);
+        } catch {
+            result = {};
+        }
+
+
+        /* BACKEND ERROR */
+
+        if (!response.ok) {
+
+            throw new Error(
+                result.error ||
+                responseText ||
+                "Failed to create account."
+            );
+
+        }
+
+
+        /* MAKE SURE BACKEND RETURNED ID */
+
+        if (!result.id) {
+
+            throw new Error(
+                "Account was created but no account ID was returned."
+            );
+
+        }
+
+
+        /* =====================================
+           REMOVE OLD PROFILE CACHE
+        ===================================== */
+
+        localStorage.removeItem("solverProfile");
+
+        localStorage.removeItem("solverProfileData");
+
+        localStorage.removeItem("solverProfileCompleted");
+
+
+        /* =====================================
+           STORE NEW ACCOUNT
+        ===================================== */
+
+        localStorage.setItem(
+            "solverAccountId",
+            String(result.id)
+        );
+
+        localStorage.setItem(
+            "solverEmail",
+            email
+        );
+
+        localStorage.setItem(
+            "solverRole",
+            role
+        );
+
+        localStorage.setItem(
+            "solverFullName",
+            primaryName
+        );
+
+        localStorage.setItem(
+            "solverLoggedIn",
+            "true"
+        );
+
+        localStorage.setItem(
+            "solverSignedUp",
+            "true"
+        );
+
+
+        /* KEEP FRONTEND ACCOUNT DATA */
+
+        const solverAccount = {
+
+            id: result.id,
+
+            role: role,
+
+            email: email,
+
+            phone: normalizedPhone,
+
+            primaryName: primaryName,
+
+            secondaryName: secondaryName,
+
+            signupFields: signupFields
+
+        };
+
+
+        localStorage.setItem(
+            "solverAccount",
+            JSON.stringify(solverAccount)
+        );
+
+
+        /* =====================================
+           GO TO PROFILE
+        ===================================== */
+
+        window.location.href =
+            "solver-profile.html";
+
+
+    } catch (error) {
+
+        console.error(
+            "Signup error:",
+            error
+        );
+
+        alert(
+            error.message ||
+            "Failed to create account. Please try again."
+        );
+
+
+    } finally {
+
+        submitButton.disabled = false;
+
+        submitButton.innerHTML =
+            `Create Account
+             <i class="fa-solid fa-arrow-right"></i>`;
+
+    }
+
+});
+
+    </script>
+
+</body>
+
+</html>

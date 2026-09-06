@@ -1,0 +1,704 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Team | JAN SETU</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+
+<body>
+<div class="app">
+
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo">
+      <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+    </a>
+
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+
+    <nav class="sidebar-nav">
+      <a href="index.html" class="nav-item" data-nav="home">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="#" class="nav-item" id="aiMatchesNav" data-nav="matches">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>AI Matches</span>
+      </a>
+
+      <a href="projects.html" class="nav-item" data-nav="projects">
+        <i class="fa-regular fa-folder-open"></i>
+        <span>Projects</span>
+      </a>
+
+      <a href="team.html" class="nav-item active" data-nav="team">
+        <i class="fa-solid fa-users"></i>
+        <span>Team</span>
+      </a>
+
+      <a href="solver-profile.html" class="nav-item" data-nav="profile">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+
+      <a href="settings.html" class="nav-item" data-nav="settings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-landscape">
+      <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+    </div>
+  </aside>
+
+  <main class="main solver-page">
+
+    <header class="page-header">
+      <div>
+        <h1>Team</h1>
+        <p>Mentor and selected Student / Researcher members for the active project.</p>
+      </div>
+
+      <div class="team-count" id="teamCount">0/4 Members</div>
+    </header>
+
+    <section id="teamContent"></section>
+
+  </main>
+</div>
+
+<!-- Member profile modal -->
+<div class="modal" id="memberModal">
+  <div class="solver-profile-modal">
+
+    <button
+      class="modal-close"
+      id="memberModalClose"
+      type="button"
+      aria-label="Close member profile"
+    >
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="solver-profile-modal-head">
+      <div class="member-avatar" id="memberModalAvatar">S</div>
+
+      <div>
+        <h2 id="memberModalName"></h2>
+        <p id="memberModalRole"></p>
+      </div>
+    </div>
+
+    <div id="memberModalBody" class="profile-modal-details"></div>
+
+  </div>
+</div>
+
+<script>
+const role = localStorage.getItem("solverRole") || "student";
+
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+
+const teamCount = document.getElementById("teamCount");
+const teamContent = document.getElementById("teamContent");
+
+const memberModal = document.getElementById("memberModal");
+const memberModalClose = document.getElementById("memberModalClose");
+const memberModalName = document.getElementById("memberModalName");
+const memberModalAvatar = document.getElementById("memberModalAvatar");
+const memberModalRole = document.getElementById("memberModalRole");
+const memberModalBody = document.getElementById("memberModalBody");
+
+const roleLabels = {
+  student: "Student",
+  researcher: "Researcher",
+  startup: "Startup",
+  company: "Company",
+  msme: "MSME",
+  csr: "CSR",
+  "research-lab": "Research Lab",
+  "innovation-hub": "Innovation Hub"
+};
+
+
+/* -----------------------------
+   ROLE-AWARE NAVIGATION
+----------------------------- */
+
+function setRoleAwareNavigation() {
+  const matchesLink = document.getElementById("aiMatchesNav");
+
+  if (!matchesLink) return;
+
+  if (role === "student" || role === "researcher") {
+    matchesLink.href = "ai-matches-student.html";
+  } else {
+    matchesLink.href = "ai-matches-industry.html";
+  }
+}
+
+setRoleAwareNavigation();
+
+
+/* -----------------------------
+   ACTIVE PROJECT
+----------------------------- */
+
+function getAcceptedProject() {
+  try {
+    return JSON.parse(
+      localStorage.getItem("acceptedProject") || "null"
+    );
+  } catch {
+    return null;
+  }
+}
+
+const accepted = getAcceptedProject();
+
+
+/* -----------------------------
+   TEAM DATA
+----------------------------- */
+
+function getProjectTeam() {
+  try {
+    const stored = JSON.parse(
+      localStorage.getItem("projectTeam") || "[]"
+    );
+
+    return Array.isArray(stored) ? stored : [];
+  } catch {
+    return [];
+  }
+}
+
+function getMembers() {
+  const all = getProjectTeam();
+
+  if (!accepted || !accepted.problem) {
+    return [];
+  }
+
+  return all.filter(member =>
+    member &&
+    member.problem === accepted.problem
+  );
+}
+
+
+/* -----------------------------
+   SAFE TEXT HELPERS
+----------------------------- */
+
+function safeText(value, fallback = "") {
+  if (value === null || value === undefined || value === "") {
+    return fallback;
+  }
+
+  return String(value);
+}
+
+function getInitial(name, fallback = "M") {
+  const text = safeText(name, fallback).trim();
+
+  return text
+    ? text.charAt(0).toUpperCase()
+    : fallback;
+}
+
+
+/* -----------------------------
+   MEMBER PROFILE
+----------------------------- */
+
+function profileDetails(profile = {}) {
+  const fields = Array.isArray(profile.roleFields)
+    ? profile.roleFields.filter(field =>
+        field &&
+        field.value !== null &&
+        field.value !== undefined &&
+        String(field.value).trim() !== ""
+      )
+    : [];
+
+  let html = "";
+
+  if (profile.location) {
+    html += `
+      <div>
+        <span>Location</span>
+        <strong></strong>
+      </div>
+    `;
+  }
+
+  if (profile.about) {
+    html += `
+      <div class="profile-modal-wide">
+        <span>Bio</span>
+        <p></p>
+      </div>
+    `;
+  }
+
+  fields.forEach(field => {
+    html += `
+      <div>
+        <span></span>
+        <strong></strong>
+      </div>
+    `;
+  });
+
+  const wrapper = document.createElement("div");
+  wrapper.innerHTML = html;
+
+  let index = 0;
+
+  if (profile.location) {
+    const locationStrong = wrapper.querySelector("div strong");
+    if (locationStrong) {
+      locationStrong.textContent = safeText(profile.location);
+    }
+    index++;
+  }
+
+  if (profile.about) {
+    const bio = wrapper.querySelector(".profile-modal-wide p");
+    if (bio) {
+      bio.textContent = safeText(profile.about);
+    }
+  }
+
+  const fieldElements = wrapper.querySelectorAll(
+    "div:not(.profile-modal-wide)"
+  );
+
+  let fieldIndex = profile.location ? 1 : 0;
+
+  fields.forEach((field, i) => {
+    const element = fieldElements[fieldIndex + i];
+
+    if (!element) return;
+
+    const spans = element.querySelectorAll("span, strong");
+
+    if (spans[0]) {
+      spans[0].textContent = safeText(field.label, "Details");
+    }
+
+    if (spans[1]) {
+      spans[1].textContent = safeText(field.value);
+    }
+  });
+
+  return wrapper.innerHTML;
+}
+
+
+/* -----------------------------
+   MEMBER MODAL
+----------------------------- */
+
+function openMember(member) {
+  if (!member) return;
+
+  memberModalName.textContent =
+    safeText(member.name, "Member");
+
+  memberModalAvatar.textContent =
+    getInitial(member.name);
+
+  memberModalRole.textContent =
+    roleLabels[member.role] || "Solver";
+
+  memberModalBody.innerHTML =
+    profileDetails(member.profile || {});
+
+  memberModal.classList.add("show");
+
+  memberModalClose.focus();
+}
+
+function closeMemberModal() {
+  memberModal.classList.remove("show");
+}
+
+
+/* -----------------------------
+   RENDER TEAM
+----------------------------- */
+
+function renderTeam() {
+
+  if (!accepted) {
+
+    teamCount.textContent = "0/4 Members";
+
+    teamContent.innerHTML = `
+      <div class="solver-empty">
+        <i class="fa-solid fa-users"></i>
+
+        <h2>No active team</h2>
+
+        <p>
+          An Industry / Innovation mentor must accept a project first.
+        </p>
+
+        <a
+          href="ai-matches-industry.html"
+          class="solver-primary-link"
+        >
+          Go to AI Matches
+        </a>
+      </div>
+    `;
+
+    return;
+  }
+
+
+  const members = getMembers();
+
+  teamCount.textContent =
+    `${members.length}/4 Members`;
+
+
+  /* -----------------------------
+     PROJECT BANNER
+  ----------------------------- */
+
+  const projectImage =
+    safeText(
+      accepted.image,
+      "assets/jharkhand-landscape.jpg"
+    );
+
+  const projectName =
+    safeText(
+      accepted.problem,
+      "Active Project"
+    );
+
+  const projectLocation =
+    safeText(
+      accepted.location,
+      "Jharkhand"
+    );
+
+
+  teamContent.innerHTML = `
+    <div class="team-project-banner">
+
+      <img
+        src="${projectImage}"
+        alt="${projectName}"
+        onerror="this.onerror=null;this.src='assets/jharkhand-landscape.jpg';"
+      >
+
+      <div>
+        <span>ACTIVE PROJECT</span>
+        <h2></h2>
+        <p></p>
+      </div>
+
+    </div>
+
+    <div class="team-grid" id="teamGrid"></div>
+  `;
+
+
+  const bannerHeading =
+    teamContent.querySelector(".team-project-banner h2");
+
+  const bannerLocation =
+    teamContent.querySelector(".team-project-banner p");
+
+  if (bannerHeading) {
+    bannerHeading.textContent = projectName;
+  }
+
+  if (bannerLocation) {
+    bannerLocation.textContent = projectLocation;
+  }
+
+
+  const grid =
+    document.getElementById("teamGrid");
+
+
+  /* -----------------------------
+     MENTOR
+  ----------------------------- */
+
+  const mentor =
+    accepted.mentor || {};
+
+  const mentorName =
+    safeText(mentor.name, "Mentor");
+
+  const mentorOrganization =
+    safeText(
+      mentor.organization || mentor.role,
+      "Industry Partner"
+    );
+
+
+  const mentorCard =
+    document.createElement("article");
+
+  mentorCard.className =
+    "team-member-card mentor-card";
+
+  mentorCard.innerHTML = `
+    <div class="member-avatar"></div>
+
+    <div class="team-member-info">
+      <span class="member-type">
+        Mentor / Organization Lead
+      </span>
+
+      <h3></h3>
+
+      <p></p>
+    </div>
+  `;
+
+  mentorCard.querySelector(".member-avatar").textContent =
+    getInitial(mentorName);
+
+  mentorCard.querySelector("h3").textContent =
+    mentorName;
+
+  mentorCard.querySelector("p").textContent =
+    mentorOrganization;
+
+  grid.appendChild(mentorCard);
+
+
+  /* -----------------------------
+     STUDENT / RESEARCHER MEMBERS
+  ----------------------------- */
+
+  members.forEach(member => {
+
+    if (!member) return;
+
+    const memberName =
+      safeText(member.name, "Member");
+
+    const memberRole =
+      roleLabels[member.role] || "Solver";
+
+    const memberLocation =
+      safeText(
+        member.profile?.location,
+        "JAN SETU Member"
+      );
+
+
+    const card =
+      document.createElement("article");
+
+    card.className =
+      "team-member-card";
+
+
+    card.innerHTML = `
+      <div class="member-avatar"></div>
+
+      <div class="team-member-info">
+        <span class="member-type"></span>
+
+        <h3></h3>
+
+        <p></p>
+      </div>
+
+      <div class="member-actions">
+
+        <button
+          class="view-member-btn"
+          type="button"
+        >
+          View Profile
+        </button>
+
+        ${
+          role === "student" || role === "researcher"
+            ? ""
+            : `
+              <button
+                class="remove-member-btn"
+                type="button"
+              >
+                Remove
+              </button>
+            `
+        }
+
+      </div>
+    `;
+
+
+    card.querySelector(".member-avatar").textContent =
+      getInitial(memberName);
+
+    card.querySelector(".member-type").textContent =
+      memberRole;
+
+    card.querySelector("h3").textContent =
+      memberName;
+
+    card.querySelector("p").textContent =
+      memberLocation;
+
+
+    /* View Profile */
+
+    const viewButton =
+      card.querySelector(".view-member-btn");
+
+    if (viewButton) {
+      viewButton.addEventListener(
+        "click",
+        () => openMember(member)
+      );
+    }
+
+
+    /* Remove Member */
+
+    const removeButton =
+      card.querySelector(".remove-member-btn");
+
+    if (removeButton) {
+
+      removeButton.addEventListener(
+        "click",
+        () => {
+
+          const all =
+            getProjectTeam();
+
+          const updated =
+            all.filter(item =>
+              !(
+                item &&
+                item.problem === member.problem &&
+                item.name === member.name
+              )
+            );
+
+          localStorage.setItem(
+            "projectTeam",
+            JSON.stringify(updated)
+          );
+
+          renderTeam();
+        }
+      );
+    }
+
+
+    grid.appendChild(card);
+  });
+
+
+  /* -----------------------------
+     EMPTY TEAM
+  ----------------------------- */
+
+  if (!members.length) {
+
+    const empty =
+      document.createElement("div");
+
+    empty.className =
+      "team-inline-empty";
+
+    empty.innerHTML = `
+      <p>No Student / Researcher members added yet.</p>
+
+      ${
+        role === "student" || role === "researcher"
+          ? ""
+          : `
+            <a href="ai-matches-industry.html">
+              View proposals and add members
+            </a>
+          `
+      }
+    `;
+
+    grid.appendChild(empty);
+  }
+}
+
+
+/* -----------------------------
+   MODAL EVENTS
+----------------------------- */
+
+memberModalClose.addEventListener(
+  "click",
+  closeMemberModal
+);
+
+memberModal.addEventListener(
+  "click",
+  event => {
+    if (event.target === memberModal) {
+      closeMemberModal();
+    }
+  }
+);
+
+document.addEventListener(
+  "keydown",
+  event => {
+
+    if (
+      event.key === "Escape" &&
+      memberModal.classList.contains("show")
+    ) {
+      closeMemberModal();
+    }
+  }
+);
+
+
+/* -----------------------------
+   SIDEBAR
+----------------------------- */
+
+sidebarToggle.addEventListener(
+  "click",
+  () => {
+
+    sidebar.classList.toggle("collapsed");
+
+    document
+      .querySelector(".app")
+      .classList.toggle("sidebar-collapsed");
+  }
+);
+
+
+/* -----------------------------
+   INITIAL RENDER
+----------------------------- */
+
+renderTeam();
+</script>
+
+</body>
+</html>

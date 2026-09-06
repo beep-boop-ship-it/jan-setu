@@ -1,0 +1,271 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Projects | JAN SETU</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+<div class="app">
+  <aside class="sidebar" id="sidebar">
+    <a href="index.html" class="sidebar-logo"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+      <a href="index.html" class="nav-item" data-nav="home">
+        <i class="fa-solid fa-house"></i><span>Home</span>
+      </a>
+      <a href="#" class="nav-item" id="aiMatchesNav" data-nav="matches">
+        <i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span>
+      </a>
+      <a href="projects.html" class="nav-item active" data-nav="projects">
+        <i class="fa-regular fa-folder-open"></i><span>Projects</span>
+      </a>
+      <a href="team.html" class="nav-item" data-nav="team">
+        <i class="fa-solid fa-users"></i><span>Team</span>
+      </a>
+      <a href="solver-profile.html" class="nav-item" data-nav="profile">
+        <i class="fa-solid fa-user"></i><span>Profile</span>
+      </a>
+      <a href="settings.html" class="nav-item" data-nav="settings">
+        <i class="fa-solid fa-gear"></i><span>Settings</span>
+      </a>
+    </nav>
+
+    <div class="sidebar-landscape">
+      <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+    </div>
+  </aside>
+
+  <main class="main solver-page">
+    <header class="page-header">
+      <div>
+        <h1>Projects</h1>
+        <p>Your submitted or accepted JAN SETU projects.</p>
+      </div>
+    </header>
+
+    <section id="projectsContent" class="solver-content-list"></section>
+  </main>
+</div>
+
+<script>
+const roleLabels = {
+  student: "Student",
+  researcher: "Researcher",
+  startup: "Startup",
+  company: "Company",
+  msme: "MSME",
+  csr: "CSR",
+  "research-lab": "Research Lab",
+  "innovation-hub": "Innovation Hub"
+};
+
+const storedRole = localStorage.getItem("solverRole");
+const role = roleLabels[storedRole] ? storedRole : "student";
+
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const content = document.getElementById("projectsContent");
+
+function setRoleAwareNavigation() {
+  const matchesLink = document.getElementById("aiMatchesNav");
+
+  if (!matchesLink) return;
+
+  matchesLink.href =
+    (role === "student" || role === "researcher")
+      ? "ai-matches-student.html"
+      : "ai-matches-industry.html";
+}
+
+function readJSON(key, fallback) {
+  try {
+    const value = localStorage.getItem(key);
+
+    if (!value) return fallback;
+
+    const parsed = JSON.parse(value);
+    return parsed ?? fallback;
+  } catch {
+    return fallback;
+  }
+}
+
+function escapeHTML(value) {
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+function emptyState(message, href, label) {
+  content.innerHTML = `
+    <div class="solver-empty">
+      <i class="fa-regular fa-folder-open"></i>
+      <h2>No projects yet</h2>
+      <p>${escapeHTML(message)}</p>
+      <a href="${escapeHTML(href)}" class="solver-primary-link">${escapeHTML(label)}</a>
+    </div>
+  `;
+}
+
+setRoleAwareNavigation();
+
+const accepted = readJSON("acceptedProject", null);
+const proposals = readJSON("submittedProposals", []);
+const team = readJSON("projectTeam", []);
+
+const safeProposals = Array.isArray(proposals) ? proposals : [];
+const safeTeam = Array.isArray(team) ? team : [];
+
+if (role === "student" || role === "researcher") {
+  if (!safeProposals.length) {
+    emptyState(
+      "Submit a proposal from AI Matches to start a project journey.",
+      "ai-matches-student.html",
+      "Go to AI Matches"
+    );
+  } else {
+    safeProposals.forEach(proposal => {
+      if (!proposal || typeof proposal !== "object") return;
+
+      const problem = String(proposal.problem || "Untitled Project");
+
+      const selected =
+        accepted &&
+        accepted.problem === problem &&
+        safeTeam.some(member =>
+          member &&
+          member.problem === problem &&
+          member.name === proposal.submittedBy
+        );
+
+      const status =
+        selected
+          ? "Selected / Active"
+          : accepted?.problem === problem
+            ? "Under Team Selection"
+            : "Proposal Submitted";
+
+      const card = document.createElement("article");
+      card.className = "solver-project-card";
+
+      card.innerHTML = `
+        <div>
+          <span class="status-pill ${selected ? "in-progress" : "verified"}">
+            ${escapeHTML(status)}
+          </span>
+
+          <h2>${escapeHTML(problem)}</h2>
+
+          <p>
+            ${escapeHTML(proposal.approach || "Proposal submitted.")}
+          </p>
+
+          <div class="public-problem-meta">
+            <span>
+              <i class="fa-solid fa-layer-group"></i>
+              ${escapeHTML(proposal.category || "Civic Problem")}
+            </span>
+
+            <span>
+              <i class="fa-regular fa-clock"></i>
+              ${escapeHTML(proposal.timeline || "Timeline not set")}
+            </span>
+          </div>
+        </div>
+
+        <a href="team.html" class="solver-secondary-link">
+          View Team
+        </a>
+      `;
+
+      content.appendChild(card);
+    });
+
+    if (!content.children.length) {
+      emptyState(
+        "Submit a proposal from AI Matches to start a project journey.",
+        "ai-matches-student.html",
+        "Go to AI Matches"
+      );
+    }
+  }
+} else {
+  if (!accepted || typeof accepted !== "object") {
+    emptyState(
+      "Accept one matched project before building a team.",
+      "ai-matches-industry.html",
+      "Review AI Matches"
+    );
+  } else {
+    const acceptedProblem = String(
+      accepted.problem || "Untitled Project"
+    );
+
+    const count = safeTeam.filter(member =>
+      member &&
+      member.problem === acceptedProblem
+    ).length;
+
+    const image = accepted.image
+      ? escapeHTML(accepted.image)
+      : "";
+
+    const imageHTML = image
+      ? `<img src="${image}" alt="${escapeHTML(acceptedProblem)}">`
+      : "";
+
+    content.innerHTML = `
+      <article class="solver-project-card active-project-card">
+        ${imageHTML}
+
+        <div>
+          <span class="status-pill in-progress">
+            Active Project
+          </span>
+
+          <h2>${escapeHTML(acceptedProblem)}</h2>
+
+          <p>
+            ${escapeHTML(accepted.description || "Project description not available.")}
+          </p>
+
+          <div class="public-problem-meta">
+            <span>
+              <i class="fa-solid fa-location-dot"></i>
+              ${escapeHTML(accepted.location || "Location not set")}
+            </span>
+
+            <span>
+              <i class="fa-solid fa-users"></i>
+              ${count}/4 team members
+            </span>
+          </div>
+        </div>
+
+        <a href="team.html" class="solver-primary-link">
+          Manage Team
+        </a>
+      </article>
+    `;
+  }
+}
+
+sidebarToggle.addEventListener("click", () => {
+  const collapsed = sidebar.classList.toggle("collapsed");
+  document.querySelector(".app").classList.toggle("sidebar-collapsed");
+
+  sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
+});
+</script>
+</body>
+</html>
+```

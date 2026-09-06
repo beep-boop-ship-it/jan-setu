@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -14,12 +15,13 @@
     </a>
     <nav class="nav-links">
         <a href="index.html">Home</a>
-        <a href="#">About</a>
-        <a href="#">Initiatives</a>
-        <a href="#">Explore Jharkhand</a>
-        <a href="#">Stories</a>
-        <a href="#">Resources</a>
-        <a href="#">Contact</a>
+        <a href="problems.html">List of Problems</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#initiatives">Initiatives</a>
+        <a href="index.html#explore">Explore Jharkhand</a>
+        <a href="index.html#stories">Stories</a>
+        <a href="index.html#resources">Resources</a>
+        <a href="index.html#contact">Contact</a>
     </nav>
 </header>
 
@@ -27,7 +29,7 @@
     <div class="result-card" id="resultCard">
         <div class="result-icon" id="resultIcon">✓</div>
 
-        <h1 id="resultTitle">Problem Accepted!</h1>
+        <h1 id="resultTitle">Problem Submitted!</h1>
         <p class="result-message" id="resultMessage"></p>
 
         <div class="problem-id-box" id="problemIdBox">
@@ -38,7 +40,7 @@
         <div class="result-info" id="resultInfo"></div>
 
         <div class="result-actions">
-            <button class="result-primary" id="primaryBtn"></button>
+            <button class="result-primary" id="primaryBtn" type="button"></button>
             <a href="index.html" class="result-secondary">Back to Home</a>
         </div>
     </div>
@@ -47,9 +49,9 @@
 <div class="result-landscape"></div>
 
 <script>
-// Use: ?status=accepted | ?status=review | ?status=declined
 const params = new URLSearchParams(window.location.search);
-const status = params.get("status") || "accepted";
+const status = (params.get("status") || "submitted").toLowerCase();
+const reportId = params.get("id");
 
 const card = document.getElementById("resultCard");
 const icon = document.getElementById("resultIcon");
@@ -60,38 +62,48 @@ const problemId = document.getElementById("problemId");
 const info = document.getElementById("resultInfo");
 const primaryBtn = document.getElementById("primaryBtn");
 
-if (status === "accepted") {
+if (status === "submitted" || status === "accepted") {
     card.classList.add("accepted");
 
-    title.textContent = "Problem Accepted!";
+    title.textContent = "Problem Submitted!";
     message.textContent =
-        "Your report has been successfully verified by JAN SETU.";
+        "Your report has been successfully submitted to JAN SETU.";
 
-    // Generate ID only after acceptance
-    let savedId = localStorage.getItem("problemId");
+    const trackId = sessionStorage.getItem("newReportTrackId");
 
-    if (!savedId) {
-        savedId =
-            "JS-2026-" + Math.floor(1000 + Math.random() * 9000);
+    if (trackId && reportId && /^\d+$/.test(reportId)) {
 
-        localStorage.setItem("problemId", savedId);
+        problemId.textContent = trackId;
+
+        localStorage.setItem("problemId", trackId);
+        localStorage.setItem("activeTrackProblemId", reportId);
+
+        info.innerHTML =
+            "<strong>Your problem has been recorded.</strong><br>" +
+            "Keep this Track ID safe. You will need it to track your problem.";
+
+        primaryBtn.textContent = "Track Problem";
+        primaryBtn.onclick = () => {
+            window.location.href =
+                `track-problem-final.html?id=${encodeURIComponent(reportId)}`;
+        };
+
+        sessionStorage.removeItem("newReportTrackId");
+
+    } else {
+        idBox.style.display = "none";
+
+        info.innerHTML =
+            "<strong>Your report was submitted.</strong><br>" +
+            "Your Track ID could not be retrieved. Please try tracking it later.";
+
+        primaryBtn.textContent = "View Problems";
+        primaryBtn.onclick = () => {
+            window.location.href = "problems.html";
+        };
     }
 
-    problemId.textContent = savedId;
-
-    info.innerHTML =
-        "<strong>Student matching will begin shortly.</strong><br>" +
-        "Suitable students will be notified based on the required skills.";
-
-    primaryBtn.textContent = "Track Problem";
-
-    // Open citizen tracking page
-    primaryBtn.onclick = function () {
-        window.location.href = "track-problem-final.html";
-    };
-}
-
-else if (status === "review") {
+} else if (status === "review") {
     card.classList.add("review");
 
     icon.textContent = "!";
@@ -103,12 +115,14 @@ else if (status === "review") {
 
     info.innerHTML =
         "<strong>Under Review</strong><br>" +
-        "You will be notified once the review is completed.";
+        "No public Problem ID is created until the report is approved.";
 
-    primaryBtn.textContent = "View Status";
-}
+    primaryBtn.textContent = "Back to Report";
+    primaryBtn.onclick = () => {
+        window.location.href = "report.html";
+    };
 
-else {
+} else {
     card.classList.add("declined");
 
     icon.textContent = "×";
@@ -123,8 +137,7 @@ else {
         "A similar report may already exist or more details may be required.";
 
     primaryBtn.textContent = "Edit & Resubmit";
-
-    primaryBtn.onclick = function () {
+    primaryBtn.onclick = () => {
         window.location.href = "report.html";
     };
 }

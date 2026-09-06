@@ -3,47 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>JAN SETU | Smarter, Stronger Jharkhand</title>
-
     <link rel="stylesheet" href="style.css">
-
-    <link
-        href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
-        rel="stylesheet"
-    >
-
-    <link
-        rel="stylesheet"
-        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-    >
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
-
 <body>
 
-<header class="navbar">
-    <a href="#" class="brand">
+<header class="navbar home-navbar">
+    <a href="#home" class="brand" aria-label="JAN SETU Home">
         <img src="assets/jansetu-logo.jpg" alt="Jan Setu logo">
     </a>
 
-    <nav class="nav-links">
-        <a href="#" class="active">Home</a>
-        <a href="#">About</a>
-        <a href="#">Initiatives</a>
-        <a href="#">Explore Jharkhand</a>
-        <a href="#">Stories</a>
-        <a href="#">Resources</a>
-        <a href="#">Contact</a>
+    <!-- These links match the sections available on this homepage. -->
+    <nav class="nav-links" aria-label="Main navigation">
+        <a href="#home" class="active" data-section="home">Home</a>
+        <a href="problems.html">List of Problems</a>
+        <a href="#about" data-section="about">About</a>
+        <a href="#initiatives" data-section="initiatives">Initiatives</a>
+        <a href="#explore" data-section="explore">Explore Jharkhand</a>
+        <a href="#stories" data-section="stories">Stories</a>
+        <a href="#resources" data-section="resources">Resources</a>
+        <a href="#contact" data-section="contact">Contact</a>
     </nav>
-
-
-
-
 </header>
 
 <main>
-    <section class="hero">
+    <!-- ================= HOME ================= -->
+    <section class="hero" id="home">
         <div class="hero-content">
+            <p class="home-eyebrow">PEOPLE • PROBLEMS • SOLUTIONS</p>
             <h1>
                 From local problems<br>
                 to <span>deployed solutions.</span>
@@ -55,74 +44,223 @@
             </p>
 
             <div class="hero-buttons">
-            <a href="reporter-login.html" class="primary-btn">
-            <i class="fa-regular fa-pen-to-square"></i>
-            Report a Problem
-            </a>
+                <a href="reporter-login.html" class="primary-btn">
+                    <i class="fa-regular fa-pen-to-square"></i>
+                    Report a Problem
+                </a>
 
-            <button class="secondary-btn">
-            <i class="fa-regular fa-lightbulb"></i>
-            Solve a Problem
-            </button>
+                <a href="solve-role.html" class="secondary-btn">
+                    <i class="fa-regular fa-lightbulb"></i>
+                    Solve a Problem
+                </a>
             </div>
         </div>
 
         <div class="hero-visual">
-            <!-- Keep your existing Jharkhand map image and its 390px size. -->
-            <img
-                src="./assets/jharkhandmap.jpg"
-                alt="Map of Jharkhand"
-                class="jharkhand-map"
->
+            <img src="assets/jharkhandmap.jpg" alt="Map of Jharkhand" class="jharkhand-map">
 
             <div class="stats">
                 <div class="stat-card">
-                    <div class="stat-icon people">
-                        <i class="fa-solid fa-users"></i>
-                    </div>
-                    <div>
-                        <strong>20+</strong>
-                        <span>Districts</span>
-                    </div>
+                    <div class="stat-icon people"><i class="fa-solid fa-users"></i></div>
+                    <div><strong>20+</strong><span>Districts</span></div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon citizens">
-                        <i class="fa-solid fa-people-group"></i>
-                    </div>
-                    <div>
-                        <strong>100K+</strong>
-                        <span>Citizens Engaged</span>
-                    </div>
+                    <div class="stat-icon citizens"><i class="fa-solid fa-people-group"></i></div>
+                    <div><strong>100K+</strong><span>Citizens Engaged</span></div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon initiatives">
-                        <i class="fa-regular fa-lightbulb"></i>
-                    </div>
-                    <div>
-                        <strong>250+</strong>
-                        <span>Active Initiatives</span>
-                    </div>
+                    <div class="stat-icon initiatives"><i class="fa-regular fa-lightbulb"></i></div>
+                    <div><strong>250+</strong><span>Active Initiatives</span></div>
                 </div>
 
                 <div class="stat-card">
-                    <div class="stat-icon impact">
-                        <i class="fa-regular fa-circle-check"></i>
-                    </div>
-                    <div>
-                        <strong>Real Impact</strong>
-                        <span>On the Ground</span>
-                    </div>
+                    <div class="stat-icon impact"><i class="fa-regular fa-circle-check"></i></div>
+                    <div><strong>Real Impact</strong><span>On the Ground</span></div>
                 </div>
             </div>
         </div>
 
         <div class="landscape"></div>
     </section>
+
+    <!-- ================= ABOUT ================= -->
+    <section class="home-section" id="about">
+        <div class="home-section-heading">
+            <p>ABOUT JAN SETU</p>
+            <h2>A bridge from community needs to practical solutions.</h2>
+            <span>Citizens report real problems. JAN SETU helps structure, match and move them toward collaborative action.</span>
+        </div>
+
+        <div class="about-grid">
+            <div class="about-copy">
+                <h3>One connected problem-solving journey</h3>
+                <p>
+                    JAN SETU brings citizens, students, researchers and industry or innovation partners into one clear workflow.
+                    Reports stay grounded in the information provided by the citizen, while solvers receive structured problems that are easier to understand and act on.
+                </p>
+                <a href="problems.html" class="home-text-link">Explore public problems <i class="fa-solid fa-arrow-right"></i></a>
+            </div>
+
+            <div class="about-points">
+                <article><i class="fa-solid fa-location-dot"></i><div><strong>Local first</strong><span>Problems start with real community needs and locations.</span></div></article>
+                <article><i class="fa-solid fa-shield-halved"></i><div><strong>Responsible review</strong><span>Clear reports move forward; unclear cases can be reviewed instead of being invented or assumed.</span></div></article>
+                <article><i class="fa-solid fa-people-group"></i><div><strong>Collaborative solving</strong><span>Students, researchers and partner organizations can work around the same problem statement.</span></div></article>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= INITIATIVES ================= -->
+    <section class="home-section home-section-soft" id="initiatives">
+        <div class="home-section-heading centered">
+            <p>INITIATIVES</p>
+            <h2>Built around the complete civic problem lifecycle.</h2>
+            <span>Each part of the platform supports a specific stage from reporting to implementation.</span>
+        </div>
+
+        <div class="initiative-grid">
+            <article class="initiative-card">
+                <div class="home-card-icon"><i class="fa-regular fa-pen-to-square"></i></div>
+                <h3>Community Reporting</h3>
+                <p>Citizens submit a problem with location, description and supporting photos.</p>
+                <a href="reporter-login.html">Report a Problem</a>
+            </article>
+
+            <article class="initiative-card">
+                <div class="home-card-icon"><i class="fa-solid fa-wand-magic-sparkles"></i></div>
+                <h3>AI-Assisted Structuring</h3>
+                <p>Approved reports can be organized into understandable problem statements without adding unsupported facts.</p>
+            </article>
+
+            <article class="initiative-card">
+                <div class="home-card-icon"><i class="fa-solid fa-user-group"></i></div>
+                <h3>Solver Matching</h3>
+                <p>Relevant problems are matched with student, researcher and industry or innovation profiles.</p>
+                <a href="solve-role.html">Join as a Solver</a>
+            </article>
+
+            <article class="initiative-card">
+                <div class="home-card-icon"><i class="fa-regular fa-circle-check"></i></div>
+                <h3>Project Collaboration</h3>
+                <p>Accepted projects move into a focused team workflow for execution, validation and resolution.</p>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= EXPLORE JHARKHAND ================= -->
+    <section class="home-section" id="explore">
+        <div class="explore-grid">
+            <div class="explore-map-wrap">
+                <img src="assets/jharkhandmap.jpg" alt="Jharkhand map">
+            </div>
+            <div class="explore-copy">
+                <p class="section-eyebrow">EXPLORE JHARKHAND</p>
+                <h2>Different districts. Different needs. One shared platform.</h2>
+                <p>
+                    JAN SETU is designed for problems that can vary by place—from roads, water and sanitation to education,
+                    skilling, public safety and local digital services.
+                </p>
+                <div class="explore-tags">
+                    <span>Roads</span><span>Water</span><span>Waste</span><span>Education</span>
+                    <span>Health</span><span>Environment</span><span>Skilling</span><span>Public Safety</span>
+                </div>
+                <a href="problems.html" class="home-outline-link">View Problems Across Jharkhand</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- ================= STORIES ================= -->
+    <section class="home-section home-section-soft" id="stories">
+        <div class="home-section-heading centered">
+            <p>STORIES</p>
+            <h2>See how a problem can move through the JAN SETU journey.</h2>
+            <span>These prototype examples demonstrate the kinds of civic challenges the platform can organize and track.</span>
+        </div>
+
+        <div class="story-grid">
+            <article class="story-card">
+                <img src="assets/smart-waste-1.png" alt="Smart waste collection">
+                <div><span>NEW / OPEN</span><h3>Smart Waste Collection Monitoring</h3><p>A city waste-monitoring problem ready for relevant solvers to explore.</p></div>
+            </article>
+            <article class="story-card">
+                <img src="assets/flood-warning-1.png" alt="Flood monitoring">
+                <div><span>IN PROGRESS</span><h3>Flood Early Warning</h3><p>A disaster-management challenge shown as an active project in the prototype.</p></div>
+            </article>
+            <article class="story-card">
+                <img src="assets/rural-skilling-1.png" alt="Rural digital learning">
+                <div><span>VALIDATION</span><h3>Rural Youth Skilling</h3><p>A digital-skilling challenge demonstrating the validation stage.</p></div>
+            </article>
+        </div>
+    </section>
+
+    <!-- ================= RESOURCES ================= -->
+    <section class="home-section" id="resources">
+        <div class="home-section-heading centered">
+            <p>RESOURCES</p>
+            <h2>Go directly to the part of JAN SETU you need.</h2>
+        </div>
+
+        <div class="resource-grid">
+            <a href="reporter-login.html" class="resource-card">
+                <i class="fa-regular fa-pen-to-square"></i>
+                <div><strong>Report a Problem</strong><span>Verify your phone and submit a community issue.</span></div>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="problems.html" class="resource-card">
+                <i class="fa-solid fa-list-check"></i>
+                <div><strong>List of Problems</strong><span>Browse public problems and their current status.</span></div>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+            <a href="solve-role.html" class="resource-card">
+                <i class="fa-regular fa-lightbulb"></i>
+                <div><strong>Solve a Problem</strong><span>Continue as a student, researcher or industry / innovation partner.</span></div>
+                <i class="fa-solid fa-arrow-right"></i>
+            </a>
+        </div>
+    </section>
+
+    <!-- ================= CONTACT ================= -->
+    <section class="home-contact" id="contact">
+        <div>
+            <p>CONTACT</p>
+            <h2>Ready to contribute to a stronger Jharkhand?</h2>
+            <span>Choose the citizen or solver journey and JAN SETU will guide you to the right next step.</span>
+        </div>
+        <div class="home-contact-actions">
+            <a href="reporter-login.html" class="primary-btn">Report a Problem</a>
+            <a href="solve-role.html" class="home-contact-secondary">Become a Solver</a>
+        </div>
+    </section>
 </main>
 
+<footer class="home-footer">
+    <a href="#home" class="footer-brand"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
+    <p>JAN SETU — connecting community problems with collaborative solutions.</p>
+    <a href="#home">Back to top <i class="fa-solid fa-arrow-up"></i></a>
+</footer>
 
+<script>
+// Keep the homepage navigation highlight in sync while scrolling.
+const sectionLinks = [...document.querySelectorAll('.home-navbar .nav-links a[data-section]')];
+const sections = sectionLinks
+    .map(link => document.getElementById(link.dataset.section))
+    .filter(Boolean);
+
+const observer = new IntersectionObserver(entries => {
+    const visible = entries
+        .filter(entry => entry.isIntersecting)
+        .sort((a, b) => b.intersectionRatio - a.intersectionRatio)[0];
+
+    if (!visible) return;
+
+    sectionLinks.forEach(link => {
+        link.classList.toggle('active', link.dataset.section === visible.target.id);
+    });
+}, { rootMargin: '-30% 0px -55% 0px', threshold: [0, 0.2, 0.5] });
+
+sections.forEach(section => observer.observe(section));
+</script>
 
 </body>
 </html>

@@ -1,0 +1,244 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+```
+<title>Solve a Problem | JAN SETU</title>
+
+<link rel="stylesheet" href="style.css">
+
+<link rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+```
+
+</head>
+
+<body>
+
+```
+<!-- Navbar -->
+<header class="navbar">
+
+    <a href="index.html" class="brand">
+        <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
+    </a>
+
+    <nav class="nav-links" aria-label="Main navigation">
+        <a href="index.html">Home</a>
+        <a href="problems.html">List of Problems</a>
+        <a href="index.html#about">About</a>
+        <a href="index.html#initiatives">Initiatives</a>
+        <a href="index.html#explore">Explore Jharkhand</a>
+        <a href="index.html#stories">Stories</a>
+        <a href="index.html#resources">Resources</a>
+        <a href="index.html#contact">Contact</a>
+    </nav>
+
+</header>
+
+
+<main class="solve-role-page">
+
+    <div class="solve-role-card">
+
+        <p class="solve-label">
+            SOLVE A PROBLEM
+        </p>
+
+        <h1>
+            Join the <span>Solution</span>
+        </h1>
+
+        <p class="solve-text">
+            Select your category and role to get started.
+        </p>
+
+
+        <!-- Category -->
+        <label for="category">
+            Select Category
+        </label>
+
+        <select id="category">
+
+            <option value="">
+                Select Category
+            </option>
+
+            <option value="university">
+                University / HEI
+            </option>
+
+            <option value="industry">
+                Industry & Innovation
+            </option>
+
+        </select>
+
+
+        <!-- Role -->
+        <label for="role">
+            Select Role
+        </label>
+
+        <select id="role" disabled>
+
+            <option value="">
+                Select Role
+            </option>
+
+        </select>
+
+
+        <!-- Continue -->
+        <button
+            id="continueBtn"
+            class="solve-continue-btn"
+            type="button">
+
+            Continue →
+
+        </button>
+
+    </div>
+
+</main>
+
+
+<!-- Background -->
+<div class="solve-landscape"></div>
+
+
+<script>
+
+    const category =
+        document.getElementById("category");
+
+    const role =
+        document.getElementById("role");
+
+    const continueBtn =
+        document.getElementById("continueBtn");
+
+
+    // Change roles according to category
+    category.addEventListener(
+        "change",
+        function () {
+
+            role.innerHTML =
+                '<option value="">Select Role</option>';
+
+            role.value = "";
+
+
+            // University / HEI
+            if (category.value === "university") {
+
+                role.disabled = false;
+
+                role.innerHTML += `
+                    <option value="student">
+                        Student
+                    </option>
+
+                    <option value="researcher">
+                        Researcher
+                    </option>
+                `;
+
+            }
+
+
+            // Industry & Innovation
+            else if (category.value === "industry") {
+
+                role.disabled = false;
+
+                role.innerHTML += `
+                    <option value="startup">
+                        Startup
+                    </option>
+
+                    <option value="company">
+                        Company
+                    </option>
+
+                    <option value="msme">
+                        MSME
+                    </option>
+
+                    <option value="csr">
+                        CSR
+                    </option>
+
+                    <option value="research-lab">
+                        Research Lab
+                    </option>
+
+                    <option value="innovation-hub">
+                        Innovation Hub
+                    </option>
+                `;
+
+            }
+
+
+            else {
+
+                role.disabled = true;
+
+            }
+
+        }
+    );
+
+
+    // Continue button
+    continueBtn.addEventListener(
+        "click",
+        function () {
+
+            if (
+                category.value === "" ||
+                role.value === ""
+            ) {
+
+                alert(
+                    "Please select category and role."
+                );
+
+                return;
+
+            }
+
+
+            // Save selected category
+            localStorage.setItem(
+                "solverCategory",
+                category.value
+            );
+
+
+            // Save selected role
+            localStorage.setItem(
+                "solverRole",
+                role.value
+            );
+
+
+            // Open common signup page
+            window.location.href =
+                "solver-signup.html";
+
+        }
+    );
+
+</script>
+```
+
+</body>
+</html>

@@ -1,0 +1,1640 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Matches | JAN SETU</title>
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+</head>
+<body>
+
+<div class="app">
+
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <a href="index.html" class="sidebar-logo">
+      <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+    </a>
+
+    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+      <i class="fa-solid fa-angles-left"></i>
+    </button>
+
+    <nav class="sidebar-nav" aria-label="Main navigation">
+
+      <a href="index.html" class="nav-item">
+        <i class="fa-solid fa-house"></i><span>Home</span>
+      </a>
+
+      <a href="ai-matches-student.html" class="nav-item active">
+        <i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span>
+      </a>
+
+      <a href="projects.html" class="nav-item">
+        <i class="fa-regular fa-folder-open"></i><span>Projects</span>
+      </a>
+
+      <a href="team.html" class="nav-item">
+        <i class="fa-solid fa-users"></i><span>Team</span>
+      </a>
+
+      <a href="solver-profile.html" class="nav-item">
+        <i class="fa-solid fa-user"></i><span>Profile</span>
+      </a>
+
+      <a href="settings.html" class="nav-item">
+        <i class="fa-solid fa-gear"></i><span>Settings</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-landscape">
+      <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+    </div>
+
+  </aside>
+
+
+  <!-- MAIN -->
+  <main class="main">
+
+    <header class="page-header">
+      <div>
+        <h1>AI Matches</h1>
+        <p>Problems recommended for your skills and interests.</p>
+      </div>
+
+      <div class="mini-profile">
+        <div class="mini-avatar" id="miniAvatar">A</div>
+
+        <div>
+          <strong id="miniName">Your Name</strong>
+          <span id="miniRole">Student</span>
+        </div>
+      </div>
+    </header>
+
+
+    <section class="matches" id="matches">
+
+      <div id="loadingState" class="solver-empty">
+        <i class="fa-solid fa-spinner fa-spin"></i>
+        <h2>Finding matches...</h2>
+        <p>Loading civic problems from JAN SETU.</p>
+      </div>
+
+    </section>
+
+  </main>
+
+</div>
+
+
+<!-- PROPOSAL MODAL -->
+<div class="modal" id="proposalModal">
+
+  <div class="proposal-modal">
+
+    <button class="modal-close" id="proposalClose" type="button" aria-label="Close proposal form">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <div class="proposal-title">
+      <i class="fa-regular fa-paper-plane"></i>
+
+      <div>
+        <h2>Submit Proposal</h2>
+        <p>Share your idea and approach for this problem.</p>
+      </div>
+    </div>
+
+
+    <div class="proposal-layout">
+
+      <form id="proposalForm">
+
+        <div class="field">
+          <label for="proposalApproach">
+            Your Proposed Approach <span>*</span>
+          </label>
+
+          <textarea
+            id="proposalApproach"
+            maxlength="1000"
+            placeholder="Explain your solution approach, methodology and key steps..."
+            required></textarea>
+        </div>
+
+
+        <div class="field">
+          <label for="expectedOutcome">
+            Expected Outcome <span>*</span>
+          </label>
+
+          <textarea
+            id="expectedOutcome"
+            maxlength="500"
+            placeholder="What impact do you expect this solution to create?"
+            required></textarea>
+        </div>
+
+
+        <div class="field">
+          <label for="tools">
+            Tools / Technologies <span>*</span>
+          </label>
+
+          <input
+            id="tools"
+            type="text"
+            placeholder="e.g. Python, IoT sensors, React, GIS..."
+            required>
+        </div>
+
+
+        <div class="field">
+          <label for="timeline">
+            Estimated Timeline <span>*</span>
+          </label>
+
+          <select id="timeline" required>
+            <option value="">Select timeline</option>
+            <option>1–2 weeks</option>
+            <option>3–4 weeks</option>
+            <option>1–2 months</option>
+            <option>2–3 months</option>
+          </select>
+        </div>
+
+
+        <div class="field">
+          <label for="supportLink">
+            Supporting Link <em>(Optional)</em>
+          </label>
+
+          <input
+            id="supportLink"
+            type="url"
+            placeholder="Google Drive, GitHub, etc.">
+        </div>
+
+
+        <div class="proposal-actions">
+
+          <button class="cancel-btn" id="proposalCancel" type="button">
+            Cancel
+          </button>
+
+          <button class="proposal-submit-btn" type="submit">
+            <i class="fa-regular fa-paper-plane"></i>
+            Submit Proposal
+          </button>
+
+        </div>
+
+      </form>
+
+
+      <!-- AUTO-FILLED SUMMARY -->
+      <aside class="problem-summary">
+
+        <img id="summaryImage" src="" alt="Problem">
+
+        <h3 id="summaryTitle">Problem Title</h3>
+
+        <p id="summaryDescription"></p>
+
+        <div class="summary-meta">
+
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            <span id="summaryLocation"></span>
+          </span>
+
+          <span>
+            <i class="fa-solid fa-building-columns"></i>
+            <span id="summaryCategory"></span>
+          </span>
+
+        </div>
+
+
+        <div class="summary-skills">
+
+          <strong>Required Skills</strong>
+
+          <div id="summarySkills"></div>
+
+        </div>
+
+      </aside>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<!-- IMAGE MODAL -->
+<div class="modal" id="imageModal">
+
+  <div class="gallery-card">
+
+    <button class="modal-close" id="galleryClose" type="button" aria-label="Close image gallery">
+      <i class="fa-solid fa-xmark"></i>
+    </button>
+
+    <h3 id="galleryTitle">Problem Images</h3>
+
+    <img id="galleryImage" class="gallery-image" src="" alt="Problem image">
+
+    <div class="thumbnails" id="thumbnails"></div>
+
+  </div>
+
+</div>
+
+
+<!-- NOT INTERESTED -->
+<div class="modal" id="confirmModal">
+
+  <div class="confirm-card">
+
+    <h3>Not interested?</h3>
+
+    <p>Are you sure you're not interested in this match?</p>
+
+    <div class="confirm-actions">
+
+      <button id="cancelConfirm" type="button">
+        Cancel
+      </button>
+
+      <button id="yesConfirm" type="button">
+        Yes, Not Interested
+      </button>
+
+    </div>
+
+  </div>
+
+</div>
+
+
+<script>
+
+const API_BASE =
+  (window.location.hostname === "localhost" ||
+   window.location.hostname === "127.0.0.1")
+    ? window.location.origin
+    : "https://jan-setu-bf03.onrender.com";
+
+const roleLabels = {
+  student: "Student",
+  researcher: "Researcher"
+};
+
+const storedRole = localStorage.getItem("solverRole");
+
+const role =
+  roleLabels[storedRole]
+    ? storedRole
+    : "student";
+
+
+/* DOM REFERENCES */
+
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+
+const miniName = document.getElementById("miniName");
+const miniAvatar = document.getElementById("miniAvatar");
+const miniRole = document.getElementById("miniRole");
+
+const matches = document.getElementById("matches");
+const loadingState = document.getElementById("loadingState");
+
+const proposalModal = document.getElementById("proposalModal");
+const proposalForm = document.getElementById("proposalForm");
+
+const proposalClose = document.getElementById("proposalClose");
+const proposalCancel = document.getElementById("proposalCancel");
+
+const proposalApproach =
+  document.getElementById("proposalApproach");
+
+const expectedOutcome =
+  document.getElementById("expectedOutcome");
+
+const tools =
+  document.getElementById("tools");
+
+const timeline =
+  document.getElementById("timeline");
+
+const supportLink =
+  document.getElementById("supportLink");
+
+const summaryImage =
+  document.getElementById("summaryImage");
+
+const summaryTitle =
+  document.getElementById("summaryTitle");
+
+const summaryDescription =
+  document.getElementById("summaryDescription");
+
+const summaryLocation =
+  document.getElementById("summaryLocation");
+
+const summaryCategory =
+  document.getElementById("summaryCategory");
+
+const summarySkills =
+  document.getElementById("summarySkills");
+
+const imageModal =
+  document.getElementById("imageModal");
+
+const galleryClose =
+  document.getElementById("galleryClose");
+
+const galleryTitle =
+  document.getElementById("galleryTitle");
+
+const galleryImage =
+  document.getElementById("galleryImage");
+
+const thumbnails =
+  document.getElementById("thumbnails");
+
+const confirmModal =
+  document.getElementById("confirmModal");
+
+const cancelConfirm =
+  document.getElementById("cancelConfirm");
+
+const yesConfirm =
+  document.getElementById("yesConfirm");
+
+
+/* SAFE JSON */
+
+function readJSON(key, fallback) {
+
+  try {
+
+    const value = localStorage.getItem(key);
+
+    if (!value) return fallback;
+
+    const parsed = JSON.parse(value);
+
+    return parsed ?? fallback;
+
+  } catch {
+
+    return fallback;
+
+  }
+
+}
+
+
+/* ESCAPE HTML */
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+
+}
+
+
+/* PROFILE */
+
+const savedProfile =
+  readJSON("solverProfileData", {});
+
+const solverAccount =
+  readJSON("solverAccount", {});
+
+
+if (savedProfile.fullName) {
+
+  miniName.textContent =
+    savedProfile.fullName;
+
+  miniAvatar.textContent =
+    savedProfile.fullName
+      .charAt(0)
+      .toUpperCase();
+
+}
+
+
+miniRole.textContent =
+  roleLabels[role];
+
+
+/* SIDEBAR */
+
+sidebarToggle.addEventListener("click", () => {
+
+  sidebar.classList.toggle("collapsed");
+
+  document
+    .querySelector(".app")
+    .classList.toggle("sidebar-collapsed");
+
+  sidebarToggle.querySelector("i").className =
+    sidebar.classList.contains("collapsed")
+      ? "fa-solid fa-angles-right"
+      : "fa-solid fa-angles-left";
+
+});
+
+
+/* PROFILE-BASED CATEGORY MATCHING */
+
+let solverInterests = [];
+let currentSolverProfile = {};
+
+
+/*
+  Fetch the current solver's profile from the same backend route
+  used by solver-profile.html.
+
+  solverAccountId is the account identifier created by the existing
+  login flow, so this always loads the profile belonging to the
+  currently signed-in solver.
+*/
+async function loadSolverProfile() {
+
+  const accountId =
+    String(localStorage.getItem("solverAccountId") || "").trim();
+
+  if (!/^\d+$/.test(accountId) || Number(accountId) <= 0) {
+    throw new Error("Unable to identify the current solver.");
+  }
+
+  const response =
+    await fetch(
+      `${API_BASE}/api/solver/profile/${encodeURIComponent(accountId)}`,
+      {
+        method: "GET",
+        headers: {
+          "Accept": "application/json"
+        },
+        cache: "no-store"
+      }
+    );
+
+  const result =
+    await response.json().catch(() => null);
+
+  if (!response.ok) {
+    if (response.status === 404) {
+      throw new Error(
+        "Please complete your solver profile before viewing AI Matches."
+      );
+    }
+
+    throw new Error(
+      result?.error ||
+      result?.message ||
+      "Failed to load solver profile."
+    );
+  }
+
+  const profile =
+    result?.profile ||
+    result?.data ||
+    result;
+
+  /*
+    interests is stored as up to 5 comma-separated categories.
+    Normalize only whitespace/casing for exact category matching.
+  */
+  const interests =
+    Array.isArray(profile?.interests)
+      ? profile.interests
+      : String(profile?.interests || "")
+          .split(",");
+
+  solverInterests =
+    interests
+      .map(item => String(item || "").trim().toLowerCase())
+      .filter(Boolean)
+      .slice(0, 5);
+
+  currentSolverProfile = profile || {};
+
+  if (profile?.full_name) {
+    miniName.textContent = profile.full_name;
+    miniAvatar.textContent =
+      profile.full_name.charAt(0).toUpperCase();
+  } else if (profile?.fullName) {
+    miniName.textContent = profile.fullName;
+    miniAvatar.textContent =
+      profile.fullName.charAt(0).toUpperCase();
+  }
+
+  return profile;
+}
+
+
+function isRelevantReport(report) {
+
+  const reportCategory =
+    String(report?.category || "")
+      .trim()
+      .toLowerCase();
+
+  if (!reportCategory) return false;
+
+  return solverInterests.includes(reportCategory);
+
+}
+
+
+/* LOAD REAL REPORTS */
+
+async function loadReports() {
+
+  try {
+
+    await loadSolverProfile();
+
+    const response =
+      await fetch(`${API_BASE}/api/reports/all`);
+
+    const result =
+      await response.json().catch(() => null);
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        result?.error ||
+        "Failed to load reports."
+      );
+
+    }
+
+
+    const reports =
+      Array.isArray(result)
+        ? result
+        : Array.isArray(result?.reports)
+          ? result.reports
+          : [];
+
+
+    const relevantReports =
+      reports.filter(report => {
+        if (!report) return false;
+
+        const status =
+          String(report.status || "")
+            .trim()
+            .toLowerCase();
+
+        return status !== "resolved" && isRelevantReport(report);
+      });
+
+
+    renderReports(relevantReports);
+
+
+  } catch (error) {
+
+    console.error(error);
+
+    matches.innerHTML = `
+      <div class="solver-empty">
+        <i class="fa-solid fa-triangle-exclamation"></i>
+        <h2>Unable to load matches</h2>
+        <p>
+          We couldn't connect to JAN SETU right now.
+          Please try again later.
+        </p>
+        <button
+          type="button"
+          class="solver-primary-link"
+          id="retryReports">
+          Try Again
+        </button>
+      </div>
+    `;
+
+    document
+      .getElementById("retryReports")
+      ?.addEventListener("click", loadReports);
+
+  }
+
+}
+
+
+/* RENDER REPORT CARDS */
+
+function renderReports(reports) {
+
+  matches.innerHTML = "";
+
+  if (!reports.length) {
+
+    matches.innerHTML = `
+      <div class="solver-empty">
+        <i class="fa-regular fa-folder-open"></i>
+        <h2>No matching problems yet</h2>
+        <p>
+          There are currently no civic problems matching your category.
+        </p>
+      </div>
+    `;
+
+    return;
+
+  }
+
+
+  reports.forEach(report => {
+
+    const card =
+      document.createElement("article");
+
+    card.className =
+      "match-card";
+
+
+    const title =
+      report.title || "Untitled Civic Problem";
+
+    const description =
+      report.description ||
+      "No description provided.";
+
+    const category =
+      report.category ||
+      "Civic Problem";
+
+    const location =
+      report.location ||
+      report.district ||
+      "Jharkhand";
+
+    const createdAt =
+      report.created_at
+        ? formatDate(report.created_at)
+        : "Recently";
+
+
+    const skills =
+      Array.isArray(report.skills)
+        ? report.skills
+        : [];
+
+    let images = [];
+
+    if (Array.isArray(report.photo_urls)) {
+      images = report.photo_urls
+        .map(item => String(item || "").trim())
+        .filter(Boolean);
+    } else if (typeof report.photo_urls === "string") {
+      try {
+        const parsed = JSON.parse(report.photo_urls);
+
+        if (Array.isArray(parsed)) {
+          images = parsed
+            .map(item => String(item || "").trim())
+            .filter(Boolean);
+        }
+      } catch {
+        images = [];
+      }
+    }
+
+    if (!images.length) {
+      const fallbackImage =
+        report.image ||
+        report.photo_url ||
+        "";
+
+      if (fallbackImage) {
+        images = [String(fallbackImage).trim()];
+      }
+    }
+
+    const image =
+      images[0] || "";
+
+    const imageHTML =
+      image
+        ? `
+          <img
+            src="${escapeHTML(image)}"
+            class="problem-image"
+            alt="${escapeHTML(title)}">
+        `
+        : `
+          <div class="problem-image problem-image-placeholder">
+            <i class="fa-regular fa-image"></i>
+          </div>
+        `;
+
+
+    const skillsHTML =
+      skills.length
+        ? skills
+            .map(skill =>
+              `<span>${escapeHTML(skill)}</span>`
+            )
+            .join("")
+        : `
+          <span>Civic Problem Solving</span>
+        `;
+
+
+    card.innerHTML = `
+
+      <div class="problem-image-wrap">
+
+        ${imageHTML}
+
+        ${
+          images.length
+            ? `
+              <button
+                class="view-images-btn"
+                type="button"
+                data-title="${escapeHTML(title)}"
+                data-images="${escapeHTML(JSON.stringify(images))}">
+
+                <i class="fa-regular fa-images"></i>
+                View Images (${images.length})
+
+              </button>
+            `
+            : ""
+        }
+
+      </div>
+
+
+      <div class="match-content">
+
+        <h2>${escapeHTML(title)}</h2>
+
+        <p class="description">
+          ${escapeHTML(description)}
+        </p>
+
+
+        <div class="meta">
+
+          <span>
+            <i class="fa-solid fa-location-dot"></i>
+            ${escapeHTML(location)}
+          </span>
+
+          <span>
+            <i class="fa-solid fa-building-columns"></i>
+            ${escapeHTML(category)}
+          </span>
+
+          <span>
+            <i class="fa-regular fa-clock"></i>
+            Posted ${escapeHTML(createdAt)}
+          </span>
+
+        </div>
+
+
+        <div class="skills">
+
+          <strong>Required Skills:</strong>
+
+          ${skillsHTML}
+
+        </div>
+
+      </div>
+
+
+      <div class="card-actions">
+
+        <button
+          class="submit-btn"
+          type="button"
+          data-report-id="${escapeHTML(report.id)}">
+
+          <i class="fa-regular fa-paper-plane"></i>
+          Submit Proposal
+
+        </button>
+
+
+        <button
+          class="save-btn"
+          type="button">
+
+          <i class="fa-regular fa-bookmark"></i>
+          Save
+
+        </button>
+
+
+        <button
+          class="not-btn"
+          type="button">
+
+          <i class="fa-solid fa-ban"></i>
+          Not Interested
+
+        </button>
+
+      </div>
+
+    `;
+
+
+    matches.appendChild(card);
+
+  });
+
+
+  attachCardEvents();
+
+  restoreSavedState();
+
+}
+
+
+/* DATE */
+
+function formatDate(value) {
+
+  const date =
+    new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+
+    return "Recently";
+
+  }
+
+
+  const now =
+    new Date();
+
+  const difference =
+    Math.floor(
+      (now - date) / 86400000
+    );
+
+
+  if (difference <= 0)
+    return "today";
+
+  if (difference === 1)
+    return "1 day ago";
+
+  if (difference < 7)
+    return `${difference} days ago`;
+
+  if (difference < 30)
+    return `${Math.floor(difference / 7)} week(s) ago`;
+
+  return date.toLocaleDateString();
+
+}
+
+
+/* ACTIVE CARD */
+
+let activeCard = null;
+
+
+/* ATTACH CARD EVENTS */
+
+function attachCardEvents() {
+
+  document
+    .querySelectorAll(".submit-btn")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        activeCard =
+          button.closest(".match-card");
+
+        openProposalModal(activeCard);
+
+      });
+
+    });
+
+
+  document
+    .querySelectorAll(".view-images-btn")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        let images = [];
+
+        try {
+          images = JSON.parse(
+            button.dataset.images || "[]"
+          );
+        } catch {
+          images = [];
+        }
+
+        images = Array.isArray(images)
+          ? images
+              .map(item => String(item || "").trim())
+              .filter(Boolean)
+          : [];
+
+
+        if (!images.length) return;
+
+
+        galleryTitle.textContent =
+          button.dataset.title;
+
+
+        galleryImage.src =
+          images[0];
+
+
+        thumbnails.innerHTML =
+          "";
+
+
+        images.forEach(src => {
+
+          const img =
+            document.createElement("img");
+
+          img.src =
+            src;
+
+          img.alt =
+            button.dataset.title;
+
+
+          img.addEventListener("click", () => {
+
+            galleryImage.src =
+              src;
+
+          });
+
+
+          thumbnails.appendChild(img);
+
+        });
+
+
+        imageModal.classList.add("show");
+
+      });
+
+    });
+
+
+  document
+    .querySelectorAll(".save-btn")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        const card =
+          button.closest(".match-card");
+
+        const title =
+          card.querySelector("h2")
+            .textContent
+            .trim();
+
+
+        const saved =
+          readJSON("savedMatches", []);
+
+
+        const index =
+          saved.indexOf(title);
+
+
+        if (index >= 0) {
+
+          saved.splice(index, 1);
+
+          button.innerHTML =
+            '<i class="fa-regular fa-bookmark"></i> Save';
+
+        } else {
+
+          saved.push(title);
+
+          button.innerHTML =
+            '<i class="fa-solid fa-bookmark"></i> Saved';
+
+        }
+
+
+        localStorage.setItem(
+          "savedMatches",
+          JSON.stringify(saved)
+        );
+
+      });
+
+    });
+
+
+  document
+    .querySelectorAll(".not-btn")
+    .forEach(button => {
+
+      button.addEventListener("click", () => {
+
+        cardToRemove =
+          button.closest(".match-card");
+
+        confirmModal.classList.add("show");
+
+      });
+
+    });
+
+}
+
+
+/* PROPOSAL MODAL */
+
+function openProposalModal(card) {
+
+  if (!card) return;
+
+
+  summaryImage.src =
+    card.querySelector(".problem-image")?.src || "";
+
+
+  summaryTitle.textContent =
+    card.querySelector("h2")
+      ?.textContent
+      .trim() || "";
+
+
+  summaryDescription.textContent =
+    card.querySelector(".description")
+      ?.textContent
+      .trim() || "";
+
+
+  const meta =
+    [
+      ...card.querySelectorAll(".meta span")
+    ]
+      .map(item =>
+        item.textContent.trim()
+      );
+
+
+  summaryLocation.textContent =
+    meta[0] || "";
+
+
+  summaryCategory.textContent =
+    meta[1] || "";
+
+
+  summarySkills.innerHTML =
+    "";
+
+
+  card
+    .querySelectorAll(".skills span")
+    .forEach(skill => {
+
+      const tag =
+        document.createElement("span");
+
+      tag.textContent =
+        skill.textContent;
+
+      summarySkills.appendChild(tag);
+
+    });
+
+
+  proposalForm.reset();
+
+  proposalModal.classList.add("show");
+
+}
+
+
+/* CLOSE PROPOSAL */
+
+proposalClose.addEventListener(
+  "click",
+  () =>
+    proposalModal.classList.remove("show")
+);
+
+
+proposalCancel.addEventListener(
+  "click",
+  () =>
+    proposalModal.classList.remove("show")
+);
+
+
+/* SUBMIT PROPOSAL */
+
+proposalForm.addEventListener(
+  "submit",
+  async event => {
+
+    event.preventDefault();
+
+
+    if (!activeCard) return;
+
+
+    const submitButton =
+      proposalForm.querySelector(
+        ".proposal-submit-btn"
+      );
+
+
+    const reportId =
+      activeCard
+        .querySelector(".submit-btn")
+        ?.dataset.reportId;
+
+
+    if (!reportId) {
+
+      alert(
+        "Unable to identify this problem."
+      );
+
+      return;
+
+    }
+
+
+    const proposal = {
+
+      report_id: Number(reportId),
+
+      approach:
+        proposalApproach.value.trim(),
+
+      expected_outcome:
+        expectedOutcome.value.trim(),
+
+      tools:
+        tools.value.trim(),
+
+      timeline:
+        timeline.value,
+
+      support_link:
+        supportLink.value.trim(),
+
+      submitted_by:
+        savedProfile.fullName ||
+        solverAccount.primaryName ||
+        "Student / Researcher",
+
+      role:
+
+        role,
+
+      profile: {
+
+        ...savedProfile,
+
+        email:
+          solverAccount.email || "",
+
+        phone:
+          savedProfile.consent
+            ? solverAccount.phone || ""
+            : "",
+
+        signupFields:
+          solverAccount.signupFields || []
+
+      }
+
+    };
+
+
+    submitButton.disabled =
+      true;
+
+    submitButton.innerHTML =
+      '<i class="fa-solid fa-spinner fa-spin"></i> Submitting...';
+
+
+    try {
+
+      const response =
+        await fetch(
+          `${API_BASE}/api/proposals`,
+          {
+            method: "POST",
+
+            headers: {
+              "Content-Type":
+                "application/json"
+            },
+
+            body:
+              JSON.stringify(proposal)
+          }
+        );
+
+
+      const result =
+        await response.json()
+          .catch(() => null);
+
+
+      if (!response.ok) {
+
+        throw new Error(
+          result?.error ||
+          "Failed to submit proposal."
+        );
+
+      }
+
+
+      /*
+        Keep a temporary local copy until the
+        proposal backend is fully implemented.
+      */
+
+      const proposals =
+        readJSON(
+          "submittedProposals",
+          []
+        );
+
+
+      const localProposal = {
+
+        ...proposal,
+
+        id:
+          result?.id || null,
+
+        problem:
+          summaryTitle.textContent,
+
+        image:
+          summaryImage.src,
+
+        description:
+          summaryDescription.textContent,
+
+        location:
+          summaryLocation.textContent,
+
+        category:
+          summaryCategory.textContent,
+
+        submittedAt:
+          new Date().toISOString(),
+
+        status:
+          "Submitted"
+
+      };
+
+
+      const existingIndex =
+        proposals.findIndex(item =>
+          Number(item.report_id) ===
+          Number(reportId)
+        );
+
+
+      if (existingIndex >= 0) {
+
+        proposals[existingIndex] =
+          localProposal;
+
+      } else {
+
+        proposals.push(
+          localProposal
+        );
+
+      }
+
+
+      localStorage.setItem(
+        "submittedProposals",
+        JSON.stringify(proposals)
+      );
+
+
+      proposalModal.classList.remove(
+        "show"
+      );
+
+
+      const cardButton =
+        activeCard.querySelector(
+          ".submit-btn"
+        );
+
+
+      cardButton.innerHTML =
+        '<i class="fa-solid fa-check"></i> Proposal Submitted';
+
+      cardButton.disabled =
+        true;
+
+
+      alert(
+        "Proposal submitted successfully!"
+      );
+
+
+    } catch (error) {
+
+      console.error(error);
+
+      alert(
+        error.message ||
+        "Unable to submit proposal. Please try again."
+      );
+
+
+      submitButton.disabled =
+        false;
+
+      submitButton.innerHTML =
+        '<i class="fa-regular fa-paper-plane"></i> Submit Proposal';
+
+    }
+
+  }
+);
+
+
+/* RESTORE SUBMITTED PROPOSALS */
+
+function restoreSubmittedState() {
+
+  const proposals =
+    readJSON(
+      "submittedProposals",
+      []
+    );
+
+
+  document
+    .querySelectorAll(".match-card")
+    .forEach(card => {
+
+      const button =
+        card.querySelector(
+          ".submit-btn"
+        );
+
+
+      const reportId =
+        button?.dataset.reportId;
+
+
+      const alreadySubmitted =
+        proposals.some(item =>
+          Number(item.report_id) ===
+          Number(reportId)
+        );
+
+
+      if (alreadySubmitted) {
+
+        button.innerHTML =
+          '<i class="fa-solid fa-check"></i> Proposal Submitted';
+
+        button.disabled =
+          true;
+
+      }
+
+    });
+
+}
+
+
+/* SAVED STATE */
+
+function restoreSavedState() {
+
+  const savedMatches =
+    readJSON(
+      "savedMatches",
+      []
+    );
+
+
+  document
+    .querySelectorAll(".match-card")
+    .forEach(card => {
+
+      const title =
+        card.querySelector("h2")
+          ?.textContent
+          .trim();
+
+
+      const button =
+        card.querySelector(
+          ".save-btn"
+        );
+
+
+      if (
+        title &&
+        savedMatches.includes(title)
+      ) {
+
+        button.innerHTML =
+          '<i class="fa-solid fa-bookmark"></i> Saved';
+
+      }
+
+    });
+
+
+  restoreSubmittedState();
+
+}
+
+
+/* NOT INTERESTED */
+
+let cardToRemove = null;
+
+
+const hiddenMatches =
+  readJSON(
+    "hiddenMatches",
+    []
+  );
+
+
+function removeHiddenMatches() {
+
+  document
+    .querySelectorAll(".match-card")
+    .forEach(card => {
+
+      const title =
+        card.querySelector("h2")
+          ?.textContent
+          .trim();
+
+
+      if (
+        title &&
+        hiddenMatches.includes(title)
+      ) {
+
+        card.remove();
+
+      }
+
+    });
+
+}
+
+
+yesConfirm.addEventListener(
+  "click",
+  () => {
+
+    if (cardToRemove) {
+
+      const title =
+        cardToRemove
+          .querySelector("h2")
+          .textContent
+          .trim();
+
+
+      const hidden =
+        readJSON(
+          "hiddenMatches",
+          []
+        );
+
+
+      if (!hidden.includes(title)) {
+
+        hidden.push(title);
+
+      }
+
+
+      localStorage.setItem(
+        "hiddenMatches",
+        JSON.stringify(hidden)
+      );
+
+
+      cardToRemove.remove();
+
+      cardToRemove =
+        null;
+
+    }
+
+
+    confirmModal.classList.remove(
+      "show"
+    );
+
+  }
+);
+
+
+cancelConfirm.addEventListener(
+  "click",
+  () =>
+    confirmModal.classList.remove(
+      "show"
+    )
+);
+
+
+/* IMAGE MODAL CLOSE */
+
+galleryClose.addEventListener(
+  "click",
+  () =>
+    imageModal.classList.remove(
+      "show"
+    )
+);
+
+
+/* OVERLAY CLOSE */
+
+document
+  .querySelectorAll(".modal")
+  .forEach(modal => {
+
+    modal.addEventListener(
+      "click",
+      event => {
+
+        if (
+          event.target === modal
+        ) {
+
+          modal.classList.remove(
+            "show"
+          );
+
+        }
+
+      }
+    );
+
+  });
+
+
+/* INITIAL LOAD */
+
+loadReports();
+
+</script>
+
+</body>
+</html>

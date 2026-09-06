@@ -1,279 +1,635 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <title>Track Problem | JAN SETU</title>
+  <title>Track Problem | JAN SETU</title>
 
-    <!-- Existing JAN SETU styles -->
-    <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css">
 
-    <!-- Track page styles -->
-    <link rel="stylesheet" href="track-problem-final.css">
-
-    <!-- Icons -->
-    <link rel="stylesheet"
-          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
 </head>
 
 <body>
 
-    <!-- Same JAN SETU navbar -->
-    <header class="navbar">
-        <a href="index.html" class="brand">
-            <img src="assets/jansetu-logo.jpg" alt="JAN SETU Logo">
-        </a>
+<header class="navbar">
 
-        <nav class="nav-links">
-            <a href="index.html">Home</a>
-            <a href="#">About</a>
-            <a href="#">Initiatives</a>
-            <a href="#">Explore Jharkhand</a>
-            <a href="#">Stories</a>
-            <a href="#">Resources</a>
-            <a href="#">Contact</a>
-        </nav>
-    </header>
+  <a href="index.html" class="brand">
+    <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+  </a>
 
+  <nav class="nav-links">
+    <a href="index.html">Home</a>
+    <a href="problems.html">List of Problems</a>
+    <a href="index.html#about">About</a>
+    <a href="index.html#initiatives">Initiatives</a>
+    <a href="index.html#explore">Explore Jharkhand</a>
+    <a href="index.html#stories">Stories</a>
+    <a href="index.html#resources">Resources</a>
+    <a href="index.html#contact">Contact</a>
+  </nav>
 
-    <!-- Notification button -->
-    <button class="notif-toggle-btn" id="notifToggleBtn">
-        <i class="fa-regular fa-bell"></i>
-        Notifications
-        <span>3</span>
-    </button>
+</header>
 
 
-    <main class="track-page-final">
+<main class="track-page-final">
 
-        <section class="track-card-final">
+  <section class="track-card-final">
 
-            <p class="track-eyebrow">TRACK YOUR REPORT</p>
+    <p class="track-eyebrow">
+      TRACK YOUR REPORT
+    </p>
 
-            <h1>
-                Your Problem is <span>In Progress</span>
-            </h1>
+    <h1>
+      Your Problem is
+      <span id="trackStatusHeading">Loading...</span>
+    </h1>
 
-            <p class="track-subtitle">
-                Here's the latest update on your reported issue.
-            </p>
-
-
-            <!-- Problem ID -->
-            <div class="problem-id-card">
-                <span>Problem ID</span>
-
-                <div class="problem-id-row">
-                    <strong id="problemId">JS-2026-9186</strong>
-
-                    <button class="copy-id-btn" id="copyIdBtn" title="Copy ID">
-                        <i class="fa-regular fa-copy"></i>
-                    </button>
-                </div>
-            </div>
+    <p
+      class="track-subtitle"
+      id="trackProblemTitle"
+    >
+      Loading report details...
+    </p>
 
 
-            <!-- Report details -->
-            <div class="problem-details-grid">
+    <!-- PROBLEM ID -->
 
-                <div class="detail-card">
-                    <div class="detail-icon">
-                        <i class="fa-solid fa-layer-group"></i>
-                    </div>
+    <div class="problem-id-card">
 
-                    <div>
-                        <span>Category</span>
-                        <strong>Infrastructure</strong>
-                    </div>
-                </div>
+      <span>Problem ID</span>
 
+      <div class="problem-id-row">
 
-                <div class="detail-card">
-                    <div class="detail-icon priority-icon">
-                        <i class="fa-solid fa-flag"></i>
-                    </div>
+        <strong id="problemId">—</strong>
 
-                    <div>
-                        <span>Priority</span>
-                        <strong>High</strong>
-                    </div>
-                </div>
+        <button
+          class="copy-id-btn"
+          id="copyIdBtn"
+          type="button"
+          title="Copy ID"
+          aria-label="Copy problem ID"
+        >
+          <i class="fa-regular fa-copy"></i>
+        </button>
+
+      </div>
+
+    </div>
 
 
-                <div class="detail-card">
-                    <div class="detail-icon">
-                        <i class="fa-regular fa-calendar"></i>
-                    </div>
+    <!-- DETAILS -->
 
-                    <div>
-                        <span>Last Updated</span>
-                        <strong>5 Sep 2026, 10:30 AM</strong>
-                    </div>
-                </div>
+    <div class="problem-details-grid">
 
+      <div class="detail-card">
 
-                <div class="detail-card">
-                    <div class="detail-icon">
-                        <i class="fa-solid fa-location-dot"></i>
-                    </div>
-
-                    <div>
-                        <span>Location</span>
-                        <strong>Ranchi, Jharkhand</strong>
-                    </div>
-                </div>
-
-            </div>
-
-
-            <!-- Current status -->
-            <div class="current-status-card">
-
-                <div class="status-icon">
-                    <i class="fa-solid fa-gear"></i>
-                </div>
-
-                <div>
-                    <span>Current Status</span>
-                    <strong>In Progress</strong>
-                    <p>Your issue is currently being worked on.</p>
-                </div>
-
-            </div>
-
-
-            <!-- Progress -->
-            <div class="progress-timeline">
-
-                <div class="progress-step completed">
-                    <div class="progress-circle">✓</div>
-                    <p>Submitted</p>
-                    <small>5 Sep</small>
-                </div>
-
-                <div class="progress-line completed"></div>
-
-                <div class="progress-step completed">
-                    <div class="progress-circle">✓</div>
-                    <p>Verified</p>
-                    <small>5 Sep</small>
-                </div>
-
-                <div class="progress-line completed"></div>
-
-                <div class="progress-step active">
-                    <div class="progress-circle">3</div>
-                    <p>In Progress</p>
-                    <small class="current-badge">Current</small>
-                </div>
-
-                <div class="progress-line"></div>
-
-                <div class="progress-step">
-                    <div class="progress-circle">4</div>
-                    <p>Validation</p>
-                </div>
-
-                <div class="progress-line"></div>
-
-                <div class="progress-step">
-                    <div class="progress-circle">5</div>
-                    <p>Resolved</p>
-                </div>
-
-            </div>
-
-
-            <a href="index.html" class="back-home-btn">
-                <i class="fa-solid fa-house"></i>
-                Back to Home
-            </a>
-
-        </section>
-
-    </main>
-
-
-    <!-- Notification drawer -->
-    <aside class="track-notifications" id="trackNotifications">
-
-        <div class="notifications-top">
-            <h2>
-                <i class="fa-regular fa-bell"></i>
-                Notifications
-            </h2>
-
-            <button class="notif-close-btn" id="notifCloseBtn">×</button>
+        <div class="detail-icon">
+          <i class="fa-solid fa-layer-group"></i>
         </div>
 
-
-        <div class="notification-row current">
-            <span class="notification-marker"></span>
-
-            <div>
-                <strong>Your issue is now in progress.</strong>
-                <small>2 hours ago</small>
-                
-            </div>
+        <div>
+          <span>Category</span>
+          <strong id="trackCategory">—</strong>
         </div>
 
+      </div>
 
-        <div class="notification-row completed">
-            <span class="notification-marker">✓</span>
 
-            <div>
-                <strong>Your report has been verified.</strong>
-                <small>5 Sep 2026, 10:30 AM</small>
-                
-            </div>
+      <div class="detail-card">
+
+        <div class="detail-icon priority-icon">
+          <i class="fa-solid fa-flag"></i>
         </div>
 
-
-        <div class="notification-row completed">
-            <span class="notification-marker">✓</span>
-
-            <div>
-                <strong>Your report was submitted.</strong>
-                <small>5 Sep 2026, 09:15 AM</small>
-            
-            </div>
+        <div>
+          <span>Priority</span>
+          <strong id="trackPriority">—</strong>
         </div>
 
-    </aside>
+      </div>
 
 
-    <!-- Same faded background -->
-    <div class="track-final-landscape"></div>
+      <div class="detail-card">
+
+        <div class="detail-icon">
+          <i class="fa-regular fa-calendar"></i>
+        </div>
+
+        <div>
+          <span>Last Updated</span>
+          <strong id="trackUpdated">—</strong>
+        </div>
+
+      </div>
 
 
-    <script>
-        const problemId = document.getElementById("problemId");
-        const savedId = localStorage.getItem("problemId");
+      <div class="detail-card">
 
-        // Show accepted Problem ID if available
-        if (savedId) {
-            problemId.textContent = savedId;
+        <div class="detail-icon">
+          <i class="fa-solid fa-location-dot"></i>
+        </div>
+
+        <div>
+          <span>Location</span>
+          <strong id="trackLocation">—</strong>
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <!-- CURRENT STATUS -->
+
+    <div class="current-status-card">
+
+      <div class="status-icon">
+        <i class="fa-solid fa-gear"></i>
+      </div>
+
+      <div>
+
+        <span>Current Status</span>
+
+        <strong id="currentStatus">
+          Loading...
+        </strong>
+
+        <p id="statusMessage">
+          Fetching the latest status of your report.
+        </p>
+
+      </div>
+
+    </div>
+
+
+    <!-- TIMELINE -->
+
+    <div
+      class="progress-timeline"
+      id="progressTimeline"
+    ></div>
+
+
+    <!-- ACTIONS -->
+
+    <div class="track-actions">
+
+      <a
+        href="problems.html"
+        class="back-home-btn"
+      >
+        <i class="fa-solid fa-list"></i>
+        List of Problems
+      </a>
+
+      <a
+        href="index.html"
+        class="back-home-btn"
+      >
+        <i class="fa-solid fa-house"></i>
+        Home
+      </a>
+
+    </div>
+
+  </section>
+
+</main>
+
+<div class="track-final-landscape"></div>
+
+
+<script>
+
+/* =========================================================
+   STATUS FLOW
+   ========================================================= */
+
+const steps = [
+  "Submitted",
+  "Verified",
+  "In Progress",
+  "Validation",
+  "Resolved"
+];
+
+
+const messages = {
+
+  Submitted:
+    "Your report has been submitted and is waiting for verification.",
+
+  Verified:
+    "Your problem has been verified and is ready for solver matching.",
+
+  "In Progress":
+    "A solver team is currently working on this problem.",
+
+  Validation:
+    "The proposed solution is being validated before closure.",
+
+  Resolved:
+    "The problem has been resolved and the solution has been validated."
+
+};
+
+
+/* =========================================================
+   STATUS NORMALIZATION
+   ========================================================= */
+
+function normalizeStatus(status) {
+
+  if (!status) {
+    return "Submitted";
+  }
+
+  const value =
+    String(status)
+      .trim()
+      .toLowerCase()
+      .replace(/[_-]/g, " ");
+
+
+  const statusMap = {
+
+    submitted: "Submitted",
+
+    accepted: "Verified",
+
+    verified: "Verified",
+
+    "in progress": "In Progress",
+
+    validation: "Validation",
+
+    resolved: "Resolved"
+
+  };
+
+
+  return statusMap[value] || status;
+
+}
+
+
+/* =========================================================
+   DATE
+   ========================================================= */
+
+function formatDate(value) {
+
+  if (!value) {
+    return "Recently";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "Recently";
+  }
+
+  return date.toLocaleString(
+    "en-IN",
+    {
+      day: "numeric",
+      month: "short",
+      year: "numeric",
+      hour: "numeric",
+      minute: "2-digit"
+    }
+  );
+
+}
+
+
+/* =========================================================
+   GET VERIFIED REPORT
+   ========================================================= */
+
+function getVerifiedReport() {
+
+  const stored =
+    sessionStorage.getItem("verifiedReport");
+
+  if (!stored) {
+    return null;
+  }
+
+  try {
+
+    return JSON.parse(stored);
+
+  } catch (error) {
+
+    console.error(
+      "Invalid verified report data:",
+      error
+    );
+
+    return null;
+
+  }
+
+}
+
+
+/* =========================================================
+   RENDER TIMELINE
+   ========================================================= */
+
+function renderTimeline(status) {
+
+  const timeline =
+    document.getElementById("progressTimeline");
+
+  timeline.innerHTML = "";
+
+
+  const currentIndex =
+    Math.max(
+      0,
+      steps.indexOf(status)
+    );
+
+
+  steps.forEach((step, index) => {
+
+    const stepNode =
+      document.createElement("div");
+
+
+    stepNode.className =
+      "progress-step " +
+      (
+        index < currentIndex
+          ? "completed"
+          : index === currentIndex
+            ? "active"
+            : ""
+      );
+
+
+    stepNode.innerHTML = `
+
+      <div class="progress-circle">
+        ${
+          index < currentIndex
+            ? "✓"
+            : index + 1
         }
+      </div>
+
+      <p>${step}</p>
+
+      ${
+        index === currentIndex
+          ? '<small class="current-badge">Current</small>'
+          : ""
+      }
+
+    `;
 
 
-        // Copy Problem ID
-        document.getElementById("copyIdBtn").addEventListener("click", function () {
-            navigator.clipboard.writeText(problemId.textContent);
-        });
+    timeline.appendChild(stepNode);
 
 
-        // Notification drawer
-        const drawer = document.getElementById("trackNotifications");
+    if (index < steps.length - 1) {
 
-        document.getElementById("notifToggleBtn").addEventListener("click", function () {
-            drawer.classList.add("open");
-        });
+      const line =
+        document.createElement("div");
 
-        document.getElementById("notifCloseBtn").addEventListener("click", function () {
-            drawer.classList.remove("open");
-        });
-    </script>
+
+      line.className =
+        "progress-line " +
+        (
+          index < currentIndex
+            ? "completed"
+            : ""
+        );
+
+
+      timeline.appendChild(line);
+
+    }
+
+  });
+
+}
+
+
+/* =========================================================
+   RENDER REPORT
+   ========================================================= */
+
+function renderProblem(problem) {
+
+  const status =
+    normalizeStatus(problem.status);
+
+
+  const publicId =
+    problem.track_id ||
+    "—";
+
+
+  document.getElementById(
+    "problemId"
+  ).textContent = publicId;
+
+
+  document.getElementById(
+    "trackProblemTitle"
+  ).textContent =
+    problem.title ||
+    "Reported Community Problem";
+
+
+  document.getElementById(
+    "trackCategory"
+  ).textContent =
+    problem.category ||
+    "Other";
+
+
+  document.getElementById(
+    "trackPriority"
+  ).textContent =
+    problem.priority ||
+    "Not assigned";
+
+
+  document.getElementById(
+    "trackUpdated"
+  ).textContent =
+    formatDate(
+      problem.updated_at ||
+      problem.updatedAt ||
+      problem.created_at
+    );
+
+
+  document.getElementById(
+    "trackLocation"
+  ).textContent =
+    problem.location ||
+    problem.district ||
+    "Jharkhand";
+
+
+  document.getElementById(
+    "trackStatusHeading"
+  ).textContent =
+    status;
+
+
+  document.getElementById(
+    "currentStatus"
+  ).textContent =
+    status;
+
+
+  document.getElementById(
+    "statusMessage"
+  ).textContent =
+    messages[status] ||
+    `Your report is currently marked as ${status}.`;
+
+
+  renderTimeline(status);
+
+}
+
+
+/* =========================================================
+   ERROR STATE
+   ========================================================= */
+
+function showError(message) {
+
+  document.getElementById(
+    "trackStatusHeading"
+  ).textContent = "Unavailable";
+
+
+  document.getElementById(
+    "trackProblemTitle"
+  ).textContent = message;
+
+
+  document.getElementById(
+    "currentStatus"
+  ).textContent = "Unable to load";
+
+
+  document.getElementById(
+    "statusMessage"
+  ).textContent =
+    "Please return to the problem list and try again.";
+
+}
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+function initialize() {
+
+  const problem =
+    getVerifiedReport();
+
+
+  if (!problem) {
+
+    showError(
+      "No verified report was found."
+    );
+
+    return;
+
+  }
+
+
+  if (!problem.track_id) {
+
+    showError(
+      "This report does not have a valid Track ID."
+    );
+
+    return;
+
+  }
+
+
+  renderProblem(problem);
+
+}
+
+
+/* =========================================================
+   COPY ID
+   ========================================================= */
+
+document
+  .getElementById("copyIdBtn")
+  .addEventListener(
+    "click",
+    async function () {
+
+      const id =
+        document
+          .getElementById("problemId")
+          .textContent;
+
+
+      if (!id || id === "—") {
+        return;
+      }
+
+
+      try {
+
+        await navigator
+          .clipboard
+          .writeText(id);
+
+
+        this.innerHTML =
+          '<i class="fa-solid fa-check"></i>';
+
+
+        setTimeout(() => {
+
+          this.innerHTML =
+            '<i class="fa-regular fa-copy"></i>';
+
+        }, 1500);
+
+
+      } catch (error) {
+
+        console.error(
+          "Clipboard failed:",
+          error
+        );
+
+      }
+
+    }
+  );
+
+
+initialize();
+
+</script>
 
 </body>
 </html>
