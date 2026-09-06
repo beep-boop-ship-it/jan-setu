@@ -136,7 +136,7 @@ async function loadProblems() {
   list.innerHTML = "";
 
   try {
-    const response = await fetch("${API_BASE}/api/reports/all", {
+    const response = await fetch(`${API_BASE}/api/reports/all`, {
       headers: {
         "Accept": "application/json"
       },
@@ -285,7 +285,7 @@ async function requestTrackId(problem) {
 
   try {
     const response = await fetch(
-      `${API_BASE}/api//reports/${encodeURIComponent(problem.id)}`,
+      `${API_BASE}/api/reports/${encodeURIComponent(problem.id)}`,
       {
         headers: {
           "Accept": "application/json"
@@ -338,7 +338,7 @@ async function verifyTrackId() {
 
   try {
     const response = await fetch(
-      "${API_BASE}/api/reports/verify-track",
+      `${API_BASE}/api/reports/verify-track`,
       {
         method: "POST",
         headers: {
