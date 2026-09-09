@@ -1,0 +1,1065 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>All Problems | JAN SETU</title>
+
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+    /* =========================================================
+       JAN SETU — ALL PROBLEMS
+       Page-specific styling only. Uses the existing site shell.
+       ========================================================= */
+
+    :root{
+      --page-bg:#f6f8f7;
+      --surface:#ffffff;
+      --ink:#173b31;
+      --muted:#70807a;
+      --muted-2:#8b9893;
+      --line:#dfe8e4;
+      --green:#1f7a4f;
+      --green-dark:#165d3c;
+      --green-soft:#eaf6ef;
+      --navy:#223a50;
+      --amber:#a87916;
+      --amber-soft:#fff8df;
+      --blue:#326b9b;
+      --blue-soft:#edf5fb;
+      --success:#24724e;
+      --success-soft:#eaf8f0;
+      --shadow:0 10px 30px rgba(31,61,52,.055);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--page-bg);
+      color:var(--navy);
+      font-family:Arial,sans-serif;
+    }
+
+    button,input,select{font:inherit}
+
+    .main.problems-page{
+      /*
+       * style.css gives .main a full-width layout in some views.
+       * Because the sidebar is fixed, explicitly reserve its width here.
+       * This prevents the page content from sliding underneath the sidebar.
+       */
+      width:calc(100% - var(--sidebar));
+      min-height:100vh;
+      margin-left:var(--sidebar);
+      padding:34px 38px 60px;
+      min-width:0;
+    }
+
+    .sidebar-collapsed .main.problems-page{
+      width:calc(100% - var(--sidebar-small));
+      margin-left:var(--sidebar-small);
+    }
+
+    .problems-shell{
+      width:min(1180px,100%);
+      margin:0 auto;
+    }
+
+    /* Header */
+    .problems-header{
+      display:flex;
+      justify-content:space-between;
+      align-items:flex-end;
+      gap:24px;
+      margin-bottom:28px;
+    }
+
+    .eyebrow{
+      display:flex;
+      align-items:center;
+      gap:8px;
+      margin-bottom:9px;
+      color:var(--green);
+      font-size:12px;
+      font-weight:800;
+      letter-spacing:.12em;
+      text-transform:uppercase;
+    }
+
+    .eyebrow i{font-size:11px}
+
+    .problems-header h1{
+      margin:0;
+      color:var(--ink);
+      font-size:34px;
+      line-height:1.1;
+      letter-spacing:-.025em;
+    }
+
+    .problems-header p{
+      margin:9px 0 0;
+      color:var(--muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .refresh-btn{
+      flex:0 0 auto;
+      height:42px;
+      padding:0 16px;
+      border:1px solid var(--line);
+      border-radius:10px;
+      background:#fff;
+      color:var(--green-dark);
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:700;
+      transition:.18s ease;
+      box-shadow:0 2px 8px rgba(31,61,52,.025);
+    }
+
+    .refresh-btn:hover{
+      border-color:#bfd8cc;
+      background:#f9fcfa;
+      transform:translateY(-1px);
+    }
+
+    .refresh-btn:disabled{
+      opacity:.65;
+      cursor:wait;
+      transform:none;
+    }
+
+    /* Summary strip */
+    .summary-grid{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      gap:12px;
+      margin-bottom:18px;
+    }
+
+    .summary-card{
+      min-width:0;
+      background:var(--surface);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:15px 17px;
+      display:flex;
+      align-items:center;
+      gap:13px;
+      box-shadow:var(--shadow);
+    }
+
+    .summary-icon{
+      width:38px;
+      height:38px;
+      border-radius:11px;
+      display:grid;
+      place-items:center;
+      background:#f1f5f3;
+      color:var(--green);
+      flex:0 0 auto;
+    }
+
+    .summary-card:nth-child(2) .summary-icon{
+      background:var(--amber-soft);
+      color:var(--amber);
+    }
+
+    .summary-card:nth-child(3) .summary-icon{
+      background:var(--blue-soft);
+      color:var(--blue);
+    }
+
+    .summary-card:nth-child(4) .summary-icon{
+      background:var(--success-soft);
+      color:var(--success);
+    }
+
+    .summary-label{
+      display:block;
+      margin-bottom:3px;
+      color:var(--muted-2);
+      font-size:11px;
+      font-weight:700;
+      text-transform:uppercase;
+      letter-spacing:.07em;
+    }
+
+    .summary-value{
+      display:block;
+      color:var(--ink);
+      font-size:21px;
+      font-weight:800;
+      line-height:1;
+    }
+
+    /* Controls */
+    .controls{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:12px;
+      display:flex;
+      align-items:center;
+      gap:10px;
+      margin-bottom:16px;
+      box-shadow:var(--shadow);
+    }
+
+    .search-wrap{
+      position:relative;
+      flex:1;
+      min-width:220px;
+    }
+
+    .search-wrap i{
+      position:absolute;
+      left:13px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#94a09b;
+      font-size:13px;
+      pointer-events:none;
+    }
+
+    .search-input{
+      width:100%;
+      height:40px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      outline:none;
+      padding:0 13px 0 36px;
+      background:#fbfcfc;
+      color:var(--ink);
+      font-size:13px;
+      transition:.18s ease;
+    }
+
+    .search-input:focus{
+      border-color:#9fc8b5;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(31,122,79,.08);
+    }
+
+    .filter{
+      height:40px;
+      border:1px solid var(--line);
+      border-radius:9px;
+      padding:0 34px 0 12px;
+      background:#fbfcfc;
+      color:#53645e;
+      font-size:13px;
+      font-weight:600;
+      outline:none;
+      cursor:pointer;
+    }
+
+    .filter:focus{
+      border-color:#9fc8b5;
+    }
+
+    .results-label{
+      flex:0 0 auto;
+      padding:0 5px;
+      color:var(--muted);
+      font-size:12px;
+      white-space:nowrap;
+    }
+
+    /* List */
+    .list-card{
+      background:#fff;
+      border:1px solid var(--line);
+      border-radius:16px;
+      overflow:hidden;
+      box-shadow:var(--shadow);
+    }
+
+    .list-head{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 190px;
+      align-items:center;
+      gap:18px;
+      padding:13px 20px;
+      background:#fbfcfc;
+      border-bottom:1px solid var(--line);
+      color:#84918d;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .list-head span:last-child{
+      text-align:right;
+    }
+
+    .problem-list{
+      display:flex;
+      flex-direction:column;
+    }
+
+    .problem-row{
+      display:grid;
+      grid-template-columns:minmax(0,1fr) 190px;
+      gap:18px;
+      align-items:center;
+      padding:19px 20px;
+      border-bottom:1px solid #edf1ef;
+      transition:background .16s ease;
+    }
+
+    .problem-row:last-child{border-bottom:0}
+
+    .problem-row:hover{
+      background:#fcfefd;
+    }
+
+    .problem-content{
+      min-width:0;
+    }
+
+    .problem-title-line{
+      display:flex;
+      align-items:center;
+      gap:9px;
+      min-width:0;
+      margin-bottom:7px;
+    }
+
+    .problem-id{
+      flex:0 0 auto;
+      color:#98a39f;
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.04em;
+    }
+
+    .problem-title{
+      min-width:0;
+      margin:0;
+      color:var(--ink);
+      font-size:15px;
+      font-weight:750;
+      line-height:1.35;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      white-space:nowrap;
+    }
+
+    .problem-description{
+      max-width:850px;
+      margin:0 0 11px;
+      color:#6d7c77;
+      font-size:13px;
+      line-height:1.5;
+      display:-webkit-box;
+      -webkit-box-orient:vertical;
+      -webkit-line-clamp:2;
+      overflow:hidden;
+    }
+
+    .problem-meta{
+      display:flex;
+      align-items:center;
+      flex-wrap:wrap;
+      gap:7px 16px;
+      color:#7d8b86;
+      font-size:11.5px;
+    }
+
+    .meta-item{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      min-width:0;
+    }
+
+    .meta-item i{
+      color:#8b9994;
+      font-size:10px;
+    }
+
+    .category-chip{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+      padding:4px 8px;
+      border-radius:6px;
+      background:#f1f5f3;
+      color:#587067;
+      font-size:10.5px;
+      font-weight:750;
+    }
+
+    .status-cell{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+    }
+
+    .status{
+      width:168px;
+      min-height:38px;
+      padding:8px 11px;
+      border-radius:9px;
+      border:1px solid transparent;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      text-align:center;
+      font-size:11px;
+      font-weight:800;
+    }
+
+    .status i{font-size:10px}
+
+    .status-yet{
+      color:var(--amber);
+      background:var(--amber-soft);
+      border-color:#f0dfa5;
+    }
+
+    .status-progress{
+      color:var(--blue);
+      background:var(--blue-soft);
+      border-color:#cfe1ef;
+    }
+
+    .status-solved{
+      color:var(--success);
+      background:var(--success-soft);
+      border-color:#c8e6d5;
+    }
+
+    .status-submitted{
+      color:#65727a;
+      background:#f2f4f5;
+      border-color:#dfe4e7;
+    }
+
+    .status-unknown{
+      color:#6b7773;
+      background:#f5f7f6;
+      border-color:#e2e7e5;
+    }
+
+    /* Empty / error / loading */
+    .state{
+      padding:72px 24px;
+      text-align:center;
+      color:var(--muted);
+    }
+
+    .state-icon{
+      width:52px;
+      height:52px;
+      margin:0 auto 15px;
+      border-radius:15px;
+      display:grid;
+      place-items:center;
+      background:var(--green-soft);
+      color:var(--green);
+      font-size:20px;
+    }
+
+    .state h2{
+      margin:0 0 7px;
+      color:var(--ink);
+      font-size:18px;
+    }
+
+    .state p{
+      max-width:420px;
+      margin:0 auto;
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    .state.error .state-icon{
+      background:#fff0f0;
+      color:#c84d4d;
+    }
+
+    /* Mobile */
+    @media(max-width:900px){
+      .main.problems-page{
+        width:calc(100% - var(--sidebar));
+        margin-left:var(--sidebar);
+        padding:28px 22px 50px;
+      }
+
+      .sidebar-collapsed .main.problems-page{
+        width:calc(100% - var(--sidebar-small));
+        margin-left:var(--sidebar-small);
+      }
+      .summary-grid{grid-template-columns:repeat(2,1fr)}
+      .list-head{grid-template-columns:minmax(0,1fr) 150px}
+      .problem-row{grid-template-columns:minmax(0,1fr) 150px}
+      .status{width:140px}
+    }
+
+    @media(max-width:680px){
+      .main.problems-page{
+        width:calc(100% - var(--sidebar-small));
+        margin-left:var(--sidebar-small);
+        padding:22px 16px 40px;
+      }
+
+      .problems-header{
+        align-items:flex-start;
+        flex-direction:column;
+        gap:15px;
+        margin-bottom:20px;
+      }
+
+      .problems-header h1{font-size:29px}
+
+      .refresh-btn{width:100%;justify-content:center}
+
+      .summary-grid{
+        grid-template-columns:repeat(2,1fr);
+        gap:9px;
+      }
+
+      .summary-card{padding:12px}
+      .summary-icon{width:34px;height:34px}
+      .summary-value{font-size:18px}
+
+      .controls{
+        flex-wrap:wrap;
+        padding:10px;
+      }
+
+      .search-wrap{min-width:100%}
+      .filter{flex:1;min-width:0}
+      .results-label{margin-left:auto}
+
+      .list-head{display:none}
+
+      .problem-row{
+        grid-template-columns:1fr;
+        gap:13px;
+        padding:17px 15px;
+      }
+
+      .problem-title{
+        white-space:normal;
+        font-size:14px;
+      }
+
+      .status-cell{justify-content:flex-start}
+      .status{width:auto;min-width:145px}
+    }
+
+    @media(max-width:420px){
+      .summary-grid{grid-template-columns:1fr 1fr}
+      .summary-card{gap:9px}
+      .summary-label{font-size:9px}
+      .summary-value{font-size:17px}
+    }
+  </style>
+</head>
+
+<body>
+  <div class="app">
+
+    <!-- SIDEBAR -->
+    <aside class="sidebar" id="sidebar">
+      <a href="index.html" class="sidebar-logo">
+        <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+      </a>
+
+      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+        <i class="fa-solid fa-angles-left"></i>
+      </button>
+
+      <nav class="sidebar-nav" aria-label="Main navigation">
+        <a href="index.html" class="nav-item">
+          <i class="fa-solid fa-house"></i><span>Home</span>
+        </a>
+
+        <a href="list-all-problems.html" class="nav-item active">
+          <i class="fa-solid fa-list"></i><span>Problems</span>
+        </a>
+
+        <a href="ai-matches-student.html" class="nav-item">
+          <i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span>
+        </a>
+
+        <a href="projects.html" class="nav-item">
+          <i class="fa-regular fa-folder-open"></i><span>Projects</span>
+        </a>
+
+        <a href="team.html" class="nav-item">
+          <i class="fa-solid fa-users"></i><span>Team</span>
+        </a>
+
+        <a href="solver-profile.html" class="nav-item">
+          <i class="fa-solid fa-user"></i><span>Profile</span>
+        </a>
+
+        <a href="settings.html" class="nav-item">
+          <i class="fa-solid fa-gear"></i><span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-landscape">
+        <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+      </div>
+    </aside>
+
+    <!-- MAIN -->
+    <main class="main problems-page">
+      <div class="problems-shell">
+
+        <header class="problems-header">
+          <div>
+            <div class="eyebrow">
+              <i class="fa-solid fa-layer-group"></i>
+              JAN SETU · CIVIC PROBLEMS
+            </div>
+            <h1>All Problems</h1>
+            <p>A live view of every reported civic problem and where it stands.</p>
+          </div>
+
+          <button class="refresh-btn" id="refreshBtn" type="button">
+            <i class="fa-solid fa-rotate"></i>
+            <span>Refresh</span>
+          </button>
+        </header>
+
+        <!-- SUMMARY -->
+        <section class="summary-grid" aria-label="Problem summary">
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-list"></i></div>
+            <div>
+              <span class="summary-label">Total</span>
+              <strong class="summary-value" id="totalCount">—</strong>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fa-regular fa-clock"></i></div>
+            <div>
+              <span class="summary-label">Awaiting work</span>
+              <strong class="summary-value" id="yetCount">—</strong>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-person-digging"></i></div>
+            <div>
+              <span class="summary-label">In progress</span>
+              <strong class="summary-value" id="progressCount">—</strong>
+            </div>
+          </div>
+
+          <div class="summary-card">
+            <div class="summary-icon"><i class="fa-solid fa-circle-check"></i></div>
+            <div>
+              <span class="summary-label">Solved</span>
+              <strong class="summary-value" id="solvedCount">—</strong>
+            </div>
+          </div>
+        </section>
+
+        <!-- SEARCH / FILTER -->
+        <section class="controls" aria-label="Problem controls">
+          <div class="search-wrap">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input
+              class="search-input"
+              id="searchInput"
+              type="search"
+              placeholder="Search problems, categories, or locations..."
+              autocomplete="off"
+            >
+          </div>
+
+          <select class="filter" id="statusFilter" aria-label="Filter by work status">
+            <option value="all">All statuses</option>
+            <option value="yet">Yet to be worked</option>
+            <option value="progress">In progress</option>
+            <option value="solved">Solved</option>
+            <option value="submitted">Submitted</option>
+          </select>
+
+          <span class="results-label" id="resultsLabel">Loading...</span>
+        </section>
+
+        <!-- PROBLEMS -->
+        <section class="list-card" aria-label="All reported problems">
+          <div class="list-head">
+            <span>Reported civic problems</span>
+            <span>Current work status</span>
+          </div>
+
+          <div class="problem-list" id="problemsList">
+            <div class="state">
+              <div class="state-icon">
+                <i class="fa-solid fa-spinner fa-spin"></i>
+              </div>
+              <h2>Loading problems</h2>
+              <p>Fetching the latest reports from JAN SETU.</p>
+            </div>
+          </div>
+        </section>
+
+      </div>
+    </main>
+  </div>
+
+  <script>
+    const API_BASE = "https://jan-setu-bf03.onrender.com";
+
+    const sidebar = document.getElementById("sidebar");
+    const sidebarToggle = document.getElementById("sidebarToggle");
+    const problemsList = document.getElementById("problemsList");
+    const refreshBtn = document.getElementById("refreshBtn");
+    const searchInput = document.getElementById("searchInput");
+    const statusFilter = document.getElementById("statusFilter");
+
+    const totalCount = document.getElementById("totalCount");
+    const yetCount = document.getElementById("yetCount");
+    const progressCount = document.getElementById("progressCount");
+    const solvedCount = document.getElementById("solvedCount");
+    const resultsLabel = document.getElementById("resultsLabel");
+
+    let allReports = [];
+
+    sidebarToggle.addEventListener("click", () => {
+      sidebar.classList.toggle("collapsed");
+      document.querySelector(".app").classList.toggle("sidebar-collapsed");
+
+      sidebarToggle.querySelector("i").className =
+        sidebar.classList.contains("collapsed")
+          ? "fa-solid fa-angles-right"
+          : "fa-solid fa-angles-left";
+    });
+
+    function escapeHTML(value) {
+      return String(value ?? "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatDate(value) {
+      if (!value) return "Date unavailable";
+
+      const date = new Date(value);
+      if (Number.isNaN(date.getTime())) return "Date unavailable";
+
+      return date.toLocaleDateString("en-IN", {
+        day: "numeric",
+        month: "short",
+        year: "numeric"
+      });
+    }
+
+    function normalizeWorkStatus(report) {
+      const raw =
+        report?.workflow_status ??
+        report?.work_status ??
+        report?.status ??
+        "";
+
+      const value = String(raw)
+        .trim()
+        .toLowerCase()
+        .replace(/[_-]/g, " ");
+
+      if (
+        value === "yet to be worked upon" ||
+        value === "yet to work" ||
+        value === "awaiting work"
+      ) {
+        return {
+          key: "yet",
+          label: "Yet to be worked upon",
+          icon: "fa-regular fa-clock",
+          className: "status-yet"
+        };
+      }
+
+      if (
+        value === "in progress" ||
+        value === "working" ||
+        value === "ongoing"
+      ) {
+        return {
+          key: "progress",
+          label: "In Progress",
+          icon: "fa-solid fa-person-digging",
+          className: "status-progress"
+        };
+      }
+
+      if (value === "solved" || value === "resolved") {
+        return {
+          key: "solved",
+          label: "Solved",
+          icon: "fa-solid fa-circle-check",
+          className: "status-solved"
+        };
+      }
+
+      if (value === "submitted") {
+        return {
+          key: "submitted",
+          label: "Submitted",
+          icon: "fa-regular fa-paper-plane",
+          className: "status-submitted"
+        };
+      }
+
+      return {
+        key: "unknown",
+        label: raw
+          ? String(raw)
+              .replace(/[_-]/g, " ")
+              .replace(/\b\w/g, c => c.toUpperCase())
+          : "Status unavailable",
+        icon: "fa-regular fa-circle-question",
+        className: "status-unknown"
+      };
+    }
+
+    function updateSummary(reports) {
+      const counts = {
+        total: reports.length,
+        yet: 0,
+        progress: 0,
+        solved: 0
+      };
+
+      reports.forEach(report => {
+        const status = normalizeWorkStatus(report);
+        if (status.key === "yet") counts.yet++;
+        if (status.key === "progress") counts.progress++;
+        if (status.key === "solved") counts.solved++;
+      });
+
+      totalCount.textContent = counts.total;
+      yetCount.textContent = counts.yet;
+      progressCount.textContent = counts.progress;
+      solvedCount.textContent = counts.solved;
+    }
+
+    function getFilteredReports() {
+      const query = searchInput.value.trim().toLowerCase();
+      const selectedStatus = statusFilter.value;
+
+      return allReports.filter(report => {
+        const status = normalizeWorkStatus(report);
+
+        const searchable = [
+          report?.id,
+          report?.title,
+          report?.description,
+          report?.category,
+          report?.district,
+          report?.location,
+          report?.pin_code
+        ]
+          .map(value => String(value ?? "").toLowerCase())
+          .join(" ");
+
+        const matchesSearch = !query || searchable.includes(query);
+        const matchesStatus =
+          selectedStatus === "all" || status.key === selectedStatus;
+
+        return matchesSearch && matchesStatus;
+      });
+    }
+
+    function renderProblems() {
+      const reports = getFilteredReports();
+
+      resultsLabel.textContent =
+        reports.length === allReports.length
+          ? `${reports.length} problem${reports.length === 1 ? "" : "s"}`
+          : `${reports.length} of ${allReports.length}`;
+
+      if (!reports.length) {
+        problemsList.innerHTML = `
+          <div class="state">
+            <div class="state-icon">
+              <i class="fa-regular fa-folder-open"></i>
+            </div>
+            <h2>No matching problems</h2>
+            <p>Try changing the search or status filter.</p>
+          </div>
+        `;
+        return;
+      }
+
+      problemsList.innerHTML = reports.map(report => {
+        const status = normalizeWorkStatus(report);
+
+        const location = [report?.location, report?.district]
+          .map(v => String(v || "").trim())
+          .filter(Boolean)
+          .join(", ");
+
+        const category = String(report?.category || "").trim();
+        const description =
+          String(report?.description || "").trim() ||
+          "No description provided.";
+
+        return `
+          <article class="problem-row">
+            <div class="problem-content">
+              <div class="problem-title-line">
+                <span class="problem-id">#${escapeHTML(report?.id ?? "—")}</span>
+                <h2 class="problem-title">
+                  ${escapeHTML(report?.title || "Untitled Problem")}
+                </h2>
+              </div>
+
+              <p class="problem-description">
+                ${escapeHTML(description)}
+              </p>
+
+              <div class="problem-meta">
+                ${
+                  category
+                    ? `<span class="category-chip">
+                         <i class="fa-solid fa-tag"></i>
+                         ${escapeHTML(category)}
+                       </span>`
+                    : ""
+                }
+
+                ${
+                  location
+                    ? `<span class="meta-item">
+                         <i class="fa-solid fa-location-dot"></i>
+                         ${escapeHTML(location)}
+                       </span>`
+                    : ""
+                }
+
+                ${
+                  report?.created_at
+                    ? `<span class="meta-item">
+                         <i class="fa-regular fa-calendar"></i>
+                         ${escapeHTML(formatDate(report.created_at))}
+                       </span>`
+                    : ""
+                }
+
+                ${
+                  report?.pin_code
+                    ? `<span class="meta-item">
+                         <i class="fa-solid fa-location-crosshairs"></i>
+                         ${escapeHTML(report.pin_code)}
+                       </span>`
+                    : ""
+                }
+              </div>
+            </div>
+
+            <div class="status-cell">
+              <div class="status ${status.className}">
+                <i class="${status.icon}"></i>
+                <span>${escapeHTML(status.label)}</span>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    async function loadProblems() {
+      refreshBtn.disabled = true;
+      refreshBtn.querySelector("i").className =
+        "fa-solid fa-spinner fa-spin";
+
+      if (!allReports.length) {
+        problemsList.innerHTML = `
+          <div class="state">
+            <div class="state-icon">
+              <i class="fa-solid fa-spinner fa-spin"></i>
+            </div>
+            <h2>Loading problems</h2>
+            <p>Fetching the latest reports from JAN SETU.</p>
+          </div>
+        `;
+      }
+
+      try {
+        const response = await fetch(`${API_BASE}/api/reports/all`, {
+          method: "GET",
+          cache: "no-store"
+        });
+
+        const result = await response.json().catch(() => null);
+
+        if (!response.ok) {
+          throw new Error(
+            result?.error || `Failed to load problems (${response.status})`
+          );
+        }
+
+        allReports = Array.isArray(result)
+          ? result
+          : Array.isArray(result?.reports)
+            ? result.reports
+            : [];
+
+        allReports.sort(
+          (a, b) =>
+            new Date(b?.created_at || 0).getTime() -
+            new Date(a?.created_at || 0).getTime()
+        );
+
+        updateSummary(allReports);
+        renderProblems();
+      } catch (error) {
+        console.error("[ALL PROBLEMS]", error);
+
+        totalCount.textContent = "—";
+        yetCount.textContent = "—";
+        progressCount.textContent = "—";
+        solvedCount.textContent = "—";
+        resultsLabel.textContent = "Unavailable";
+
+        problemsList.innerHTML = `
+          <div class="state error">
+            <div class="state-icon">
+              <i class="fa-solid fa-triangle-exclamation"></i>
+            </div>
+            <h2>Could not load problems</h2>
+            <p>${escapeHTML(
+              error?.message ||
+              "Something went wrong while loading the civic problems."
+            )}</p>
+          </div>
+        `;
+      } finally {
+        refreshBtn.disabled = false;
+        refreshBtn.querySelector("i").className = "fa-solid fa-rotate";
+      }
+    }
+
+    searchInput.addEventListener("input", renderProblems);
+    statusFilter.addEventListener("change", renderProblems);
+    refreshBtn.addEventListener("click", loadProblems);
+
+    loadProblems();
+  </script>
+</body>
+</html>
