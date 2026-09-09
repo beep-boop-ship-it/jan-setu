@@ -288,11 +288,7 @@
 
 <script>
 
-const API_BASE =
-  (window.location.hostname === "localhost" ||
-   window.location.hostname === "127.0.0.1")
-    ? window.location.origin
-    : "https://jan-setu-bf03.onrender.com";
+const API_BASE = "";
 
 const roleLabels = {
   student: "Student",
@@ -554,16 +550,16 @@ async function loadSolverProfile() {
 
 
 function isRelevantReport(report) {
+  const reportText = [
+    report?.title,
+    report?.description,
+    report?.category,
+    ...(Array.isArray(report?.skills) ? report.skills : [])
+  ].join(" ").toLowerCase();
 
-  const reportCategory =
-    String(report?.category || "")
-      .trim()
-      .toLowerCase();
-
-  if (!reportCategory) return false;
-
-  return solverInterests.includes(reportCategory);
-
+  return solverInterests.some(term =>
+    term.length >= 2 && reportText.includes(term)
+  );
 }
 
 
@@ -599,6 +595,29 @@ async function loadReports() {
           ? result.reports
           : [];
 
+    const accountId = Number(
+  localStorage.getItem("solverAccountId")
+);
+
+await Promise.all(
+  reports.map(async report => {
+    try {
+      const proposalResponse = await fetch(
+        `${API_BASE}/api/reports/${report.id}/proposals`
+      );
+
+      const proposals = await proposalResponse.json();
+
+      report.hasSubmittedProposal =
+        Array.isArray(proposals) &&
+        proposals.some(proposal =>
+          Number(proposal.student_account_id) === accountId
+        );
+    } catch {
+      report.hasSubmittedProposal = false;
+    }
+  })
+);
 
     const relevantReports =
       reports.filter(report => {
@@ -834,15 +853,16 @@ function renderReports(reports) {
 
       <div class="card-actions">
 
-        <button
-          class="submit-btn"
-          type="button"
-          data-report-id="${escapeHTML(report.id)}">
+        <button 
+  class="submit-btn" 
+  type="button" 
+  data-report-id="${escapeHTML(report.id)}"
+  ${report.hasSubmittedProposal ? "disabled" : ""}>
 
-          <i class="fa-regular fa-paper-plane"></i>
-          Submit Proposal
+  <i class="fa-${report.hasSubmittedProposal ? "solid fa-check" : "regular fa-paper-plane"}"></i>
+  ${report.hasSubmittedProposal ? "Proposal Submitted" : "Submit Proposal"}
 
-        </button>
+</button>
 
 
         <button
@@ -1202,52 +1222,17 @@ proposalForm.addEventListener(
 
 
     const proposal = {
-
-      report_id: Number(reportId),
-
-      approach:
-        proposalApproach.value.trim(),
-
-      expected_outcome:
-        expectedOutcome.value.trim(),
-
-      tools:
-        tools.value.trim(),
-
-      timeline:
-        timeline.value,
-
-      support_link:
-        supportLink.value.trim(),
-
-      submitted_by:
-        savedProfile.fullName ||
-        solverAccount.primaryName ||
-        "Student / Researcher",
-
-      role:
-
-        role,
-
-      profile: {
-
-        ...savedProfile,
-
-        email:
-          solverAccount.email || "",
-
-        phone:
-          savedProfile.consent
-            ? solverAccount.phone || ""
-            : "",
-
-        signupFields:
-          solverAccount.signupFields || []
-
-      }
-
+      student_account_id: Number(localStorage.getItem("solverAccountId")),
+      proposal_text: [
+        `Approach: ${proposalApproach.value.trim()}`,
+        `Expected Outcome: ${expectedOutcome.value.trim()}`,
+        `Tools / Technologies: ${tools.value.trim()}`,
+        `Timeline: ${timeline.value}`,
+        supportLink.value.trim()
+          ? `Supporting Link: ${supportLink.value.trim()}`
+          : ""
+      ].filter(Boolean).join("\n\n")
     };
-
 
     submitButton.disabled =
       true;
@@ -1260,7 +1245,7 @@ proposalForm.addEventListener(
 
       const response =
         await fetch(
-          `${API_BASE}/api/proposals`,
+          `${API_BASE}/api/reports/${reportId}/proposals`,
           {
             method: "POST",
 
@@ -1288,76 +1273,6 @@ proposalForm.addEventListener(
         );
 
       }
-
-
-      /*
-        Keep a temporary local copy until the
-        proposal backend is fully implemented.
-      */
-
-      const proposals =
-        readJSON(
-          "submittedProposals",
-          []
-        );
-
-
-      const localProposal = {
-
-        ...proposal,
-
-        id:
-          result?.id || null,
-
-        problem:
-          summaryTitle.textContent,
-
-        image:
-          summaryImage.src,
-
-        description:
-          summaryDescription.textContent,
-
-        location:
-          summaryLocation.textContent,
-
-        category:
-          summaryCategory.textContent,
-
-        submittedAt:
-          new Date().toISOString(),
-
-        status:
-          "Submitted"
-
-      };
-
-
-      const existingIndex =
-        proposals.findIndex(item =>
-          Number(item.report_id) ===
-          Number(reportId)
-        );
-
-
-      if (existingIndex >= 0) {
-
-        proposals[existingIndex] =
-          localProposal;
-
-      } else {
-
-        proposals.push(
-          localProposal
-        );
-
-      }
-
-
-      localStorage.setItem(
-        "submittedProposals",
-        JSON.stringify(proposals)
-      );
 
 
       proposalModal.classList.remove(
@@ -1405,53 +1320,6 @@ proposalForm.addEventListener(
 );
 
 
-/* RESTORE SUBMITTED PROPOSALS */
-
-function restoreSubmittedState() {
-
-  const proposals =
-    readJSON(
-      "submittedProposals",
-      []
-    );
-
-
-  document
-    .querySelectorAll(".match-card")
-    .forEach(card => {
-
-      const button =
-        card.querySelector(
-          ".submit-btn"
-        );
-
-
-      const reportId =
-        button?.dataset.reportId;
-
-
-      const alreadySubmitted =
-        proposals.some(item =>
-          Number(item.report_id) ===
-          Number(reportId)
-        );
-
-
-      if (alreadySubmitted) {
-
-        button.innerHTML =
-          '<i class="fa-solid fa-check"></i> Proposal Submitted';
-
-        button.disabled =
-          true;
-
-      }
-
-    });
-
-}
-
-
 /* SAVED STATE */
 
 function restoreSavedState() {
@@ -1491,8 +1359,6 @@ function restoreSavedState() {
 
     });
 
-
-  restoreSubmittedState();
 
 }
 

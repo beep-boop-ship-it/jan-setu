@@ -1,59 +1,120 @@
-```html
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Projects | JAN SETU</title>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
 </head>
+
 <body>
+
 <div class="app">
+
+  <!-- ================= SIDEBAR ================= -->
+
   <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="sidebar-logo"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
-    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+
+    <a href="index.html" class="sidebar-logo">
+      <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+    </a>
+
+    <button
+      class="sidebar-toggle"
+      id="sidebarToggle"
+      type="button"
+      aria-label="Toggle sidebar"
+    >
       <i class="fa-solid fa-angles-left"></i>
     </button>
 
     <nav class="sidebar-nav" aria-label="Main navigation">
+
       <a href="index.html" class="nav-item" data-nav="home">
-        <i class="fa-solid fa-house"></i><span>Home</span>
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
       </a>
+
       <a href="#" class="nav-item" id="aiMatchesNav" data-nav="matches">
-        <i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span>
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>AI Matches</span>
       </a>
+
       <a href="projects.html" class="nav-item active" data-nav="projects">
-        <i class="fa-regular fa-folder-open"></i><span>Projects</span>
+        <i class="fa-regular fa-folder-open"></i>
+        <span>Projects</span>
       </a>
+
       <a href="team.html" class="nav-item" data-nav="team">
-        <i class="fa-solid fa-users"></i><span>Team</span>
+        <i class="fa-solid fa-users"></i>
+        <span>Team</span>
       </a>
+
       <a href="solver-profile.html" class="nav-item" data-nav="profile">
-        <i class="fa-solid fa-user"></i><span>Profile</span>
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
       </a>
+
       <a href="settings.html" class="nav-item" data-nav="settings">
-        <i class="fa-solid fa-gear"></i><span>Settings</span>
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
       </a>
+
     </nav>
 
     <div class="sidebar-landscape">
-      <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+      <p>
+        A STRONGER<br>
+        JHARKHAND<br>
+        TOGETHER
+      </p>
     </div>
+
   </aside>
 
+
+  <!-- ================= MAIN ================= -->
+
   <main class="main solver-page">
+
     <header class="page-header">
+
       <div>
-        <h1>Projects</h1>
-        <p>Your submitted or accepted JAN SETU projects.</p>
+
+        <h1 id="projectsTitle">Projects</h1>
+
+        <p id="projectsSubtitle">
+          Your active JAN SETU projects and their working teams.
+        </p>
+
       </div>
+
     </header>
 
-    <section id="projectsContent" class="solver-content-list"></section>
+
+    <section
+      id="projectsContent"
+      class="solver-content-list"
+    ></section>
+
   </main>
+
 </div>
 
+
 <script>
+
+/* =========================================================
+   ROLE LABELS
+   ========================================================= */
+
 const roleLabels = {
   student: "Student",
   researcher: "Researcher",
@@ -65,38 +126,83 @@ const roleLabels = {
   "innovation-hub": "Innovation Hub"
 };
 
-const storedRole = localStorage.getItem("solverRole");
-const role = roleLabels[storedRole] ? storedRole : "student";
 
-const sidebar = document.getElementById("sidebar");
-const sidebarToggle = document.getElementById("sidebarToggle");
-const content = document.getElementById("projectsContent");
+const storedRole =
+  localStorage.getItem("solverRole");
+
+
+const role =
+  roleLabels[storedRole]
+    ? storedRole
+    : "student";
+
+
+const accountId =
+  localStorage.getItem("solverAccountId");
+
+const isIndustry =
+  role !== "student" && role !== "researcher";
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const sidebar =
+  document.getElementById("sidebar");
+
+const sidebarToggle =
+  document.getElementById("sidebarToggle");
+
+const content =
+  document.getElementById("projectsContent");
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 function setRoleAwareNavigation() {
-  const matchesLink = document.getElementById("aiMatchesNav");
+
+  const matchesLink =
+    document.getElementById("aiMatchesNav");
 
   if (!matchesLink) return;
 
+  const isSolver =
+    role === "student" || role === "researcher";
+
   matchesLink.href =
-    (role === "student" || role === "researcher")
+    isSolver
       ? "ai-matches-student.html"
       : "ai-matches-industry.html";
-}
 
-function readJSON(key, fallback) {
-  try {
-    const value = localStorage.getItem(key);
+  const projectsTitle =
+    document.getElementById("projectsTitle");
 
-    if (!value) return fallback;
+  const projectsSubtitle =
+    document.getElementById("projectsSubtitle");
 
-    const parsed = JSON.parse(value);
-    return parsed ?? fallback;
-  } catch {
-    return fallback;
+  if (projectsTitle && projectsSubtitle) {
+    if (isIndustry) {
+      projectsTitle.textContent = "Mentored Projects";
+      projectsSubtitle.textContent =
+        "Problems your organization is mentoring and the teams working on them.";
+    } else {
+      projectsTitle.textContent = "Projects";
+      projectsSubtitle.textContent =
+        "Your active JAN SETU projects and their working teams.";
+    }
   }
 }
 
+
+/* =========================================================
+   HTML SAFETY
+   ========================================================= */
+
 function escapeHTML(value) {
+
   return String(value ?? "")
     .replace(/&/g, "&amp;")
     .replace(/</g, "&lt;")
@@ -105,167 +211,580 @@ function escapeHTML(value) {
     .replace(/'/g, "&#039;");
 }
 
+
+/* =========================================================
+   EMPTY STATE
+   ========================================================= */
+
 function emptyState(message, href, label) {
+
   content.innerHTML = `
+
     <div class="solver-empty">
+
       <i class="fa-regular fa-folder-open"></i>
-      <h2>No projects yet</h2>
-      <p>${escapeHTML(message)}</p>
-      <a href="${escapeHTML(href)}" class="solver-primary-link">${escapeHTML(label)}</a>
+
+      <h2>${isIndustry ? "No mentored projects yet" : "No projects yet"}</h2>
+
+      <p>
+        ${escapeHTML(message)}
+      </p>
+
+      <a
+        href="${escapeHTML(href)}"
+        class="solver-primary-link"
+      >
+        ${escapeHTML(label)}
+      </a>
+
     </div>
+
   `;
 }
 
-setRoleAwareNavigation();
 
-const accepted = readJSON("acceptedProject", null);
-const proposals = readJSON("submittedProposals", []);
-const team = readJSON("projectTeam", []);
+/* =========================================================
+   LOADING STATE
+   ========================================================= */
 
-const safeProposals = Array.isArray(proposals) ? proposals : [];
-const safeTeam = Array.isArray(team) ? team : [];
+function loadingState() {
 
-if (role === "student" || role === "researcher") {
-  if (!safeProposals.length) {
-    emptyState(
-      "Submit a proposal from AI Matches to start a project journey.",
-      "ai-matches-student.html",
-      "Go to AI Matches"
-    );
-  } else {
-    safeProposals.forEach(proposal => {
-      if (!proposal || typeof proposal !== "object") return;
+  content.innerHTML = `
 
-      const problem = String(proposal.problem || "Untitled Project");
+    <div class="solver-empty">
 
-      const selected =
-        accepted &&
-        accepted.problem === problem &&
-        safeTeam.some(member =>
-          member &&
-          member.problem === problem &&
-          member.name === proposal.submittedBy
-        );
+      <i class="fa-solid fa-spinner fa-spin"></i>
 
-      const status =
-        selected
-          ? "Selected / Active"
-          : accepted?.problem === problem
-            ? "Under Team Selection"
-            : "Proposal Submitted";
+      <h2>${isIndustry ? "Loading mentored projects..." : "Loading projects..."}</h2>
 
-      const card = document.createElement("article");
-      card.className = "solver-project-card";
+      <p>
+        ${isIndustry
+          ? "Fetching projects your organization is mentoring."
+          : "Fetching your active JAN SETU projects."}
+      </p>
 
-      card.innerHTML = `
-        <div>
-          <span class="status-pill ${selected ? "in-progress" : "verified"}">
-            ${escapeHTML(status)}
-          </span>
+    </div>
 
-          <h2>${escapeHTML(problem)}</h2>
-
-          <p>
-            ${escapeHTML(proposal.approach || "Proposal submitted.")}
-          </p>
-
-          <div class="public-problem-meta">
-            <span>
-              <i class="fa-solid fa-layer-group"></i>
-              ${escapeHTML(proposal.category || "Civic Problem")}
-            </span>
-
-            <span>
-              <i class="fa-regular fa-clock"></i>
-              ${escapeHTML(proposal.timeline || "Timeline not set")}
-            </span>
-          </div>
-        </div>
-
-        <a href="team.html" class="solver-secondary-link">
-          View Team
-        </a>
-      `;
-
-      content.appendChild(card);
-    });
-
-    if (!content.children.length) {
-      emptyState(
-        "Submit a proposal from AI Matches to start a project journey.",
-        "ai-matches-student.html",
-        "Go to AI Matches"
-      );
-    }
-  }
-} else {
-  if (!accepted || typeof accepted !== "object") {
-    emptyState(
-      "Accept one matched project before building a team.",
-      "ai-matches-industry.html",
-      "Review AI Matches"
-    );
-  } else {
-    const acceptedProblem = String(
-      accepted.problem || "Untitled Project"
-    );
-
-    const count = safeTeam.filter(member =>
-      member &&
-      member.problem === acceptedProblem
-    ).length;
-
-    const image = accepted.image
-      ? escapeHTML(accepted.image)
-      : "";
-
-    const imageHTML = image
-      ? `<img src="${image}" alt="${escapeHTML(acceptedProblem)}">`
-      : "";
-
-    content.innerHTML = `
-      <article class="solver-project-card active-project-card">
-        ${imageHTML}
-
-        <div>
-          <span class="status-pill in-progress">
-            Active Project
-          </span>
-
-          <h2>${escapeHTML(acceptedProblem)}</h2>
-
-          <p>
-            ${escapeHTML(accepted.description || "Project description not available.")}
-          </p>
-
-          <div class="public-problem-meta">
-            <span>
-              <i class="fa-solid fa-location-dot"></i>
-              ${escapeHTML(accepted.location || "Location not set")}
-            </span>
-
-            <span>
-              <i class="fa-solid fa-users"></i>
-              ${count}/4 team members
-            </span>
-          </div>
-        </div>
-
-        <a href="team.html" class="solver-primary-link">
-          Manage Team
-        </a>
-      </article>
-    `;
-  }
+  `;
 }
 
-sidebarToggle.addEventListener("click", () => {
-  const collapsed = sidebar.classList.toggle("collapsed");
-  document.querySelector(".app").classList.toggle("sidebar-collapsed");
 
-  sidebarToggle.setAttribute("aria-expanded", String(!collapsed));
-});
+/* =========================================================
+   ERROR STATE
+   ========================================================= */
+
+function errorState(message) {
+
+  content.innerHTML = `
+
+    <div class="solver-empty">
+
+      <i class="fa-solid fa-triangle-exclamation"></i>
+
+      <h2>${isIndustry ? "Unable to load mentored projects" : "Unable to load projects"}</h2>
+
+      <p>
+        ${escapeHTML(message)}
+      </p>
+
+      <button
+        type="button"
+        class="solver-primary-link"
+        onclick="loadProjects()"
+      >
+        Try Again
+      </button>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   ROLE FORMATTING
+   ========================================================= */
+
+function formatRole(role) {
+
+  return roleLabels[role]
+    || role
+    || "Member";
+}
+
+
+/* =========================================================
+   MEMBER CARD
+   ========================================================= */
+
+function renderMember(member) {
+
+  const memberRole =
+    isIndustry && member.role === "company"
+      ? "Mentor"
+      : formatRole(member.role);
+
+  return `
+
+    <div class="project-member">
+
+      <div class="project-member-avatar">
+
+        <i class="fa-solid fa-user"></i>
+
+      </div>
+
+
+      <div class="project-member-info">
+
+        <strong>
+          ${escapeHTML(
+            member.full_name ||
+            "Unnamed Member"
+          )}
+        </strong>
+
+        <span>
+          ${escapeHTML(
+            member.email ||
+            "Email unavailable"
+          )}
+        </span>
+
+      </div>
+
+
+      <span class="project-member-role">
+
+        ${escapeHTML(memberRole)}
+
+      </span>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   MEMBER SECTION
+   ========================================================= */
+
+function renderMemberSection(
+  title,
+  icon,
+  members,
+  count,
+  max
+) {
+
+  const memberHTML =
+    members.length
+
+      ? members
+          .map(renderMember)
+          .join("")
+
+      : `
+        <div class="project-no-members">
+          No ${escapeHTML(title.toLowerCase())} yet.
+        </div>
+      `;
+
+
+  return `
+
+    <div class="project-member-section">
+
+      <div class="project-member-section-header">
+
+        <h3>
+
+          <i class="${icon}"></i>
+
+          ${escapeHTML(title)}
+
+        </h3>
+
+        <span>
+          ${count}/${max}
+        </span>
+
+      </div>
+
+
+      <div class="project-members-list">
+
+        ${memberHTML}
+
+      </div>
+
+    </div>
+
+  `;
+}
+
+
+/* =========================================================
+   PROJECT CARD
+   ========================================================= */
+
+function renderProject(project) {
+
+  const members =
+    Array.isArray(project.members)
+      ? project.members
+      : [];
+
+
+  /*
+   * Students/researchers use the 4-person
+   * student capacity.
+   *
+   * Company accounts are mentors and use
+   * the separate 2-person mentor capacity.
+   */
+
+  const students =
+    members.filter(member =>
+      member &&
+      (
+        member.role === "student" ||
+        member.role === "researcher"
+      )
+    );
+
+
+  const mentors =
+    members.filter(member =>
+      member &&
+      member.role === "company"
+    );
+
+
+  const studentCount =
+    Number.isFinite(project.student_count)
+      ? project.student_count
+      : students.length;
+
+
+  const mentorCount =
+    Number.isFinite(project.mentor_count)
+      ? project.mentor_count
+      : mentors.length;
+
+
+  const maxStudents =
+    Number.isFinite(project.max_students)
+      ? project.max_students
+      : 4;
+
+
+  const maxMentors =
+    Number.isFinite(project.max_mentors)
+      ? project.max_mentors
+      : 2;
+
+
+  const isSolved =
+    project.workflow_status === "SOLVED";
+
+
+  const status =
+    isSolved
+      ? "Solved"
+      : (isIndustry ? "Mentoring" : "In Progress");
+
+
+  const statusClass =
+    isSolved
+      ? "verified"
+      : "in-progress";
+
+  const projectRoleLabel =
+    isIndustry ? "MENTORED PROJECT" : "YOUR PROJECT";
+
+  const projectActionLabel =
+    isIndustry ? "View Team" : "View Team";
+
+
+  const card =
+    document.createElement("article");
+
+
+  card.className =
+    "solver-project-card active-project-card";
+
+
+  card.innerHTML = `
+
+    <!-- ================= PROJECT INFORMATION ================= -->
+
+    <div class="project-main-info">
+
+      <span class="status-pill ${statusClass}">
+        ${escapeHTML(status)}
+      </span>
+
+
+      <h2>
+        ${escapeHTML(
+          project.title ||
+          "Untitled Project"
+        )}
+      </h2>
+
+
+      <p>
+        ${escapeHTML(
+          project.description ||
+          "No project description available."
+        )}
+      </p>
+
+
+      <div class="public-problem-meta">
+
+        <span>
+
+          <i class="fa-solid fa-layer-group"></i>
+
+          ${escapeHTML(
+            project.category ||
+            "Civic Problem"
+          )}
+
+        </span>
+
+
+        <span>
+
+          <i class="fa-solid fa-location-dot"></i>
+
+          ${escapeHTML(
+            project.location ||
+            "Location not set"
+          )}
+
+        </span>
+
+      </div>
+
+    </div>
+
+
+    <!-- ================= WORKING TEAM ================= -->
+
+    <div class="project-team">
+
+      <div class="project-team-heading">
+
+        <div>
+
+          <span class="project-team-label">
+            ${escapeHTML(projectRoleLabel)}
+          </span>
+
+          <h3>
+            <i class="fa-solid fa-users"></i>
+            Project Members
+          </h3>
+
+        </div>
+
+      </div>
+
+
+      ${renderMemberSection(
+        "Students",
+        "fa-solid fa-user-graduate",
+        students,
+        studentCount,
+        maxStudents
+      )}
+
+
+      ${renderMemberSection(
+        "Mentors",
+        "fa-solid fa-building",
+        mentors,
+        mentorCount,
+        maxMentors
+      )}
+
+    </div>
+
+
+    <!-- ================= ACTION ================= -->
+
+    <div class="project-actions">
+
+      <a
+        href="team.html"
+        class="solver-primary-link"
+      >
+        <i class="fa-solid fa-users"></i>
+        ${escapeHTML(projectActionLabel)}
+      </a>
+
+    </div>
+
+  `;
+
+
+  content.appendChild(card);
+}
+
+
+/* =========================================================
+   LOAD PROJECTS
+   ========================================================= */
+
+async function loadProjects() {
+
+  /*
+   * Do not fall back to cached project data.
+   * The backend is the source of truth.
+   */
+
+  if (!accountId) {
+
+    emptyState(
+      isIndustry
+        ? "Please log in as an industry account to view your mentored projects."
+        : "Please log in as a solver to view your projects.",
+      "solver-login.html",
+      "Go to Solver Login"
+    );
+
+    return;
+  }
+
+
+  loadingState();
+
+
+  try {
+
+    /*
+     * IMPORTANT:
+     * Relative API URL.
+     *
+     * Local:
+     *   /api/projects
+     *
+     * Render:
+     *   /api/projects
+     *
+     * No localhost is hardcoded.
+     */
+
+    const response =
+      await fetch(
+        `/api/projects?account_id=${encodeURIComponent(accountId)}`
+      );
+
+
+    if (!response.ok) {
+
+      const errorText =
+        await response.text();
+
+      throw new Error(
+        errorText ||
+        `Server returned ${response.status}`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const projects =
+      Array.isArray(data.projects)
+        ? data.projects
+        : [];
+
+
+    content.innerHTML = "";
+
+
+    if (!projects.length) {
+
+      emptyState(
+        isIndustry
+          ? "Your organization is not currently mentoring any JAN SETU problems."
+          : "You are not currently working on any JAN SETU problems.",
+        isIndustry ? "ai-matches-industry.html" : "ai-matches-student.html",
+        isIndustry ? "Explore AI Matches" : "Explore AI Matches"
+      );
+
+      return;
+    }
+
+
+    projects.forEach(renderProject);
+
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load projects:",
+      error
+    );
+
+
+    errorState(
+      "We couldn't retrieve your projects from the server. " +
+      "Please make sure the backend is running and try again."
+    );
+
+  }
+
+}
+
+
+/* =========================================================
+   SIDEBAR TOGGLE
+   ========================================================= */
+
+sidebarToggle.addEventListener(
+  "click",
+  () => {
+
+    const collapsed =
+      sidebar.classList.toggle(
+        "collapsed"
+      );
+
+
+    document
+      .querySelector(".app")
+      .classList.toggle(
+        "sidebar-collapsed"
+      );
+
+
+    sidebarToggle.setAttribute(
+      "aria-expanded",
+      String(!collapsed)
+    );
+
+  }
+);
+
+
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
+
+setRoleAwareNavigation();
+
+loadProjects();
+
 </script>
+
 </body>
 </html>
-```

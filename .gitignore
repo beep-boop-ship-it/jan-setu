@@ -1,13 +1,22 @@
 # Secrets
 .env
+.env.*
 
 # Go
 *.exe
 *.out
+backend/sih_2026
 t
+
+# Python
+*.egg-info/
+__pycache__/
+*.pyc
+.venv/
 
 # OS
 .DS_Store
 
 # Editor
 .vscode/
+.idea/

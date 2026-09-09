@@ -3209,3 +3209,604 @@ html { scroll-behavior: smooth; }
     font-size: 13px;
     letter-spacing: .04em;
 }
+
+
+/* =========================================================
+   PROJECTS — WORKING TEAM
+   ========================================================= */
+
+.project-main-info {
+  width: 100%;
+}
+
+
+.project-main-info h2 {
+  margin-bottom: 10px;
+}
+
+
+.project-main-info > p {
+  max-width: 850px;
+  line-height: 1.6;
+}
+
+
+/* ================= TEAM CONTAINER ================= */
+
+.project-team {
+  width: 100%;
+  margin-top: 26px;
+  padding-top: 22px;
+  border-top: 1px solid #e5e7eb;
+}
+
+
+.project-team-heading {
+  margin-bottom: 18px;
+}
+
+
+.project-team-label {
+  display: block;
+  margin-bottom: 5px;
+
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+
+  color: #718096;
+}
+
+
+.project-team-heading h3 {
+  margin: 0;
+
+  font-size: 20px;
+  font-weight: 700;
+
+  color: #173f67;
+}
+
+
+.project-team-heading h3 i {
+  margin-right: 8px;
+}
+
+
+/* ================= MEMBER SECTION ================= */
+
+.project-member-section {
+  margin-top: 18px;
+}
+
+
+.project-member-section-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  margin-bottom: 10px;
+}
+
+
+.project-member-section-header h3 {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  margin: 0;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  color: #294b6b;
+}
+
+
+.project-member-section-header h3 i {
+  font-size: 14px;
+}
+
+
+.project-member-section-header > span {
+  display: inline-flex;
+  align-items: center;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #eef5f1;
+
+  color: #237d52;
+
+  font-size: 12px;
+  font-weight: 700;
+}
+
+
+/* ================= MEMBER LIST ================= */
+
+.project-members-list {
+  display: flex;
+  flex-direction: column;
+
+  gap: 8px;
+}
+
+
+/* ================= MEMBER ================= */
+
+.project-member {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  padding: 12px 14px;
+
+  border: 1px solid #e4e8eb;
+  border-radius: 10px;
+
+  background: #fafcfd;
+}
+
+
+.project-member-avatar {
+  flex: 0 0 36px;
+
+  width: 36px;
+  height: 36px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eaf4ef;
+
+  color: #237d52;
+
+  font-size: 14px;
+}
+
+
+.project-member-info {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+}
+
+
+.project-member-info strong {
+  font-size: 14px;
+  font-weight: 700;
+
+  color: #183b5d;
+}
+
+
+.project-member-info span {
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 13px;
+
+  color: #68798a;
+}
+
+
+/* ================= MEMBER ROLE ================= */
+
+.project-member-role {
+  flex-shrink: 0;
+
+  padding: 5px 10px;
+
+  border-radius: 999px;
+
+  background: #fff3d7;
+
+  color: #a86800;
+
+  font-size: 11px;
+  font-weight: 700;
+}
+
+
+/* ================= NO MEMBERS ================= */
+
+.project-no-members {
+  padding: 12px 14px;
+
+  border: 1px dashed #d5dce2;
+  border-radius: 10px;
+
+  color: #7b8794;
+
+  font-size: 13px;
+}
+
+
+/* ================= ACTIONS ================= */
+
+.project-actions {
+  width: 100%;
+
+  display: flex;
+  justify-content: flex-end;
+
+  margin-top: 22px;
+  padding-top: 18px;
+
+  border-top: 1px solid #e5e7eb;
+}
+
+
+.project-actions .solver-primary-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+
+  .project-member {
+    align-items: flex-start;
+  }
+
+
+  .project-member-role {
+    margin-left: auto;
+  }
+
+
+  .project-member-info span {
+    max-width: 180px;
+  }
+
+
+  .project-actions {
+    justify-content: stretch;
+  }
+
+
+  .project-actions .solver-primary-link {
+    width: 100%;
+    justify-content: center;
+  }
+
+}
+
+/* =========================================================
+   TEAM — REAL PROJECT TEAMS
+   ========================================================= */
+
+.team-project-wrapper {
+  margin-bottom: 32px;
+}
+
+
+/* ================= PROJECT BANNER ================= */
+
+.team-project-banner {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  min-height: 130px;
+
+  padding: 28px 30px;
+
+  border-radius: 14px;
+
+  background: #173f67;
+
+  color: white;
+}
+
+
+.team-project-banner span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  letter-spacing: 0.12em;
+
+  opacity: 0.75;
+}
+
+
+.team-project-banner h2 {
+  margin: 0 0 8px;
+
+  font-size: 26px;
+}
+
+
+.team-project-banner p {
+  margin: 0;
+
+  font-size: 14px;
+
+  opacity: 0.85;
+}
+
+
+.team-project-banner p i {
+  margin-right: 5px;
+}
+
+
+/* ================= PROJECT META ================= */
+
+.team-project-wrapper > .public-problem-meta {
+  margin: 16px 0 20px;
+}
+
+
+/* ================= TEAM GRID ================= */
+
+.team-project-wrapper .team-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(auto-fit, minmax(280px, 1fr));
+
+  gap: 14px;
+}
+
+
+/* ================= MEMBER CARD ================= */
+
+.team-project-wrapper .team-member-card {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  min-width: 0;
+
+  padding: 16px;
+
+  border: 1px solid #e3e8ec;
+  border-radius: 12px;
+
+  background: #ffffff;
+
+  transition:
+    transform 0.15s ease,
+    box-shadow 0.15s ease;
+}
+
+
+.team-project-wrapper .team-member-card:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 8px 22px rgba(23, 63, 103, 0.08);
+}
+
+
+/* ================= AVATAR ================= */
+
+.team-project-wrapper .member-avatar {
+  flex: 0 0 46px;
+
+  width: 46px;
+  height: 46px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #eaf4ef;
+
+  color: #237d52;
+
+  font-size: 17px;
+  font-weight: 700;
+}
+
+
+/* ================= MEMBER INFO ================= */
+
+.team-project-wrapper .team-member-info {
+  min-width: 0;
+
+  flex: 1;
+}
+
+
+.team-project-wrapper .member-type {
+  display: block;
+
+  margin-bottom: 3px;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  color: #718096;
+
+  text-transform: uppercase;
+
+  letter-spacing: 0.06em;
+}
+
+
+.team-project-wrapper .team-member-info h3 {
+  margin: 0 0 4px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 15px;
+
+  color: #183b5d;
+}
+
+
+.team-project-wrapper .team-member-info p {
+  margin: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+
+  font-size: 12px;
+
+  color: #68798a;
+}
+
+
+/* ================= ACTION ================= */
+
+.team-project-wrapper .member-actions {
+  flex-shrink: 0;
+}
+
+
+.team-project-wrapper .view-member-btn {
+  padding: 7px 10px;
+
+  border: 1px solid #d8e0e6;
+  border-radius: 7px;
+
+  background: white;
+
+  color: #294b6b;
+
+  font-size: 11px;
+  font-weight: 700;
+
+  cursor: pointer;
+}
+
+
+.team-project-wrapper .view-member-btn:hover {
+  background: #f4f8fa;
+}
+
+
+/* ================= MENTOR ================= */
+
+.team-project-wrapper .mentor-card {
+  border-color: #eadfca;
+}
+
+
+.team-project-wrapper .mentor-card .member-avatar {
+  background: #fff3d7;
+
+  color: #a86800;
+}
+
+
+/* ================= DESCRIPTION ================= */
+
+.team-project-description {
+  margin-top: 18px;
+
+  padding: 18px;
+
+  border: 1px solid #e3e8ec;
+  border-radius: 10px;
+
+  background: #fafcfd;
+}
+
+
+.team-project-description > span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  font-size: 10px;
+  font-weight: 700;
+
+  letter-spacing: 0.1em;
+
+  color: #718096;
+}
+
+
+.team-project-description p {
+  margin: 0;
+
+  line-height: 1.6;
+
+  font-size: 14px;
+
+  color: #425466;
+}
+
+
+/* ================= EMPTY ================= */
+
+.team-inline-empty {
+  grid-column: 1 / -1;
+
+  padding: 20px;
+
+  border: 1px dashed #d5dce2;
+  border-radius: 10px;
+
+  text-align: center;
+
+  color: #718096;
+}
+
+
+.team-inline-empty p {
+  margin: 0;
+}
+
+
+/* ================= MOBILE ================= */
+
+@media (max-width: 700px) {
+
+  .team-project-banner {
+    padding: 22px;
+  }
+
+
+  .team-project-banner h2 {
+    font-size: 21px;
+  }
+
+
+  .team-project-wrapper .team-member-card {
+    align-items: flex-start;
+  }
+
+
+  .team-project-wrapper .member-actions {
+    margin-left: auto;
+  }
+
+
+  .team-project-wrapper .view-member-btn {
+    padding: 6px 8px;
+  }
+
+}

@@ -1,516 +1,1421 @@
 <!DOCTYPE html>
 
 <html lang="en">
+
 <head>
+
   <meta charset="UTF-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Industry AI Matches | JAN SETU</title>
+
   <link rel="stylesheet" href="style.css">
+
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <style>
+
+/* Page-specific styles only. Existing JAN SETU sidebar/theme remains untouched. */ .matches-toolbar {display:flex; align-items:center; justify-content:space-between; gap:20px; margin:24px 0 18px; padding:18px 20px; background:#fff; border:1px solid #dfe8e5; border-radius:16px; box-shadow:none; }
+
+.toolbar-copy h2 {margin:0 0 5px; font-size:19px; color:#193a35; }
+
+.toolbar-copy p {margin:0; color:#71807c; font-size:14px; }
+
+.refresh-btn {border:1px solid #2b8a63; background:#fff; color:#237653; border-radius:10px; padding:10px 15px; font-weight:700; cursor:pointer; white-space:nowrap; }
+
+.refresh-btn:hover {background:#f2faf6; }
+
+.match-summary {display:grid; grid-template-columns:repeat(3, minmax(0,1fr)); gap:12px; margin-bottom:18px; }
+
+.summary-box {background:#fff; border:1px solid #e0e9e6; border-radius:14px; padding:15px 17px; }
+
+.summary-box span {display:block; color:#788681; font-size:12px; text-transform:uppercase; letter-spacing:.05em; }
+
+.summary-box strong {display:block; margin-top:4px; color:#193a35; font-size:24px; }
+
+.problem-group {background:#fff; border:1px solid #dce7e3; border-radius:18px; margin-bottom:18px; overflow:hidden; box-shadow:none; }
+
+.problem-head {display:grid; grid-template-columns:116px minmax(0,1fr) auto; gap:18px; padding:18px; border-bottom:1px solid #edf2f0; align-items:center; }
+
+.problem-thumb {width:116px; height:88px; border-radius:12px; object-fit:cover; background:#edf3f0; }
+
+.problem-main {min-width:0; }
+
+.problem-kicker {display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:7px; color:#71807c; font-size:12px; }
+
+.status-pill, .count-pill {display:inline-flex; align-items:center; gap:5px; border-radius:999px; padding:5px 9px; font-size:11px; font-weight:800; letter-spacing:.02em; }
+
+.status-pill {color:#24704f; background:#eaf7f0; border:1px solid #ccebd9; }
+
+.status-pill.accepted {color:#155d40; background:#e3f6ec; }
+
+.count-pill {color:#53635e; background:#f3f6f5; border:1px solid #e1e8e5; }
+
+.problem-main h2 {margin:0; color:#193a35; font-size:20px; line-height:1.25; }
+
+.problem-main > p {margin:7px 0 0; color:#657570; line-height:1.5; font-size:14px; max-width:760px; }
+
+.problem-meta {display:flex; gap:14px; flex-wrap:wrap; margin-top:10px; color:#71807c; font-size:12px; }
+
+.problem-meta i {margin-right:4px; color:#42806a; }
+
+.problem-actions {display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; }
+
+.problem-actions button {border:1px solid #d7e3df; background:#fff; color:#2d5e50; border-radius:9px; padding:9px 12px; font-weight:700; cursor:pointer; }
+
+.problem-actions button:hover {background:#f4faf7; }
+
+.proposal-list {padding:8px 18px 18px; }
+
+.proposal-row {display:grid; grid-template-columns:42px minmax(0,1fr) auto; gap:13px; align-items:center; padding:14px 0; border-bottom:1px solid #edf2f0; }
+
+.proposal-row:last-child {border-bottom:0; }
+
+.proposal-avatar {width:42px; height:42px; border-radius:50%; display:grid; place-items:center; background:#e8f4ef; color:#257252; font-weight:800; overflow:hidden; background-size:cover; background-position:center; }
+
+.proposal-info {min-width:0; }
+
+.proposal-name-line {display:flex; align-items:center; gap:8px; flex-wrap:wrap; }
+
+.proposal-name {color:#193a35; font-weight:800; }
+
+.proposal-role {color:#6c7a76; font-size:12px; }
+
+.proposal-excerpt {margin:4px 0 0; color:#74817e; font-size:13px; line-height:1.45; white-space:nowrap; overflow:hidden; text-overflow:ellipsis; max-width:760px; }
+
+.proposal-status {display:inline-flex; margin-top:6px; padding:4px 8px; border-radius:999px; font-size:10px; font-weight:800; background:#f5f7f6; color:#66736f; border:1px solid #e1e8e5; }
+
+.proposal-status.pending {color:#8a6517; background:#fff8e6; border-color:#f1dfaa; }
+
+.proposal-status.accepted {color:#176443; background:#e7f7ef; border-color:#ccebd9; }
+
+.proposal-actions {display:flex; gap:7px; align-items:center; }
+
+.proposal-actions button {border:1px solid #d8e4e0; background:#fff; color:#2b6653; border-radius:8px; padding:8px 10px; font-size:12px; font-weight:800; cursor:pointer; white-space:nowrap; }
+
+.proposal-actions .accept-btn {background:#2b8a63; border-color:#2b8a63; color:#fff; }
+
+.proposal-actions .accept-btn:hover {background:#237653; }
+
+.proposal-actions button:disabled {opacity:.55; cursor:not-allowed; }
+
+.empty-state, .error-state, .loading-state {padding:55px 25px; text-align:center; border:1px dashed #d4e1dd; border-radius:16px; background:#fff; color:#6f7d78; }
+
+.empty-state i, .error-state i, .loading-state i {font-size:28px; margin-bottom:12px; color:#4f8a73; }
+
+.empty-state h3, .error-state h3 {margin:0 0 7px; color:#28483f; }
+
+.empty-state p, .error-state p {margin:0 auto; max-width:560px; line-height:1.55; }
+
+.modal-card-wide {max-width:760px !important; width:min(760px, calc(100vw - 30px)); }
+
+.proposal-modal-meta {display:flex; gap:8px; flex-wrap:wrap; margin:8px 0 20px; }
+
+.proposal-section {border:1px solid #e4ece9; border-radius:12px; padding:14px; margin-bottom:11px; background:#fbfdfc; }
+
+.proposal-section span {display:block; margin-bottom:5px; font-size:11px; font-weight:800; text-transform:uppercase; letter-spacing:.05em; color:#71807c; }
+
+.proposal-section p {margin:0; color:#314a43; line-height:1.6; white-space:pre-wrap; }
+
+.profile-grid {display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:10px; margin-top:18px; }
+
+.profile-field {border:1px solid #e4ece9; border-radius:11px; padding:12px; background:#fbfdfc; }
+
+.profile-field span {display:block; font-size:11px; color:#7a8783; margin-bottom:4px; }
+
+.profile-field strong {color:#2e4941; font-size:13px; word-break:break-word; }
+
+.profile-field.wide {grid-column:1/-1; }
+
+.toast {position:fixed; right:22px; bottom:22px; z-index:2000; max-width:390px; padding:13px 16px; border-radius:12px; background:#193a35; color:#fff; box-shadow:0 12px 35px rgba(0,0,0,.18); font-size:13px; line-height:1.45; display:none; }
+
+.toast.show {display:block; animation:toastIn .2s ease-out; }
+
+@keyframes toastIn {from {opacity:0; transform:translateY(8px); }
+
+to {opacity:1; transform:translateY(0); }
+
+}
+
+@media (max-width: 850px) {.match-summary {grid-template-columns:1fr; }
+
+.problem-head {grid-template-columns:84px minmax(0,1fr); }
+
+.problem-thumb {width:84px; height:70px; }
+
+.problem-actions {grid-column:1/-1; justify-content:flex-start; }
+
+.proposal-row {grid-template-columns:38px minmax(0,1fr); }
+
+.proposal-actions {grid-column:2; justify-content:flex-start; }
+
+.profile-grid {grid-template-columns:1fr; }
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-<!--
-  ai-matches-industry.html
-  Industry / Innovation flow:
-  View Proposal -> Accept Project -> View Profile -> Add to Team.
-  One mentor/organization can accept only ONE different project in this frontend demo.
--->
+  <div class="app">
 
-<div class="app">
-  <!-- ================= SOLVER SIDEBAR ================= -->
-  <aside class="sidebar" id="sidebar">
-    <a href="index.html" class="sidebar-logo"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
-    <button class="sidebar-toggle" id="sidebarToggle" type="button"><i class="fa-solid fa-angles-left"></i></button>
-    <nav class="sidebar-nav">
-      <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
-      <a href="ai-matches-industry.html" class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span></a>
-      <a href="projects.html" class="nav-item"><i class="fa-regular fa-folder-open"></i><span>Projects</span></a>
-      <a href="team.html" class="nav-item"><i class="fa-solid fa-users"></i><span>Team</span></a>
-      <a href="solver-profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
-      <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
-    </nav>
-    <div class="sidebar-landscape"><p>A STRONGER<br>JHARKHAND<br>TOGETHER</p></div>
-  </aside>
+    <aside class="sidebar" id="sidebar">
 
-  <main class="main">
-    <header class="page-header">
-      <div>
-        <h1>AI Matches</h1>
-        <p>Review matched proposals and accept one project to mentor.</p>
+      <a href="index.html" class="sidebar-logo">
+
+        <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+
+      </a>
+
+      <button class="sidebar-toggle" id="sidebarToggle" type="button">
+
+        <i class="fa-solid fa-angles-left"></i>
+
+      </button>
+
+      <nav class="sidebar-nav">
+
+        <a href="index.html" class="nav-item"><i class="fa-solid fa-house"></i><span>Home</span></a>
+
+        <a href="ai-matches-industry.html" class="nav-item active"><i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span></a>
+
+        <a href="projects.html" class="nav-item"><i class="fa-regular fa-folder-open"></i><span>Projects</span></a>
+
+        <a href="team.html" class="nav-item"><i class="fa-solid fa-users"></i><span>Team</span></a>
+
+        <a href="solver-profile.html" class="nav-item"><i class="fa-solid fa-user"></i><span>Profile</span></a>
+
+        <a href="settings.html" class="nav-item"><i class="fa-solid fa-gear"></i><span>Settings</span></a>
+
+      </nav>
+
+      <div class="sidebar-landscape">
+
+        <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+
       </div>
-      <div class="mini-profile">
-        <div class="mini-avatar" id="miniAvatar">O</div>
-        <div><strong id="miniName">Your Organization</strong><span id="miniRole">Company</span></div>
+
+    </aside>
+
+    <main class="main">
+
+      <header class="page-header">
+
+        <div>
+
+          <h1>Proposal Review</h1>
+
+          <p>Review real student and researcher proposals attached to live community problems.</p>
+
+        </div>
+
+        <div class="mini-profile">
+
+          <div class="mini-avatar" id="miniAvatar">O</div>
+
+          <div>
+
+            <strong id="miniName">Your Organization</strong>
+
+            <span id="miniRole">Company</span>
+
+          </div>
+
+        </div>
+
+      </header>
+
+      <div class="match-summary">
+
+        <div class="summary-box"><span>Problems with proposals</span><strong id="problemCount">—</strong></div>
+
+        <div class="summary-box"><span>Pending proposals</span><strong id="pendingCount">—</strong></div>
+
+        <div class="summary-box"><span>Accepted proposals</span><strong id="acceptedCount">—</strong></div>
+
       </div>
-    </header>
 
-```
-<div class="accepted-project-note" id="acceptedProjectNote" hidden></div>
+      <div class="matches-toolbar">
 
-<section class="matches" id="industryMatches"></section>
-```
+        <div class="toolbar-copy">
 
-  </main>
-</div>
+          <h2>Proposal inbox</h2>
 
-<!-- ================= VIEW PROPOSAL MODAL ================= -->
+          <p>Live problem capacity and mentor membership are loaded from the backend.</p>
 
-<div class="modal" id="proposalViewModal">
-  <div class="proposal-view-card">
-    <button class="modal-close" id="proposalViewClose" type="button"><i class="fa-solid fa-xmark"></i></button>
-    <h2 id="viewProposalTitle">Proposal</h2>
-    <p class="proposal-by" id="viewProposalBy"></p>
-    <div id="proposalContent">
-      <div class="proposal-view-section"><strong>Proposed Approach</strong><p id="viewApproach"></p></div>
-      <div class="proposal-view-section"><strong>Expected Outcome</strong><p id="viewOutcome"></p></div>
-      <div class="proposal-view-grid">
-        <div><strong>Tools / Technologies</strong><p id="viewTools"></p></div>
-        <div><strong>Estimated Timeline</strong><p id="viewTimeline"></p></div>
+        </div>
+
+        <button class="refresh-btn" id="refreshBtn" type="button">
+
+          <i class="fa-solid fa-rotate"></i> Refresh
+
+        </button>
+
       </div>
-      <div class="proposal-view-section" id="viewLinkRow"><strong>Supporting Link</strong><a id="viewSupportLink" href="#" target="_blank" rel="noopener">Open Link</a></div>
+
+      <section id="industryMatches">
+
+        <div class="loading-state">
+
+          <i class="fa-solid fa-spinner fa-spin"></i>
+
+          <h3>Loading proposals</h3>
+
+          <p>Fetching problems, proposals and solver profiles from JAN SETU.</p>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- Proposal modal -->
+
+  <div class="modal" id="proposalModal">
+
+    <div class="proposal-view-card modal-card-wide">
+
+      <button class="modal-close" id="proposalModalClose" type="button">
+
+        <i class="fa-solid fa-xmark"></i>
+
+      </button>
+
+      <h2 id="proposalTitle">Proposal</h2>
+
+      <div class="proposal-modal-meta" id="proposalMeta"></div>
+
+      <div class="proposal-section">
+
+        <span>Approach</span>
+
+        <p id="proposalApproach">—</p>
+
+      </div>
+
+      <div class="proposal-section">
+
+        <span>Expected outcome</span>
+
+        <p id="proposalOutcome">—</p>
+
+      </div>
+
+      <div class="proposal-section">
+
+        <span>Tools / technologies</span>
+
+        <p id="proposalTools">—</p>
+
+      </div>
+
+      <div class="proposal-section">
+
+        <span>Timeline</span>
+
+        <p id="proposalTimeline">—</p>
+
+      </div>
+
+      <div class="proposal-section" id="proposalLinkSection" hidden>
+
+        <span>Supporting link</span>
+
+        <p><a id="proposalLink" href="#" target="_blank" rel="noopener">Open supporting link</a></p>
+
+      </div>
+
     </div>
-    <p class="no-proposal" id="noProposal">No proposal has been submitted for this problem yet.</p>
+
   </div>
-</div>
 
-<!-- ================= PROFILE MODAL ================= -->
+  <!-- Profile modal -->
 
-<div class="modal" id="profileViewModal">
-  <div class="solver-profile-modal">
-    <button class="modal-close" id="profileViewClose" type="button"><i class="fa-solid fa-xmark"></i></button>
-    <div class="solver-profile-modal-head">
-      <div class="member-avatar" id="profileModalAvatar">S</div>
-      <div><h2 id="profileModalName">Student / Researcher</h2><p id="profileModalRole"></p></div>
+  <div class="modal" id="profileModal">
+
+    <div class="solver-profile-modal modal-card-wide">
+
+      <button class="modal-close" id="profileModalClose" type="button">
+
+        <i class="fa-solid fa-xmark"></i>
+
+      </button>
+
+      <div class="solver-profile-modal-head">
+
+        <div class="member-avatar" id="profileAvatar">S</div>
+
+        <div>
+
+          <h2 id="profileName">Solver</h2>
+
+          <p id="profileRole">Student / Researcher</p>
+
+        </div>
+
+      </div>
+
+      <div class="profile-grid" id="profileGrid"></div>
+
     </div>
-    <div id="profileModalBody" class="profile-modal-details"></div>
-    <p id="profileUnavailable" class="no-proposal" hidden>No submitted profile is available for this proposal yet.</p>
-    <button class="team-add-btn" id="addToTeamBtn" type="button"><i class="fa-solid fa-user-plus"></i> Add to Team</button>
-    <small class="team-rule">Accept this project first. A project can have up to 4 Student / Researcher members.</small>
+
   </div>
-</div>
 
-<!-- ================= IMAGE GALLERY ================= -->
+  <div class="toast" id="toast"></div>
 
-<div class="modal" id="imageModal">
-  <div class="gallery-card">
-    <button class="modal-close" id="galleryClose" type="button"><i class="fa-solid fa-xmark"></i></button>
-    <h3 id="galleryTitle">Problem Images</h3>
-    <img id="galleryImage" class="gallery-image" src="" alt="Problem image">
-    <div class="thumbnails" id="thumbnails"></div>
-  </div>
-</div>
+  <script>
 
-<!-- ================= NOT INTERESTED ================= -->
+    /*
 
-<div class="modal" id="confirmModal">
-  <div class="confirm-card">
-    <h3>Not interested?</h3>
-    <p>Are you sure you're not interested in this match?</p>
-    <div class="confirm-actions"><button id="cancelConfirm" type="button">Cancel</button><button id="yesConfirm" type="button">Yes, Not Interested</button></div>
-  </div>
-</div>
+      GitHub Pages is a separate origin from Render, so /api/... cannot reach the
 
-<script>
-const API_BASE = "https://jan-setu-bf03.onrender.com";
-const role = localStorage.getItem("solverRole") || "company";
-const savedProfile = JSON.parse(localStorage.getItem("solverProfileData") || "{}");
-const account = JSON.parse(localStorage.getItem("solverAccount") || "{}");
-let proposals = [];
+      Go backend when this page is deployed there. Local development uses the
 
-const sidebar = document.getElementById("sidebar");
-const sidebarToggle = document.getElementById("sidebarToggle");
-const miniName = document.getElementById("miniName");
-const miniAvatar = document.getElementById("miniAvatar");
-const miniRole = document.getElementById("miniRole");
-const acceptedProjectNote = document.getElementById("acceptedProjectNote");
-const industryMatches = document.getElementById("industryMatches");
-const proposalViewModal = document.getElementById("proposalViewModal");
-const proposalViewClose = document.getElementById("proposalViewClose");
-const viewProposalTitle = document.getElementById("viewProposalTitle");
-const viewProposalBy = document.getElementById("viewProposalBy");
-const proposalContent = document.getElementById("proposalContent");
-const noProposal = document.getElementById("noProposal");
-const viewApproach = document.getElementById("viewApproach");
-const viewOutcome = document.getElementById("viewOutcome");
-const viewTools = document.getElementById("viewTools");
-const viewTimeline = document.getElementById("viewTimeline");
-const viewLinkRow = document.getElementById("viewLinkRow");
-const viewSupportLink = document.getElementById("viewSupportLink");
-const profileViewModal = document.getElementById("profileViewModal");
-const profileViewClose = document.getElementById("profileViewClose");
-const profileModalName = document.getElementById("profileModalName");
-const profileModalAvatar = document.getElementById("profileModalAvatar");
-const profileModalRole = document.getElementById("profileModalRole");
-const profileModalBody = document.getElementById("profileModalBody");
-const profileUnavailable = document.getElementById("profileUnavailable");
-const addToTeamBtn = document.getElementById("addToTeamBtn");
-const imageModal = document.getElementById("imageModal");
-const galleryClose = document.getElementById("galleryClose");
-const galleryTitle = document.getElementById("galleryTitle");
-const galleryImage = document.getElementById("galleryImage");
-const thumbnails = document.getElementById("thumbnails");
-const confirmModal = document.getElementById("confirmModal");
-const cancelConfirm = document.getElementById("cancelConfirm");
-const yesConfirm = document.getElementById("yesConfirm");
-const roleLabels = {
-  student: "Student",
-  researcher: "Researcher",
-  startup: "Startup",
-  company: "Company",
-  msme: "MSME",
-  csr: "CSR",
-  "research-lab": "Research Lab",
-  "innovation-hub": "Innovation Hub"
-};
+      current origin; GitHub Pages uses the deployed Render API.
 
-miniName.textContent = savedProfile.fullName || account.primaryName || "Your Organization";
-miniAvatar.textContent = miniName.textContent.charAt(0).toUpperCase();
-miniRole.textContent = roleLabels[role] || "Industry & Innovation";
+    */
 
-sidebarToggle.addEventListener("click", () => {
-  sidebar.classList.toggle("collapsed");
-  document.querySelector(".app").classList.toggle("sidebar-collapsed");
-  sidebarToggle.querySelector("i").className = sidebar.classList.contains("collapsed") ? "fa-solid fa-angles-right" : "fa-solid fa-angles-left";
-});
+    /*
 
-function getProposals() {
-  return proposals;
-}
-function getProposal(problem) {
-  return getProposals().find(item => item.problem === problem || item.title === problem);
-}
-function getAcceptedProject() {
-  return JSON.parse(localStorage.getItem("acceptedProject") || "null");
-}
-function getTeam() {
-  return JSON.parse(localStorage.getItem("projectTeam") || "[]");
-}
+      LOCAL DEVELOPMENT:
 
-function escapeHtml(value) {
-  return String(value ?? "")
-    .replaceAll("&", "&amp;")
-    .replaceAll("<", "&lt;")
-    .replaceAll(">", "&gt;")
-    .replaceAll('"', "&quot;")
-    .replaceAll("'", "&#039;");
-}
+      - Frontend on Live Server / localhost
 
-function profileDetail(label, value, wide = false, link = false) {
-  if (!value) return "";
-  const safeLabel = escapeHtml(label);
-  const safeValue = escapeHtml(value);
-  const content = link
-    ? `<a href="${safeValue}" target="_blank" rel="noopener">${safeValue}</a>`
-    : `<strong>${safeValue}</strong>`;
-  return `<div class="${wide ? "profile-modal-wide" : ""}"><span>${safeLabel}</span>${content}</div>`;
-}
+      - Go backend on localhost:8080
 
-function cardInfo(card) {
-  const proposal = getProposal(card.dataset.problem);
-  return {
-    problem: card.dataset.problem,
-    title: card.querySelector("h2").textContent.trim(),
-    description: card.querySelector(".description").textContent.trim(),
-    image: card.querySelector(".problem-image")?.getAttribute("src") || "",
-    location: proposal?.location || "",
-    category: proposal?.category || ""
-  };
-}
+      DEPLOYED:
 
-function renderMatches() {
-  industryMatches.innerHTML = "";
+      - When the frontend is served by Render from the same application,
 
-  if (!proposals.length) {
-    industryMatches.innerHTML = '<p class="no-proposal">No matched proposals are available yet.</p>';
-    return;
-  }
+        use relative /api/... URLs.
 
-  proposals.forEach(proposal => {
-    const title = proposal.problem || proposal.title || "Untitled Project";
-    const description = proposal.description || proposal.problemDescription || "No problem description available.";
-    const location = proposal.location || proposal.district || "Location not specified";
-    const category = proposal.category || "Category not specified";
-    const image = proposal.image || "assets/smart-waste-1.png";
+    */
 
-    const card = document.createElement("article");
-    card.className = "match-card";
-    card.dataset.problem = title;
-    card.innerHTML = `
-      <div class="problem-image-wrap">
-        <img src="${escapeHtml(image)}" class="problem-image" alt="${escapeHtml(title)}">
-        <button class="view-images-btn" type="button" data-title="${escapeHtml(title)}" data-images="${escapeHtml(image)}"><i class="fa-regular fa-images"></i> View Images (1)</button>
-      </div>
-      <div class="match-content">
-        <h2>${escapeHtml(title)}</h2>
-        <p class="description">${escapeHtml(description)}</p>
-        <div class="meta"><span><i class="fa-solid fa-location-dot"></i> ${escapeHtml(location)}</span><span><i class="fa-solid fa-building-columns"></i> ${escapeHtml(category)}</span><span><i class="fa-solid fa-user-graduate"></i> Student / Researcher Proposal</span></div>
-        <div class="skills"><strong>Relevant Expertise:</strong><span>${escapeHtml(proposal.tools || "Not specified")}</span></div>
-      </div>
-      <div class="industry-actions">
-        <button class="industry-action view-proposal-btn" type="button"><i class="fa-regular fa-file-lines"></i> View Proposal</button>
-        <button class="industry-action accept-project-btn" type="button"><i class="fa-regular fa-circle-check"></i> Accept Project</button>
-        <button class="industry-action view-profile-btn" type="button"><i class="fa-regular fa-user"></i> View Profile</button>
-        <button class="industry-action danger not-interested-btn" type="button"><i class="fa-solid fa-ban"></i> Not Interested</button>
-      </div>
-    `;
-    industryMatches.appendChild(card);
-  });
+    // Local development -> Go backend on localhost:8080.
+    // Deployed same-origin -> relative /api/... (no hardcoded Render URL).
+    const API_BASE =
+      (window.location.hostname === "localhost" ||
+       window.location.hostname === "127.0.0.1" ||
+       window.location.protocol === "file:")
+        ? "http://localhost:8080"
+        : "";
 
-  bindMatchActions();
-  refreshAcceptedState();
-}
+    const accountId = Number(localStorage.getItem("solverAccountId"));
 
-function refreshAcceptedState() {
-  const accepted = getAcceptedProject();
-  acceptedProjectNote.hidden = !accepted;
-  if (accepted) acceptedProjectNote.innerHTML = `<i class="fa-solid fa-circle-check"></i> Active project: <strong>${escapeHtml(accepted.problem)}</strong>. You can add members only to this project.`;
+    const role = localStorage.getItem("solverRole") || "company";
 
-  document.querySelectorAll(".match-card").forEach(card => {
-    const acceptButton = card.querySelector(".accept-project-btn");
-    const profileButton = card.querySelector(".view-profile-btn");
-    const notInterestedButton = card.querySelector(".not-interested-btn");
-    const same = accepted && accepted.problem === card.dataset.problem;
-    const another = accepted && !same;
+    const savedProfile = JSON.parse(localStorage.getItem("solverProfileData") || "{}");
 
-    acceptButton.disabled = !!accepted;
-    acceptButton.innerHTML = same
-      ? '<i class="fa-solid fa-check"></i> Project Accepted'
-      : another
-        ? '<i class="fa-solid fa-lock"></i> Another Project Active'
-        : '<i class="fa-regular fa-circle-check"></i> Accept Project';
+    const savedAccount = JSON.parse(localStorage.getItem("solverAccount") || "{}");
 
-    profileButton.disabled = !same;
-    profileButton.title = same ? "View proposal owner profile" : "Accept this project first";
-    notInterestedButton.disabled = !!same;
-  });
-}
+    const roleLabels = {
 
-function bindMatchActions() {
-  document.querySelectorAll(".view-proposal-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      const card = button.closest(".match-card");
-      const proposal = getProposal(card.dataset.problem);
-      viewProposalTitle.textContent = card.dataset.problem;
+      student: "Student",
 
-      if (!proposal) {
-        proposalContent.style.display = "none";
-        noProposal.style.display = "block";
-        viewProposalBy.textContent = "";
-      } else {
-        proposalContent.style.display = "block";
-        noProposal.style.display = "none";
-        viewProposalBy.textContent = `Submitted by ${proposal.submittedBy || proposal.profile?.fullName || "Student / Researcher"} · ${roleLabels[proposal.role] || "Solver"}`;
-        viewApproach.textContent = proposal.approach || "—";
-        viewOutcome.textContent = proposal.expectedOutcome || "—";
-        viewTools.textContent = proposal.tools || "—";
-        viewTimeline.textContent = proposal.timeline || "—";
-        viewLinkRow.style.display = proposal.supportLink ? "block" : "none";
-        if (proposal.supportLink) viewSupportLink.href = proposal.supportLink;
-      }
-      proposalViewModal.classList.add("show");
+      researcher: "Researcher",
+
+      startup: "Startup",
+
+      company: "Company",
+
+      msme: "MSME",
+
+      csr: "CSR",
+
+      "research-lab": "Research Lab",
+
+      "innovation-hub": "Innovation Hub"
+
+    };
+
+    const sidebar = document.getElementById("sidebar");
+
+    const industryMatches = document.getElementById("industryMatches");
+
+    const problemCount = document.getElementById("problemCount");
+
+    const pendingCount = document.getElementById("pendingCount");
+
+    const acceptedCount = document.getElementById("acceptedCount");
+
+    const refreshBtn = document.getElementById("refreshBtn");
+
+    const toast = document.getElementById("toast");
+
+    const proposalModal = document.getElementById("proposalModal");
+
+    const proposalModalClose = document.getElementById("proposalModalClose");
+
+    const proposalTitle = document.getElementById("proposalTitle");
+
+    const proposalMeta = document.getElementById("proposalMeta");
+
+    const proposalApproach = document.getElementById("proposalApproach");
+
+    const proposalOutcome = document.getElementById("proposalOutcome");
+
+    const proposalTools = document.getElementById("proposalTools");
+
+    const proposalTimeline = document.getElementById("proposalTimeline");
+
+    const proposalLinkSection = document.getElementById("proposalLinkSection");
+
+    const proposalLink = document.getElementById("proposalLink");
+
+    const profileModal = document.getElementById("profileModal");
+
+    const profileModalClose = document.getElementById("profileModalClose");
+
+    const profileAvatar = document.getElementById("profileAvatar");
+
+    const profileName = document.getElementById("profileName");
+
+    const profileRole = document.getElementById("profileRole");
+
+    const profileGrid = document.getElementById("profileGrid");
+
+    let groupedProblems = [];
+
+    let profileCache = new Map();
+
+    const miniName =
+
+      savedProfile.fullName ||
+
+      savedAccount.primaryName ||
+
+      savedAccount.full_name ||
+
+      "Your Organization";
+
+    document.getElementById("miniName").textContent = miniName;
+
+    document.getElementById("miniAvatar").textContent = miniName.charAt(0).toUpperCase();
+
+    document.getElementById("miniRole").textContent =
+
+      roleLabels[role] || "Industry & Innovation";
+
+    sidebar?.querySelector("#sidebarToggle")?.addEventListener("click", () => {
+
+      sidebar.classList.toggle("collapsed");
+
+      document.querySelector(".app").classList.toggle("sidebar-collapsed");
+
     });
-  });
 
-  document.querySelectorAll(".accept-project-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      const card = button.closest(".match-card");
-      const info = cardInfo(card);
-      const existing = getAcceptedProject();
-      const proposal = getProposal(info.problem);
+    function escapeHtml(value) {
 
-      if (!proposal) {
-        alert("A Student / Researcher proposal is required before accepting this project.");
-        return;
-      }
+      return String(value ?? "")
 
-      if (existing && existing.problem !== info.problem) {
-        alert("You already have an active project. Finish it before accepting another project.");
-        return;
-      }
+        .replaceAll("&", "&amp;")
 
-      const accepted = {
-        ...info,
-        acceptedAt: new Date().toISOString(),
-        mentor: {
-          name: account.secondaryName || savedProfile.fullName || "Mentor / Representative",
-          organization: savedProfile.fullName || account.primaryName || "Industry Partner",
-          role: roleLabels[role] || "Industry & Innovation",
-          profile: savedProfile
-        }
+        .replaceAll("<", "&lt;")
+
+        .replaceAll(">", "&gt;")
+
+        .replaceAll('"', "&quot;")
+
+        .replaceAll("'", "&#039;");
+
+    }
+
+    function showToast(message) {
+
+      toast.textContent = message;
+
+      toast.classList.add("show");
+
+      clearTimeout(showToast.timer);
+
+      showToast.timer = setTimeout(() => toast.classList.remove("show"), 3600);
+
+    }
+
+    function parseProposalText(text) {
+
+      const source = String(text || "").trim();
+
+      const result = {
+
+        raw: source,
+
+        approach: "",
+
+        expectedOutcome: "",
+
+        tools: "",
+
+        timeline: "",
+
+        supportLink: ""
+
       };
-      localStorage.setItem("acceptedProject", JSON.stringify(accepted));
-      refreshAcceptedState();
-      alert("Project accepted. It is now visible in Team and Projects.");
-    });
-  });
 
-  document.querySelectorAll(".view-profile-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      const card = button.closest(".match-card");
-      const proposal = getProposal(card.dataset.problem);
-      currentProfileProposal = proposal || null;
+      if (!source) return result;
 
-      if (!proposal) {
-        profileModalName.textContent = "Student / Researcher";
-        profileModalRole.textContent = "No proposal found";
-        profileModalAvatar.textContent = "S";
-        profileModalAvatar.style.backgroundImage = "none";
-        profileModalBody.innerHTML = "";
-        profileUnavailable.hidden = false;
-        addToTeamBtn.style.display = "none";
-      } else {
-        const profile = proposal.profile || {};
-        const name = proposal.submittedBy || profile.fullName || "Student / Researcher";
+      const sections = [
 
-        profileModalName.textContent = name;
-        profileModalRole.textContent = roleLabels[proposal.role] || "Solver";
-        profileUnavailable.hidden = true;
+        ["approach", /^Approach:\s*([\s\S]*?)(?=\n\s*\n|$)/i],
 
-        if (profile.photo) {
-          profileModalAvatar.textContent = "";
-          profileModalAvatar.style.backgroundImage = `url("${profile.photo}")`;
-          profileModalAvatar.style.backgroundSize = "cover";
-          profileModalAvatar.style.backgroundPosition = "center";
-        } else {
-          profileModalAvatar.style.backgroundImage = "none";
-          profileModalAvatar.textContent = name.charAt(0).toUpperCase();
-        }
+        ["expectedOutcome", /^Expected Outcome:\s*([\s\S]*?)(?=\n\s*\n|$)/im],
 
-        const roleFields = (profile.roleFields || []).filter(field => field.value);
+        ["tools", /^Tools\s*\/?\s*Technologies:\s*([\s\S]*?)(?=\n\s*\n|$)/im],
 
-        profileModalBody.innerHTML = [
-          profileDetail("Full Name", name),
-          profileDetail("Role", roleLabels[proposal.role] || "Solver"),
-          profileDetail("Account Email", profile.email),
-          profile.consent && profile.phone ? profileDetail("Contact Number", profile.phone) : "",
-          profileDetail("Location", profile.location),
-          profileDetail("LinkedIn", profile.linkedin, true, true),
-          ...roleFields.map(field =>
-            profileDetail(field.label, field.value,
-              field.label.includes("Projects") ||
-              field.label.includes("Publications") ||
-              field.label.includes("Interests") ||
-              field.label.includes("Skills") ||
-              field.label.includes("Expertise"))
-          ),
-          profile.about
-            ? `<div class="profile-modal-wide"><span>Bio / About</span><p>${escapeHtml(profile.about)}</p></div>`
-            : ""
-        ].join("");
+        ["timeline", /^Timeline:\s*([\s\S]*?)(?=\n\s*\n|$)/im],
 
-        const accepted = getAcceptedProject();
-        const team = getTeam();
-        const alreadyAdded = team.some(member => member.problem === proposal.problem && member.name === name);
-        const canAdd = accepted && accepted.problem === proposal.problem;
+        ["supportLink", /^Supporting Link:\s*(\S+)\s*$/im]
 
-        addToTeamBtn.style.display = "inline-flex";
-        addToTeamBtn.disabled = alreadyAdded || !canAdd;
-        addToTeamBtn.innerHTML = alreadyAdded
-          ? '<i class="fa-solid fa-check"></i> Added to Team'
-          : canAdd
-            ? '<i class="fa-solid fa-user-plus"></i> Add to Team'
-            : '<i class="fa-solid fa-lock"></i> Accept Project First';
+      ];
+
+      for (const [key, pattern] of sections) {
+
+        const match = source.match(pattern);
+
+        if (match) result[key] = match[1].trim();
+
       }
 
-      profileViewModal.classList.add("show");
-    });
-  });
+      return result;
 
-  document.querySelectorAll(".view-images-btn").forEach(button => {
-    button.addEventListener("click", () => {
-      const images = button.dataset.images.split(",");
-      galleryTitle.textContent = button.dataset.title;
-      galleryImage.src = images[0];
-      thumbnails.innerHTML = "";
-      images.forEach(src => {
-        const img = document.createElement("img");
-        img.src = src;
-        img.addEventListener("click", () => galleryImage.src = src);
-        thumbnails.appendChild(img);
+    }
+
+    async function fetchJSON(url, options = {}) {
+
+      const response = await fetch(url, options);
+
+      const text = await response.text();
+
+      let data = {};
+
+      try {
+
+        data = text ? JSON.parse(text) : {};
+
+      } catch {
+
+        throw new Error(text || `Request failed with ${response.status}`);
+
+      }
+
+      if (!response.ok) {
+
+        throw new Error(
+
+          data.error ||
+
+          data.message ||
+
+          `Request failed with ${response.status}`
+
+        );
+
+      }
+
+      return data;
+
+    }
+
+    async function getSolverProfile(id) {
+
+      if (!id) return {};
+
+      if (profileCache.has(id)) return profileCache.get(id);
+
+      try {
+
+        const profile = await fetchJSON(
+
+          `${API_BASE}/api/solver/profile/${encodeURIComponent(id)}`
+
+        );
+
+        profileCache.set(id, profile);
+
+        return profile;
+
+      } catch {
+
+        profileCache.set(id, {});
+
+        return {};
+
+      }
+
+    }
+
+    function reportImage(report) {
+
+      if (Array.isArray(report.photo_urls) && report.photo_urls.length) {
+
+        return report.photo_urls[0];
+
+      }
+
+      return "assets/smart-waste-1.png";
+
+    }
+
+    async function loadData() {
+      industryMatches.innerHTML = `
+        <div class="loading-state">
+          <i class="fa-solid fa-spinner fa-spin"></i>
+          <h3>Finding relevant problems</h3>
+          <p>Running your organization profile through JAN SETU's AI matcher.</p>
+        </div>
+      `;
+
+      try {
+        // AI is now the source of truth for which problems are relevant to
+        // this company. We keep the existing proposal/mentor APIs for the
+        // workflow details shown after the match is selected.
+        const [matchesResult, reportsResult] = await Promise.all([
+          fetchJSON(`${API_BASE}/api/industry/matches/${encodeURIComponent(accountId)}`),
+          fetchJSON(`${API_BASE}/api/reports/all`)
+        ]);
+
+        const matches = Array.isArray(matchesResult)
+          ? matchesResult
+          : (matchesResult.matches || []);
+
+        const reports = Array.isArray(reportsResult)
+          ? reportsResult
+          : (reportsResult.reports || []);
+
+        const reportsById = new Map(
+          reports.map(report => [Number(report.id), report])
+        );
+
+        const reportGroups = await Promise.all(
+          matches.map(async match => {
+            try {
+              const reportId = Number(match.problem_id || match.challenge_id);
+              const report = reportsById.get(reportId);
+
+              // The AI result identifies the problem, while the report API
+              // provides the existing full report object used by the UI.
+              if (!report) return null;
+
+              const status = String(
+                report.workflow_status || report.status || "OPEN"
+              ).toUpperCase();
+
+              if (["SOLVED", "CLOSED"].includes(status)) return null;
+
+              const [mentorResult, proposalResult] = await Promise.all([
+                fetchJSON(`${API_BASE}/api/reports/${report.id}/mentors`),
+                fetchJSON(`${API_BASE}/api/reports/${report.id}/proposals`)
+              ]);
+
+              const mentors = mentorResult.mentors || [];
+              const mentorCount = Number(
+                mentorResult.mentor_count ?? mentors.length
+              );
+
+              const isMentor = mentors.some(
+                mentor => Number(mentor.account_id) === accountId
+              );
+
+              // Full mentor problems are unavailable to new companies,
+              // but remain visible to companies already mentoring them.
+              if (mentorCount >= 2 && !isMentor) return null;
+
+              const rawProposals = Array.isArray(proposalResult)
+                ? proposalResult
+                : (proposalResult.proposals || []);
+
+              const proposals = rawProposals
+                .filter(p => ["PENDING", "ACCEPTED"].includes(
+                  String(p.status || "PENDING").toUpperCase()
+                ))
+                .map(p => ({
+                  ...p,
+                  parsed: parseProposalText(p.proposal_text)
+                }));
+
+              if (isMentor) {
+                await Promise.all(
+                  proposals.map(async proposal => {
+                    proposal.profile = await getSolverProfile(
+                      Number(proposal.student_account_id)
+                    );
+                  })
+                );
+              }
+
+              return {
+                report,
+                match,
+                mentors,
+                mentorCount,
+                isMentor,
+                proposals
+              };
+            } catch (error) {
+              console.warn(`Could not load AI match ${match.problem_id || match.challenge_id}:`, error);
+              return null;
+            }
+          })
+        );
+
+        groupedProblems = reportGroups.filter(Boolean);
+        render();
+      } catch (error) {
+        console.error("Industry AI matching failed:", error);
+        problemCount.textContent = "—";
+        pendingCount.textContent = "—";
+        acceptedCount.textContent = "—";
+        industryMatches.innerHTML = `
+          <div class="error-state">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+            <h3>Could not load AI matches</h3>
+            <p>${escapeHtml(error.message || "The industry matching service is unavailable right now.")}</p>
+          </div>
+        `;
+      }
+    }
+
+    function render() {
+      let pending = 0;
+      let accepted = 0;
+
+      groupedProblems.forEach(group => {
+        group.proposals.forEach(p => {
+          if (String(p.status).toUpperCase() === "ACCEPTED") accepted++;
+          else pending++;
+        });
       });
-      imageModal.classList.add("show");
+
+      problemCount.textContent = groupedProblems.length;
+      pendingCount.textContent = pending;
+      acceptedCount.textContent = accepted;
+
+      if (!groupedProblems.length) {
+        industryMatches.innerHTML = `
+          <div class="empty-state">
+            <i class="fa-regular fa-folder-open"></i>
+            <h3>No available problems</h3>
+            <p>There are currently no open problems available for your organization.</p>
+          </div>
+        `;
+        return;
+      }
+
+      industryMatches.innerHTML = groupedProblems.map(group => {
+        const report = group.report;
+        const acceptedHere = group.proposals.filter(
+          p => String(p.status).toUpperCase() === "ACCEPTED"
+        ).length;
+
+        return `
+          <article class="problem-group">
+            <div class="problem-head">
+              <img
+                class="problem-thumb"
+                src="${escapeHtml(reportImage(report))}"
+                alt="${escapeHtml(report.title || "Problem")}"
+              >
+
+              <div class="problem-main">
+                <div class="problem-kicker">
+                  <span class="status-pill accepted">AI match ${Number(group.match?.score_percent ?? 0).toFixed(1)}%</span>
+                  <span class="count-pill">Students ${acceptedHere}/4</span>
+                  <span class="count-pill">Mentors ${group.mentorCount}/2</span>
+                  ${group.isMentor
+                    ? `<span class="status-pill accepted">You are a mentor</span>`
+                    : ""}
+                  ${group.isMentor && group.proposals.length
+                    ? `<span class="count-pill">${group.proposals.length} proposal${group.proposals.length === 1 ? "" : "s"}</span>`
+                    : ""}
+                </div>
+
+                <h2>${escapeHtml(report.title || "Untitled problem")}</h2>
+                <p>${escapeHtml(report.description || "No description available.")}</p>
+
+                <div class="problem-meta">
+                  <span><i class="fa-solid fa-location-dot"></i>${escapeHtml(report.location || report.district || "Location unavailable")}</span>
+                  <span><i class="fa-solid fa-building"></i>${escapeHtml(report.category || "Unclassified")}</span>
+                  ${report.pin_code ? `<span><i class="fa-solid fa-location-crosshairs"></i>${escapeHtml(report.pin_code)}</span>` : ""}
+                </div>
+              </div>
+
+              <div class="problem-actions">
+                ${!group.isMentor && group.mentorCount < 2
+                  ? `<button type="button" class="join-mentor-btn" data-report-id="${escapeHtml(report.id)}">
+                      <i class="fa-solid fa-handshake"></i> Accept as Mentor
+                    </button>`
+                  : ""}
+                <button type="button" class="report-image-btn" data-report-id="${escapeHtml(report.id)}">
+                  <i class="fa-regular fa-image"></i> Problem
+                </button>
+              </div>
+            </div>
+
+            ${group.isMentor
+              ? `<div class="proposal-list">
+                  ${group.proposals.length
+                    ? group.proposals.map(proposalRowHTML).join("")
+                    : `<div class="empty-state" style="margin:10px 0 0; padding:30px 20px;">
+                         <h3>No proposals yet</h3>
+                         <p>Student and researcher proposals will appear here.</p>
+                       </div>`}
+                </div>`
+              : ""}
+          </article>
+        `;
+      }).join("");
+
+      bindActions();
+    }
+
+    function proposalRowHTML(proposal) {
+
+      const profile = proposal.profile || {};
+
+      const name =
+
+        profile.full_name ||
+
+        profile.fullName ||
+
+        proposal.student_name ||
+
+        "Student / Researcher";
+
+      const role = roleLabels[profile.role || proposal.role] ||
+
+        (profile.department ? "Student / Researcher" : "Solver");
+
+      const skills = profile.skills || profile.interests || "";
+
+      const excerpt =
+
+        proposal.parsed.approach ||
+
+        proposal.parsed.raw ||
+
+        "Proposal submitted without a readable approach section.";
+
+      const status = String(proposal.status || "PENDING").toUpperCase();
+
+      const avatar = profile.photo || "";
+
+      return `
+
+        <div class="proposal-row" data-proposal-id="${escapeHtml(proposal.id)}">
+
+          <div
+
+            class="proposal-avatar"
+
+            ${avatar ? `style="background-image:url('${escapeHtml(avatar)}'); color:transparent;"` : ""}
+
+          >${escapeHtml(name.charAt(0).toUpperCase())}</div>
+
+          <div class="proposal-info">
+
+            <div class="proposal-name-line">
+
+              <span class="proposal-name">${escapeHtml(name)}</span>
+
+              <span class="proposal-role">${escapeHtml(role)}</span>
+
+            </div>
+
+            <p class="proposal-excerpt">${escapeHtml(excerpt)}</p>
+
+            <span class="proposal-status ${status.toLowerCase()}">${escapeHtml(status)}</span>
+
+            ${skills ? `<span class="proposal-role"> · ${escapeHtml(skills)}</span>` : ""}
+
+          </div>
+
+          <div class="proposal-actions">
+
+            <button type="button" class="view-proposal-btn" data-proposal-id="${escapeHtml(proposal.id)}">
+
+              <i class="fa-regular fa-file-lines"></i> Review
+
+            </button>
+
+            <button
+
+              type="button"
+
+              class="view-profile-btn"
+
+              data-proposal-id="${escapeHtml(proposal.id)}"
+
+            >
+
+              <i class="fa-regular fa-user"></i>
+
+            </button>
+
+            <button
+
+              type="button"
+
+              class="accept-btn"
+
+              data-proposal-id="${escapeHtml(proposal.id)}"
+
+              ${status !== "PENDING" ? "disabled" : ""}
+
+            >
+
+              ${status === "ACCEPTED"
+
+                ? '<i class="fa-solid fa-check"></i> Accepted'
+
+                : '<i class="fa-solid fa-check"></i> Accept'}
+
+            </button>
+
+          </div>
+
+        </div>
+
+      `;
+
+    }
+
+    function findProposal(id) {
+
+      for (const group of groupedProblems) {
+
+        const proposal = group.proposals.find(
+
+          p => Number(p.id) === Number(id)
+
+        );
+
+        if (proposal) return { proposal, report: group.report };
+
+      }
+
+      return null;
+
+    }
+
+    function openProposal(id) {
+
+      const found = findProposal(id);
+
+      if (!found) return;
+
+      const { proposal, report } = found;
+
+      const profile = proposal.profile || {};
+
+      const name =
+
+        profile.full_name ||
+
+        profile.fullName ||
+
+        proposal.student_name ||
+
+        "Student / Researcher";
+
+      proposalTitle.textContent = report.title || "Proposal";
+
+      proposalMeta.innerHTML = `
+
+        <span class="count-pill"><i class="fa-regular fa-user"></i> ${escapeHtml(name)}</span>
+
+        <span class="count-pill">${escapeHtml(roleLabels[profile.role || proposal.role] || "Student / Researcher")}</span>
+
+        <span class="count-pill">${escapeHtml(String(proposal.status || "PENDING").toUpperCase())}</span>
+
+      `;
+
+      proposalApproach.textContent =
+
+        proposal.parsed.approach || "No approach section was included.";
+
+      proposalOutcome.textContent =
+
+        proposal.parsed.expectedOutcome || "No expected outcome was included.";
+
+      proposalTools.textContent =
+
+        proposal.parsed.tools || "No tools / technologies were specified.";
+
+      proposalTimeline.textContent =
+
+        proposal.parsed.timeline || "No timeline was specified.";
+
+      if (proposal.parsed.supportLink) {
+
+        proposalLinkSection.hidden = false;
+
+        proposalLink.href = proposal.parsed.supportLink;
+
+      } else {
+
+        proposalLinkSection.hidden = true;
+
+        proposalLink.removeAttribute("href");
+
+      }
+
+      proposalModal.classList.add("show");
+
+    }
+
+    function openProfile(id) {
+
+      const found = findProposal(id);
+
+      if (!found) return;
+
+      const { proposal } = found;
+
+      const profile = proposal.profile || {};
+
+      const name =
+
+        profile.full_name ||
+
+        profile.fullName ||
+
+        proposal.student_name ||
+
+        "Student / Researcher";
+
+      profileName.textContent = name;
+
+      profileRole.textContent =
+
+        roleLabels[profile.role || proposal.role] || "Student / Researcher";
+
+      if (profile.photo) {
+
+        profileAvatar.textContent = "";
+
+        profileAvatar.style.backgroundImage = `url("${profile.photo}")`;
+
+        profileAvatar.style.backgroundSize = "cover";
+
+        profileAvatar.style.backgroundPosition = "center";
+
+      } else {
+
+        profileAvatar.style.backgroundImage = "none";
+
+        profileAvatar.textContent = name.charAt(0).toUpperCase();
+
+      }
+
+      const fields = [
+
+        ["University", profile.university],
+
+        ["Department", profile.department],
+
+        ["Year", profile.year_of_study || profile.yearOfStudy],
+
+        ["Skills", profile.skills],
+
+        ["Interests", profile.interests],
+
+        ["Projects", profile.projects],
+
+        ["Location", profile.location]
+
+      ].filter(([, value]) => value);
+
+      profileGrid.innerHTML = fields.length
+
+        ? fields.map(([label, value]) => `
+
+            <div class="profile-field ${String(value).length > 90 ? "wide" : ""}">
+
+              <span>${escapeHtml(label)}</span>
+
+              <strong>${escapeHtml(value)}</strong>
+
+            </div>
+
+          `).join("")
+
+        : `
+
+          <div class="profile-field wide">
+
+            <span>Profile</span>
+
+            <strong>The solver profile has not been completed yet.</strong>
+
+          </div>
+
+        `;
+
+      profileModal.classList.add("show");
+
+    }
+
+    async function acceptProposal(id, button) {
+
+      const found = findProposal(id);
+
+      if (!found) return;
+
+      if (!Number.isFinite(accountId) || accountId <= 0) {
+
+        showToast("Company account information is missing. Please log in again.");
+
+        return;
+
+      }
+
+      const proposal = found.proposal;
+
+      if (String(proposal.status).toUpperCase() !== "PENDING") return;
+
+      const confirmed = window.confirm(
+
+        `Accept ${found.report.title || "this problem"} proposal from the selected solver?`
+
+      );
+
+      if (!confirmed) return;
+
+      const oldHTML = button.innerHTML;
+
+      button.disabled = true;
+
+      button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      try {
+
+        const result = await fetchJSON(
+
+          `${API_BASE}/api/proposals/${encodeURIComponent(id)}/accept`,
+
+          {
+
+            method: "POST",
+
+            headers: { "Content-Type": "application/json" },
+
+            body: JSON.stringify({ account_id: accountId })
+
+          }
+
+        );
+
+        /*
+
+          Important: do NOT write acceptedProject/projectTeam here.
+
+          The backend response is the source of truth.
+
+        */
+
+        const workId = result.work_id || result.workId;
+
+        if (workId) {
+
+          showToast(
+
+            `Proposal accepted. Work #${workId} has been created by the backend.`
+
+          );
+
+        } else {
+
+          showToast(
+
+            result.message ||
+
+            "Proposal accepted. The project is waiting for the remaining team members."
+
+          );
+
+        }
+
+        await loadData();
+
+      } catch (error) {
+
+        console.error("Accept proposal failed:", error);
+
+        button.disabled = false;
+
+        button.innerHTML = oldHTML;
+
+        showToast(error.message || "The backend rejected this acceptance.");
+
+      }
+
+    }
+
+    async function joinAsMentor(reportId, button) {
+      if (!Number.isFinite(accountId) || accountId <= 0) {
+        showToast("Company account information is missing. Please log in again.");
+        return;
+      }
+
+      const confirmed = window.confirm("Join this problem as a mentor?");
+      if (!confirmed) return;
+
+      const oldHTML = button.innerHTML;
+      button.disabled = true;
+      button.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i>';
+
+      try {
+        await fetchJSON(
+          `${API_BASE}/api/reports/${encodeURIComponent(reportId)}/mentors`,
+          {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ account_id: accountId })
+          }
+        );
+
+        showToast("You joined this problem as a mentor.");
+        await loadData();
+      } catch (error) {
+        console.error("Join mentor failed:", error);
+        button.disabled = false;
+        button.innerHTML = oldHTML;
+        showToast(error.message || "Could not join this problem as a mentor.");
+      }
+    }
+
+    function bindActions() {
+      document.querySelectorAll(".join-mentor-btn").forEach(button => {
+        button.addEventListener("click", () =>
+          joinAsMentor(Number(button.dataset.reportId), button)
+        );
+      });
+
+
+      document.querySelectorAll(".view-proposal-btn").forEach(button => {
+
+        button.addEventListener("click", () =>
+
+          openProposal(Number(button.dataset.proposalId))
+
+        );
+
+      });
+
+      document.querySelectorAll(".view-profile-btn").forEach(button => {
+
+        button.addEventListener("click", () =>
+
+          openProfile(Number(button.dataset.proposalId))
+
+        );
+
+      });
+
+      document.querySelectorAll(".accept-btn").forEach(button => {
+
+        button.addEventListener("click", () =>
+
+          acceptProposal(Number(button.dataset.proposalId), button)
+
+        );
+
+      });
+
+      document.querySelectorAll(".report-image-btn").forEach(button => {
+
+        button.addEventListener("click", () => {
+
+          const reportId = Number(button.dataset.reportId);
+
+          const group = groupedProblems.find(
+
+            item => Number(item.report.id) === reportId
+
+          );
+
+          if (!group) return;
+
+          const images = Array.isArray(group.report.photo_urls)
+
+            ? group.report.photo_urls
+
+            : [];
+
+          if (!images.length) {
+
+            showToast("This report has no uploaded image.");
+
+            return;
+
+          }
+
+          const image = images[0];
+
+          window.open(image, "_blank", "noopener");
+
+        });
+
+      });
+
+    }
+
+    proposalModalClose.addEventListener(
+
+      "click",
+
+      () => proposalModal.classList.remove("show")
+
+    );
+
+    profileModalClose.addEventListener(
+
+      "click",
+
+      () => profileModal.classList.remove("show")
+
+    );
+
+    document.querySelectorAll(".modal").forEach(modal => {
+
+      modal.addEventListener("click", event => {
+
+        if (event.target === modal) modal.classList.remove("show");
+
+      });
+
     });
-  });
 
-  document.querySelectorAll(".not-interested-btn").forEach(button => button.addEventListener("click", () => {
-    cardToHide = button.closest(".match-card");
-    confirmModal.classList.add("show");
-  }));
-}
+    refreshBtn.addEventListener("click", async () => {
 
-proposalViewClose.addEventListener("click", () => proposalViewModal.classList.remove("show"));
-profileViewClose.addEventListener("click", () => profileViewModal.classList.remove("show"));
+      refreshBtn.disabled = true;
 
-let currentProfileProposal = null;
+      refreshBtn.innerHTML = '<i class="fa-solid fa-spinner fa-spin"></i> Refreshing';
 
-addToTeamBtn.addEventListener("click", () => {
-  if (!currentProfileProposal) return;
-  const accepted = getAcceptedProject();
-  if (!accepted || accepted.problem !== currentProfileProposal.problem) return;
+      try {
 
-  const team = getTeam().filter(member => member.problem === accepted.problem);
-  if (team.length >= 4) {
-    alert("Maximum 4 Student / Researcher members can be added to this project.");
-    return;
-  }
+        await loadData();
 
-  const name = currentProfileProposal.submittedBy || currentProfileProposal.profile?.fullName || "Student / Researcher";
-  const allMembers = getTeam();
-  if (!allMembers.some(member => member.problem === accepted.problem && member.name === name)) {
-    allMembers.push({
-      name,
-      role: currentProfileProposal.role,
-      problem: accepted.problem,
-      profile: currentProfileProposal.profile || {},
-      addedAt: new Date().toISOString()
+      } finally {
+
+        refreshBtn.disabled = false;
+
+        refreshBtn.innerHTML = '<i class="fa-solid fa-rotate"></i> Refresh';
+
+      }
+
     });
-    localStorage.setItem("projectTeam", JSON.stringify(allMembers));
-  }
 
-  addToTeamBtn.disabled = true;
-  addToTeamBtn.innerHTML = '<i class="fa-solid fa-check"></i> Added to Team';
-});
+    loadData();
 
-galleryClose.addEventListener("click", () => imageModal.classList.remove("show"));
-
-let cardToHide = null;
-const hiddenIndustry = JSON.parse(localStorage.getItem("industryHiddenMatches") || "[]");
-
-cancelConfirm.addEventListener("click", () => confirmModal.classList.remove("show"));
-yesConfirm.addEventListener("click", () => {
-  if (cardToHide) {
-    const hidden = JSON.parse(localStorage.getItem("industryHiddenMatches") || "[]");
-    if (!hidden.includes(cardToHide.dataset.problem)) hidden.push(cardToHide.dataset.problem);
-    localStorage.setItem("industryHiddenMatches", JSON.stringify(hidden));
-    cardToHide.remove();
-  }
-  confirmModal.classList.remove("show");
-});
-
-document.querySelectorAll(".modal").forEach(modal => modal.addEventListener("click", event => {
-  if (event.target === modal) modal.classList.remove("show");
-}));
-
-async function loadProposals() {
-  try {
-    const response = await fetch(`${API_BASE}/api/proposals`);
-    const result = await response.json();
-
-    if (!response.ok) throw new Error(result.error || "Failed to load proposals");
-
-    proposals = Array.isArray(result) ? result : result.proposals || [];
-    proposals = proposals.filter(item => !hiddenIndustry.includes(item.problem || item.title));
-
-    renderMatches();
-  } catch (error) {
-    console.error(error);
-    industryMatches.innerHTML = '<p class="no-proposal">Unable to load matched proposals right now. Please try again.</p>';
-  }
-}
-
-loadProposals();
-</script>
+  </script>
 
 </body>
+
 </html>

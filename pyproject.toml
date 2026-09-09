@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jansetu-ai"
+version = "0.1.0"
+description = "Standalone AI domain layer for JanSetu"
+requires-python = ">=3.11"
+dependencies = ["pydantic>=2.6,<3"]
+
+[project.optional-dependencies]
+gemini = ["google-genai>=1.0"]
+dev = ["pytest>=8", "pytest-asyncio>=0.23"]
+
+[tool.setuptools.packages.find]
+include = ["ai*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["ai/tests"]
+

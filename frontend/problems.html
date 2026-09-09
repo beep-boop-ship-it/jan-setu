@@ -1,447 +1,463 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>List of Problems | JAN SETU</title>
+  <title>Projects | JAN SETU</title>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 </head>
+
 <body>
 
-<header class="navbar">
-  <a href="index.html" class="brand"><img src="assets/jansetu-logo.jpg" alt="JAN SETU"></a>
-  <nav class="nav-links">
-    <a href="index.html">Home</a>
-    <a href="problems.html" class="active">List of Problems</a>
-    <a href="index.html#about">About</a>
-    <a href="index.html#initiatives">Initiatives</a>
-    <a href="index.html#explore">Explore Jharkhand</a>
-    <a href="index.html#stories">Stories</a>
-    <a href="index.html#resources">Resources</a>
-    <a href="index.html#contact">Contact</a>
-  </nav>
-</header>
+<div class="app">
 
-<main class="problems-page">
-  <section class="problems-top">
-    <div>
-      <p class="section-eyebrow">COMMUNITY PROBLEMS</p>
-      <h1>List of Problems</h1>
-      <p>Open problems appear first. Resolved problems move to the bottom automatically.</p>
-    </div>
-    <a href="reporter-login.html" class="problems-report-btn"><i class="fa-solid fa-plus"></i> Report a Problem</a>
-  </section>
+  <aside class="sidebar" id="sidebar">
 
-  <div class="problems-toolbar">
-    <div class="problem-search">
-      <i class="fa-solid fa-magnifying-glass"></i>
-      <input id="problemSearch" type="search" placeholder="Search by problem, location or category">
-    </div>
-    <select id="statusFilter" aria-label="Filter by status">
-      <option value="all">All Statuses</option>
-      <option value="Verified">New / Open</option>
-      <option value="In Progress">In Progress</option>
-      <option value="Validation">Validation</option>
-      <option value="Resolved">Resolved</option>
-    </select>
-  </div>
+    <a href="index.html" class="sidebar-logo">
+      <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
+    </a>
 
-  <section id="problemList" class="public-problem-list"></section>
-  <p id="emptyProblems" class="public-empty" hidden>No matching problems found.</p>
-  <p id="loadingProblems" class="public-empty">Loading problems...</p>
-</main>
-
-<div class="modal" id="trackIdModal">
-  <div class="track-id-modal-card">
-    <button class="modal-close" id="trackModalClose" type="button" aria-label="Close">
-      <i class="fa-solid fa-xmark"></i>
+    <button
+      class="sidebar-toggle"
+      id="sidebarToggle"
+      type="button"
+      aria-label="Toggle sidebar">
+      <i class="fa-solid fa-angles-left"></i>
     </button>
 
-    <div class="track-id-icon">
-      <i class="fa-solid fa-shield-halved"></i>
+    <nav class="sidebar-nav" aria-label="Main navigation">
+
+      <a href="index.html" class="nav-item" data-nav="home">
+        <i class="fa-solid fa-house"></i>
+        <span>Home</span>
+      </a>
+
+      <a href="#" class="nav-item" id="aiMatchesNav" data-nav="matches">
+        <i class="fa-solid fa-wand-magic-sparkles"></i>
+        <span>AI Matches</span>
+      </a>
+
+      <a href="projects.html" class="nav-item active" data-nav="projects">
+        <i class="fa-regular fa-folder-open"></i>
+        <span>Projects</span>
+      </a>
+
+      <a href="team.html" class="nav-item" data-nav="team">
+        <i class="fa-solid fa-users"></i>
+        <span>Team</span>
+      </a>
+
+      <a href="solver-profile.html" class="nav-item" data-nav="profile">
+        <i class="fa-solid fa-user"></i>
+        <span>Profile</span>
+      </a>
+
+      <a href="settings.html" class="nav-item" data-nav="settings">
+        <i class="fa-solid fa-gear"></i>
+        <span>Settings</span>
+      </a>
+
+    </nav>
+
+    <div class="sidebar-landscape">
+      <p>
+        A STRONGER<br>
+        JHARKHAND<br>
+        TOGETHER
+      </p>
     </div>
 
-    <h2>Enter your Track ID</h2>
-    <p>Enter the private ID received for this problem.</p>
+  </aside>
 
-    <input id="trackIdInput" type="text" placeholder="JS-2026-001" autocomplete="off">
-    <small id="trackIdError"></small>
-    <button id="openTrackBtn" class="track-open-btn" type="button">View Status</button>
 
-  </div>
+  <main class="main solver-page">
+
+    <header class="page-header">
+      <div>
+        <h1>Projects</h1>
+        <p>Your active JAN SETU projects and their working teams.</p>
+      </div>
+    </header>
+
+
+    <section id="projectsContent" class="solver-content-list"></section>
+
+  </main>
+
 </div>
 
+
 <script>
-    const API_BASE =
+
+const API_BASE =
   (window.location.hostname === "localhost" ||
-   window.location.hostname === "127.0.0.1")
-    ? window.location.origin
-    : "https://jan-setu-bf03.onrender.com";
+   window.location.hostname === "127.0.0.1" ||
+   window.location.protocol === "file:")
+    ? "http://localhost:8080"
+    : "";
 
-
-const statusOrder = {
-  "Submitted": 0,
-  "Verified": 1,
-  "In Progress": 2,
-  "Validation": 3,
-  "Resolved": 4
+const roleLabels = {
+  student: "Student",
+  researcher: "Researcher",
+  startup: "Startup",
+  company: "Company",
+  msme: "MSME",
+  csr: "CSR",
+  "research-lab": "Research Lab",
+  "innovation-hub": "Innovation Hub"
 };
 
-const list = document.getElementById("problemList");
-const searchInput = document.getElementById("problemSearch");
-const statusFilter = document.getElementById("statusFilter");
-const emptyState = document.getElementById("emptyProblems");
-const loadingState = document.getElementById("loadingProblems");
 
-const trackModal = document.getElementById("trackIdModal");
-const trackInput = document.getElementById("trackIdInput");
-const trackError = document.getElementById("trackIdError");
+const storedRole = localStorage.getItem("solverRole");
 
-let problems = [];
-let selectedProblem = null;
+const role = roleLabels[storedRole]
+  ? storedRole
+  : "student";
 
-function formatDate(value) {
-  if (!value) return "Recently";
 
-  const date = new Date(value);
+const accountId = localStorage.getItem("solverAccountId");
 
-  if (Number.isNaN(date.getTime())) {
-    return "Recently";
-  }
 
-  return date.toLocaleDateString("en-IN", {
-    day: "numeric",
-    month: "short",
-    year: "numeric"
-  });
+const sidebar = document.getElementById("sidebar");
+const sidebarToggle = document.getElementById("sidebarToggle");
+const content = document.getElementById("projectsContent");
+
+
+function setRoleAwareNavigation() {
+
+  const matchesLink = document.getElementById("aiMatchesNav");
+
+  if (!matchesLink) return;
+
+  matchesLink.href =
+    (role === "student" || role === "researcher")
+      ? "ai-matches-student.html"
+      : "ai-matches-industry.html";
 }
 
-function statusClass(status) {
-  return String(status || "Submitted")
-    .toLowerCase()
-    .replaceAll(" ", "-");
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
 }
 
-function publicStatus(status) {
-  if (status === "Verified") return "New / Open";
-  if (status === "Submitted") return "New / Submitted";
-  return status;
+
+function emptyState(message, href, label) {
+
+  content.innerHTML = `
+    <div class="solver-empty">
+
+      <i class="fa-regular fa-folder-open"></i>
+
+      <h2>No projects yet</h2>
+
+      <p>
+        ${escapeHTML(message)}
+      </p>
+
+      <a
+        href="${escapeHTML(href)}"
+        class="solver-primary-link">
+        ${escapeHTML(label)}
+      </a>
+
+    </div>
+  `;
 }
 
-async function loadProblems() {
-  loadingState.hidden = false;
-  emptyState.hidden = true;
-  list.innerHTML = "";
 
-  try {
-    const response = await fetch(`${API_BASE}/api/reports/all`, {
-      headers: {
-        "Accept": "application/json"
-      },
-      cache: "no-store"
-    });
+function loadingState() {
 
-    if (!response.ok) {
-      throw new Error("Unable to load problems.");
-    }
+  content.innerHTML = `
+    <div class="solver-empty">
 
-    const result = await response.json();
+      <i class="fa-solid fa-spinner fa-spin"></i>
 
-    problems =
-      Array.isArray(result)
-        ? result
-        : Array.isArray(result.reports)
-          ? result.reports
-          : Array.isArray(result.data)
-            ? result.data
-            : [];
+      <h2>Loading projects...</h2>
 
-    renderProblems();
+      <p>
+        Fetching your active JAN SETU projects.
+      </p>
 
-  } catch (error) {
-    console.error("Problems load error:", error);
-
-    list.innerHTML = "";
-
-    loadingState.hidden = true;
-    emptyState.hidden = false;
-    emptyState.textContent =
-      "Could not load problems. Please make sure the server is running and try again.";
-
-  } finally {
-    loadingState.hidden = true;
-  }
+    </div>
+  `;
 }
 
-function renderProblems() {
-  const query = searchInput.value.trim().toLowerCase();
-  const filter = statusFilter.value;
 
-  const filteredProblems = problems
-    .filter(problem => {
-      const text =
-        `${problem.title || ""}
-         ${problem.location || ""}
-         ${problem.category || ""}`.toLowerCase();
+function errorState(message) {
 
-      return (
-        text.includes(query) &&
-        (filter === "all" || problem.status === filter)
-      );
-    })
-    .sort((a, b) => {
-      const statusDifference =
-        (statusOrder[a.status] ?? 9) -
-        (statusOrder[b.status] ?? 9);
+  content.innerHTML = `
+    <div class="solver-empty">
 
-      if (statusDifference !== 0) {
-        return statusDifference;
-      }
+      <i class="fa-solid fa-triangle-exclamation"></i>
 
-      return new Date(b.postedAt || b.created_at || 0) -
-        new Date(a.postedAt || a.created_at || 0);
-    });
+      <h2>Unable to load projects</h2>
 
-  list.innerHTML = "";
-  emptyState.hidden = filteredProblems.length > 0;
+      <p>
+        ${escapeHTML(message)}
+      </p>
 
-  filteredProblems.forEach(problem => {
-    const card = document.createElement("article");
-    card.className = "public-problem-card";
+      <button
+        type="button"
+        class="solver-primary-link"
+        onclick="loadProjects()">
+        Try Again
+      </button>
 
-    let photoURL = "assets/jharkhand-landscape.jpg";
+    </div>
+  `;
+}
 
-    if (Array.isArray(problem.photo_urls) && problem.photo_urls.length > 0) {
-      photoURL = problem.photo_urls[0];
-    } else if (typeof problem.photo_urls === "string") {
-      try {
-        const photoURLs = JSON.parse(problem.photo_urls);
 
-        if (Array.isArray(photoURLs) && photoURLs.length > 0) {
-          photoURL = photoURLs[0];
-        }
-      } catch {
-        photoURL = "assets/jharkhand-landscape.jpg";
-      }
-    }
+function formatRole(role) {
 
-    card.innerHTML = `
-      <img
-        src="${photoURL}"
-        alt="${problem.title || "Problem"}"
-      >
+  return roleLabels[role] || role || "Member";
+}
 
-      <div class="public-problem-body">
-        <div class="public-problem-title-row">
-          <div>
-            <span class="status-pill ${statusClass(problem.status)}">
-              ${publicStatus(problem.status)}
-            </span>
 
-            <h2>${problem.title || "Untitled Problem"}</h2>
-          </div>
+function renderMember(member) {
 
-          <span class="problem-date">
-            ${formatDate(problem.postedAt || problem.created_at)}
-          </span>
-        </div>
+  const role = formatRole(member.role);
 
-        <p>${problem.description || ""}</p>
+  return `
+    <div class="project-member">
 
-        <div class="public-problem-meta">
-          <span>
-            <i class="fa-solid fa-location-dot"></i>
-            ${problem.location || problem.district || "Jharkhand"}
-          </span>
-
-          <span>
-            <i class="fa-solid fa-layer-group"></i>
-            ${problem.category || "General"}
-          </span>
-        </div>
+      <div class="project-member-avatar">
+        <i class="fa-solid fa-user"></i>
       </div>
 
-      <button class="public-view-btn" type="button">
-        View Details
-      </button>
+      <div class="project-member-info">
+
+        <strong>
+          ${escapeHTML(member.full_name || "Unnamed Member")}
+        </strong>
+
+        <span>
+          ${escapeHTML(member.email || "Email unavailable")}
+        </span>
+
+      </div>
+
+      <span class="status-pill verified">
+        ${escapeHTML(role)}
+      </span>
+
+    </div>
+  `;
+}
+
+
+function renderProject(project) {
+
+  const members = Array.isArray(project.members)
+    ? project.members
+    : [];
+
+  const memberHTML = members.length
+    ? members.map(renderMember).join("")
+    : `
+      <p>
+        No team members found.
+      </p>
     `;
 
-    card
-      .querySelector(".public-view-btn")
-      .addEventListener("click", () => requestTrackId(problem));
 
-    list.appendChild(card);
-  });
+  const status =
+    project.workflow_status === "SOLVED"
+      ? "Solved"
+      : "In Progress";
+
+
+  const statusClass =
+    project.workflow_status === "SOLVED"
+      ? "verified"
+      : "in-progress";
+
+
+  const card = document.createElement("article");
+
+  card.className = "solver-project-card active-project-card";
+
+
+  card.innerHTML = `
+
+    <div>
+
+      <span class="status-pill ${statusClass}">
+        ${escapeHTML(status)}
+      </span>
+
+      <h2>
+        ${escapeHTML(project.title || "Untitled Project")}
+      </h2>
+
+      <p>
+        ${escapeHTML(
+          project.description ||
+          "No project description available."
+        )}
+      </p>
+
+
+      <div class="public-problem-meta">
+
+        <span>
+          <i class="fa-solid fa-layer-group"></i>
+          ${escapeHTML(project.category || "Civic Problem")}
+        </span>
+
+        <span>
+          <i class="fa-solid fa-location-dot"></i>
+          ${escapeHTML(project.location || "Location not set")}
+        </span>
+
+        <span>
+          <i class="fa-solid fa-users"></i>
+          ${project.team_size || 0}/${project.max_team_size || 4}
+          team members
+        </span>
+
+      </div>
+
+
+      <div class="project-team-preview">
+
+        <h3>
+          <i class="fa-solid fa-users"></i>
+          Working Team
+        </h3>
+
+        <div class="project-members-list">
+
+          ${memberHTML}
+
+        </div>
+
+      </div>
+
+    </div>
+
+
+    <a
+      href="team.html"
+      class="solver-primary-link">
+      View Team
+    </a>
+
+  `;
+
+
+  content.appendChild(card);
 }
 
-async function requestTrackId(problem) {
-  selectedProblem = problem;
 
-  trackInput.value = "";
-  trackError.textContent = "";
-  trackModal.classList.add("show");
+async function loadProjects() {
 
-  try {
-    const response = await fetch(
-      `${API_BASE}/api/reports/${encodeURIComponent(problem.id)}`,
-      {
-        headers: {
-          "Accept": "application/json"
-        },
-        cache: "no-store"
-      }
+  if (!accountId) {
+
+    emptyState(
+      "Please log in as a solver to view your projects.",
+      "solver-login.html",
+      "Go to Solver Login"
     );
 
-    if (!response.ok) {
-      throw new Error("Unable to load this problem.");
-    }
-
-    const result = await response.json();
-
-    selectedProblem =
-      result.report ||
-      result.data ||
-      result;
-
-    trackInput.focus();
-
-  } catch (error) {
-    console.error("Report detail load error:", error);
-
-    trackError.textContent =
-      error.message ||
-      "Unable to load this problem.";
-  }
-}
-
-async function verifyTrackId() {
-  if (!selectedProblem) return;
-
-  const entered =
-    trackInput.value.trim().toUpperCase();
-
-  if (!entered) {
-    trackError.textContent =
-      "Please enter your Track ID.";
     return;
   }
 
-  trackError.textContent = "";
 
-  const openButton =
-    document.getElementById("openTrackBtn");
+  loadingState();
 
-  openButton.disabled = true;
-  openButton.textContent = "Verifying...";
 
   try {
+
     const response = await fetch(
-      `${API_BASE}/api/reports/verify-track`,
-      {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          "Accept": "application/json"
-        },
-        body: JSON.stringify({
-          report_id: selectedProblem.id,
-          track_id: entered
-        })
-      }
+      `${API_BASE}/api/projects?account_id=${encodeURIComponent(accountId)}`
     );
+
 
     if (!response.ok) {
-      let errorMessage = "Track ID does not match this problem.";
 
-      try {
-        const errorText = await response.text();
+      const errorText = await response.text();
 
-        if (errorText.trim()) {
-          errorMessage = errorText.trim();
-        }
-      } catch {
-        // Keep default error message.
-      }
-
-      throw new Error(errorMessage);
+      throw new Error(
+        errorText || `Server returned ${response.status}`
+      );
     }
 
-    const verifiedReport = await response.json();
 
-    sessionStorage.setItem(
-      "verifiedReport",
-      JSON.stringify(verifiedReport)
-    );
+    const data = await response.json();
 
-    localStorage.setItem(
-      "activeTrackProblemId",
-      selectedProblem.id
-    );
 
-    window.location.href =
-      "track-problem-final.html";
+    const projects =
+      Array.isArray(data.projects)
+        ? data.projects
+        : [];
+
+
+    content.innerHTML = "";
+
+
+    if (!projects.length) {
+
+      emptyState(
+        "You are not currently working on any JAN SETU problems.",
+        "ai-matches-student.html",
+        "Explore AI Matches"
+      );
+
+      return;
+    }
+
+
+    projects.forEach(renderProject);
+
 
   } catch (error) {
-    console.error("Track ID verification error:", error);
 
-    trackError.textContent =
-      error.message ||
-      "Track ID does not match this problem.";
+    console.error("Failed to load projects:", error);
 
-    openButton.disabled = false;
-    openButton.textContent = "View Status";
+    errorState(
+      "We couldn't retrieve your projects from the server. " +
+      "Please make sure the backend is running and try again."
+    );
+
   }
+
 }
 
-searchInput.addEventListener(
-  "input",
-  renderProblems
-);
 
-statusFilter.addEventListener(
-  "change",
-  renderProblems
-);
+setRoleAwareNavigation();
 
-document
-  .getElementById("openTrackBtn")
-  .addEventListener(
-    "click",
-    verifyTrackId
+
+sidebarToggle.addEventListener("click", () => {
+
+  const collapsed =
+    sidebar.classList.toggle("collapsed");
+
+  document
+    .querySelector(".app")
+    .classList.toggle(
+      "sidebar-collapsed"
+    );
+
+  sidebarToggle.setAttribute(
+    "aria-expanded",
+    String(!collapsed)
   );
 
-document
-  .getElementById("trackModalClose")
-  .addEventListener(
-    "click",
-    () => {
-      trackModal.classList.remove("show");
-      selectedProblem = null;
-    }
-  );
+});
 
-trackInput.addEventListener(
-  "keydown",
-  event => {
-    if (event.key === "Enter") {
-      verifyTrackId();
-    }
-  }
-);
 
-trackModal.addEventListener(
-  "click",
-  event => {
-    if (event.target === trackModal) {
-      trackModal.classList.remove("show");
-      selectedProblem = null;
-    }
-  }
-);
+loadProjects();
 
-loadProblems();
 </script>
 
 </body>

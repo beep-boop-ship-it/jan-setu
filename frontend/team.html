@@ -3,24 +3,40 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Team | JAN SETU</title>
+
   <link rel="stylesheet" href="style.css">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
+
+  <link
+    rel="stylesheet"
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
+  >
 </head>
 
 <body>
+
 <div class="app">
 
+  <!-- ================= SIDEBAR ================= -->
+
   <aside class="sidebar" id="sidebar">
+
     <a href="index.html" class="sidebar-logo">
       <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
     </a>
 
-    <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
+    <button
+      class="sidebar-toggle"
+      id="sidebarToggle"
+      type="button"
+      aria-label="Toggle sidebar"
+    >
       <i class="fa-solid fa-angles-left"></i>
     </button>
 
-    <nav class="sidebar-nav">
+    <nav class="sidebar-nav" aria-label="Main navigation">
+
       <a href="index.html" class="nav-item" data-nav="home">
         <i class="fa-solid fa-house"></i>
         <span>Home</span>
@@ -50,31 +66,57 @@
         <i class="fa-solid fa-gear"></i>
         <span>Settings</span>
       </a>
+
     </nav>
 
     <div class="sidebar-landscape">
-      <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
+      <p>
+        A STRONGER<br>
+        JHARKHAND<br>
+        TOGETHER
+      </p>
     </div>
+
   </aside>
+
+
+  <!-- ================= MAIN ================= -->
 
   <main class="main solver-page">
 
     <header class="page-header">
+
       <div>
+
         <h1>Team</h1>
-        <p>Mentor and selected Student / Researcher members for the active project.</p>
+
+        <p>
+          Students, Researchers and Industry Mentors working on your projects.
+        </p>
+
       </div>
 
-      <div class="team-count" id="teamCount">0/4 Members</div>
+      <div
+        class="team-count"
+        id="teamCount"
+      >
+        0 Projects
+      </div>
+
     </header>
+
 
     <section id="teamContent"></section>
 
   </main>
+
 </div>
 
-<!-- Member profile modal -->
+
+<!-- ================= MEMBER PROFILE MODAL ================= -->
+
 <div class="modal" id="memberModal">
+
   <div class="solver-profile-modal">
 
     <button
@@ -86,35 +128,43 @@
       <i class="fa-solid fa-xmark"></i>
     </button>
 
+
     <div class="solver-profile-modal-head">
-      <div class="member-avatar" id="memberModalAvatar">S</div>
+
+      <div
+        class="member-avatar"
+        id="memberModalAvatar"
+      >
+        M
+      </div>
+
 
       <div>
+
         <h2 id="memberModalName"></h2>
+
         <p id="memberModalRole"></p>
+
       </div>
+
     </div>
 
-    <div id="memberModalBody" class="profile-modal-details"></div>
+
+    <div
+      id="memberModalBody"
+      class="profile-modal-details"
+    ></div>
 
   </div>
+
 </div>
 
+
 <script>
-const role = localStorage.getItem("solverRole") || "student";
 
-const sidebar = document.getElementById("sidebar");
-const sidebarToggle = document.getElementById("sidebarToggle");
-
-const teamCount = document.getElementById("teamCount");
-const teamContent = document.getElementById("teamContent");
-
-const memberModal = document.getElementById("memberModal");
-const memberModalClose = document.getElementById("memberModalClose");
-const memberModalName = document.getElementById("memberModalName");
-const memberModalAvatar = document.getElementById("memberModalAvatar");
-const memberModalRole = document.getElementById("memberModalRole");
-const memberModalBody = document.getElementById("memberModalBody");
+/* =========================================================
+   ROLE LABELS
+   ========================================================= */
 
 const roleLabels = {
   student: "Student",
@@ -128,539 +178,812 @@ const roleLabels = {
 };
 
 
-/* -----------------------------
-   ROLE-AWARE NAVIGATION
------------------------------ */
+const role =
+  localStorage.getItem("solverRole") || "student";
+
+
+const accountId =
+  localStorage.getItem("solverAccountId");
+
+
+/* =========================================================
+   DOM
+   ========================================================= */
+
+const sidebar =
+  document.getElementById("sidebar");
+
+const sidebarToggle =
+  document.getElementById("sidebarToggle");
+
+const teamCount =
+  document.getElementById("teamCount");
+
+const teamContent =
+  document.getElementById("teamContent");
+
+
+const memberModal =
+  document.getElementById("memberModal");
+
+const memberModalClose =
+  document.getElementById("memberModalClose");
+
+const memberModalName =
+  document.getElementById("memberModalName");
+
+const memberModalAvatar =
+  document.getElementById("memberModalAvatar");
+
+const memberModalRole =
+  document.getElementById("memberModalRole");
+
+const memberModalBody =
+  document.getElementById("memberModalBody");
+
+
+/* =========================================================
+   NAVIGATION
+   ========================================================= */
 
 function setRoleAwareNavigation() {
-  const matchesLink = document.getElementById("aiMatchesNav");
+
+  const matchesLink =
+    document.getElementById("aiMatchesNav");
 
   if (!matchesLink) return;
 
-  if (role === "student" || role === "researcher") {
-    matchesLink.href = "ai-matches-student.html";
-  } else {
-    matchesLink.href = "ai-matches-industry.html";
-  }
-}
-
-setRoleAwareNavigation();
-
-
-/* -----------------------------
-   ACTIVE PROJECT
------------------------------ */
-
-function getAcceptedProject() {
-  try {
-    return JSON.parse(
-      localStorage.getItem("acceptedProject") || "null"
-    );
-  } catch {
-    return null;
-  }
-}
-
-const accepted = getAcceptedProject();
-
-
-/* -----------------------------
-   TEAM DATA
------------------------------ */
-
-function getProjectTeam() {
-  try {
-    const stored = JSON.parse(
-      localStorage.getItem("projectTeam") || "[]"
-    );
-
-    return Array.isArray(stored) ? stored : [];
-  } catch {
-    return [];
-  }
-}
-
-function getMembers() {
-  const all = getProjectTeam();
-
-  if (!accepted || !accepted.problem) {
-    return [];
-  }
-
-  return all.filter(member =>
-    member &&
-    member.problem === accepted.problem
-  );
+  matchesLink.href =
+    (role === "student" || role === "researcher")
+      ? "ai-matches-student.html"
+      : "ai-matches-industry.html";
 }
 
 
-/* -----------------------------
-   SAFE TEXT HELPERS
------------------------------ */
+/* =========================================================
+   HELPERS
+   ========================================================= */
 
 function safeText(value, fallback = "") {
-  if (value === null || value === undefined || value === "") {
+
+  if (
+    value === null ||
+    value === undefined ||
+    value === ""
+  ) {
     return fallback;
   }
 
   return String(value);
 }
 
-function getInitial(name, fallback = "M") {
-  const text = safeText(name, fallback).trim();
+
+function escapeHTML(value) {
+
+  return String(value ?? "")
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
+
+function getInitial(name) {
+
+  const text =
+    safeText(name, "M").trim();
 
   return text
     ? text.charAt(0).toUpperCase()
-    : fallback;
+    : "M";
 }
 
 
-/* -----------------------------
-   MEMBER PROFILE
------------------------------ */
+function formatRole(role) {
 
-function profileDetails(profile = {}) {
-  const fields = Array.isArray(profile.roleFields)
-    ? profile.roleFields.filter(field =>
-        field &&
-        field.value !== null &&
-        field.value !== undefined &&
-        String(field.value).trim() !== ""
-      )
-    : [];
-
-  let html = "";
-
-  if (profile.location) {
-    html += `
-      <div>
-        <span>Location</span>
-        <strong></strong>
-      </div>
-    `;
-  }
-
-  if (profile.about) {
-    html += `
-      <div class="profile-modal-wide">
-        <span>Bio</span>
-        <p></p>
-      </div>
-    `;
-  }
-
-  fields.forEach(field => {
-    html += `
-      <div>
-        <span></span>
-        <strong></strong>
-      </div>
-    `;
-  });
-
-  const wrapper = document.createElement("div");
-  wrapper.innerHTML = html;
-
-  let index = 0;
-
-  if (profile.location) {
-    const locationStrong = wrapper.querySelector("div strong");
-    if (locationStrong) {
-      locationStrong.textContent = safeText(profile.location);
-    }
-    index++;
-  }
-
-  if (profile.about) {
-    const bio = wrapper.querySelector(".profile-modal-wide p");
-    if (bio) {
-      bio.textContent = safeText(profile.about);
-    }
-  }
-
-  const fieldElements = wrapper.querySelectorAll(
-    "div:not(.profile-modal-wide)"
-  );
-
-  let fieldIndex = profile.location ? 1 : 0;
-
-  fields.forEach((field, i) => {
-    const element = fieldElements[fieldIndex + i];
-
-    if (!element) return;
-
-    const spans = element.querySelectorAll("span, strong");
-
-    if (spans[0]) {
-      spans[0].textContent = safeText(field.label, "Details");
-    }
-
-    if (spans[1]) {
-      spans[1].textContent = safeText(field.value);
-    }
-  });
-
-  return wrapper.innerHTML;
+  return roleLabels[role]
+    || role
+    || "Member";
 }
 
 
-/* -----------------------------
+/* =========================================================
    MEMBER MODAL
------------------------------ */
+   ========================================================= */
 
 function openMember(member) {
+
   if (!member) return;
 
+
+  const name =
+    safeText(
+      member.full_name,
+      "Member"
+    );
+
+
+  const memberRole =
+    formatRole(member.role);
+
+
   memberModalName.textContent =
-    safeText(member.name, "Member");
+    name;
+
 
   memberModalAvatar.textContent =
-    getInitial(member.name);
+    getInitial(name);
+
 
   memberModalRole.textContent =
-    roleLabels[member.role] || "Solver";
+    memberRole;
 
-  memberModalBody.innerHTML =
-    profileDetails(member.profile || {});
+
+  const email =
+    safeText(
+      member.email,
+      "Email unavailable"
+    );
+
+
+  memberModalBody.innerHTML = `
+
+    <div>
+
+      <span>Email</span>
+
+      <strong>
+        ${escapeHTML(email)}
+      </strong>
+
+    </div>
+
+
+    <div>
+
+      <span>Role</span>
+
+      <strong>
+        ${escapeHTML(memberRole)}
+      </strong>
+
+    </div>
+
+
+    <div>
+
+      <span>Account ID</span>
+
+      <strong>
+        ${escapeHTML(member.account_id)}
+      </strong>
+
+    </div>
+
+  `;
+
 
   memberModal.classList.add("show");
 
   memberModalClose.focus();
 }
 
+
 function closeMemberModal() {
+
   memberModal.classList.remove("show");
 }
 
 
-/* -----------------------------
-   RENDER TEAM
------------------------------ */
+/* =========================================================
+   LOADING
+   ========================================================= */
 
-function renderTeam() {
+function renderLoading() {
 
-  if (!accepted) {
+  teamContent.innerHTML = `
 
-    teamCount.textContent = "0/4 Members";
+    <div class="solver-empty">
 
-    teamContent.innerHTML = `
-      <div class="solver-empty">
-        <i class="fa-solid fa-users"></i>
+      <i class="fa-solid fa-spinner fa-spin"></i>
 
-        <h2>No active team</h2>
+      <h2>Loading teams...</h2>
 
-        <p>
-          An Industry / Innovation mentor must accept a project first.
-        </p>
+      <p>
+        Fetching your active JAN SETU projects.
+      </p>
 
-        <a
-          href="ai-matches-industry.html"
-          class="solver-primary-link"
-        >
-          Go to AI Matches
-        </a>
-      </div>
-    `;
+    </div>
 
-    return;
-  }
+  `;
+
+}
 
 
-  const members = getMembers();
+/* =========================================================
+   EMPTY
+   ========================================================= */
+
+function renderEmpty() {
 
   teamCount.textContent =
-    `${members.length}/4 Members`;
-
-
-  /* -----------------------------
-     PROJECT BANNER
-  ----------------------------- */
-
-  const projectImage =
-    safeText(
-      accepted.image,
-      "assets/jharkhand-landscape.jpg"
-    );
-
-  const projectName =
-    safeText(
-      accepted.problem,
-      "Active Project"
-    );
-
-  const projectLocation =
-    safeText(
-      accepted.location,
-      "Jharkhand"
-    );
+    "0 Projects";
 
 
   teamContent.innerHTML = `
-    <div class="team-project-banner">
 
-      <img
-        src="${projectImage}"
-        alt="${projectName}"
-        onerror="this.onerror=null;this.src='assets/jharkhand-landscape.jpg';"
+    <div class="solver-empty">
+
+      <i class="fa-solid fa-users"></i>
+
+      <h2>No active teams</h2>
+
+      <p>
+        You are not currently part of any active JAN SETU project.
+      </p>
+
+      <a
+        href="projects.html"
+        class="solver-primary-link"
       >
-
-      <div>
-        <span>ACTIVE PROJECT</span>
-        <h2></h2>
-        <p></p>
-      </div>
+        View Projects
+      </a>
 
     </div>
 
-    <div class="team-grid" id="teamGrid"></div>
   `;
 
-
-  const bannerHeading =
-    teamContent.querySelector(".team-project-banner h2");
-
-  const bannerLocation =
-    teamContent.querySelector(".team-project-banner p");
-
-  if (bannerHeading) {
-    bannerHeading.textContent = projectName;
-  }
-
-  if (bannerLocation) {
-    bannerLocation.textContent = projectLocation;
-  }
+}
 
 
-  const grid =
-    document.getElementById("teamGrid");
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+function renderError() {
+
+  teamCount.textContent =
+    "Unable to load";
 
 
-  /* -----------------------------
-     MENTOR
-  ----------------------------- */
+  teamContent.innerHTML = `
 
-  const mentor =
-    accepted.mentor || {};
+    <div class="solver-empty">
 
-  const mentorName =
-    safeText(mentor.name, "Mentor");
+      <i class="fa-solid fa-triangle-exclamation"></i>
 
-  const mentorOrganization =
+      <h2>Unable to load teams</h2>
+
+      <p>
+        We couldn't retrieve your team information.
+        Please make sure the backend is running and try again.
+      </p>
+
+      <button
+        type="button"
+        class="solver-primary-link"
+        onclick="loadTeams()"
+      >
+        Try Again
+      </button>
+
+    </div>
+
+  `;
+
+}
+
+
+/* =========================================================
+   MEMBER CARD
+   ========================================================= */
+
+function createMemberCard(member) {
+
+  const card =
+    document.createElement("article");
+
+
+  card.className =
+    "team-member-card";
+
+
+  const name =
     safeText(
-      mentor.organization || mentor.role,
-      "Industry Partner"
+      member.full_name,
+      "Member"
     );
 
 
-  const mentorCard =
-    document.createElement("article");
+  const memberRole =
+    formatRole(member.role);
 
-  mentorCard.className =
-    "team-member-card mentor-card";
 
-  mentorCard.innerHTML = `
-    <div class="member-avatar"></div>
+  const email =
+    safeText(
+      member.email,
+      "Email unavailable"
+    );
+
+
+  const isMentor =
+    member.role === "company";
+
+
+  card.innerHTML = `
+
+    <div class="member-avatar">
+      ${escapeHTML(getInitial(name))}
+    </div>
+
 
     <div class="team-member-info">
+
       <span class="member-type">
-        Mentor / Organization Lead
+        ${escapeHTML(memberRole)}
       </span>
 
-      <h3></h3>
+      <h3>
+        ${escapeHTML(name)}
+      </h3>
 
-      <p></p>
+      <p>
+        ${escapeHTML(email)}
+      </p>
+
     </div>
+
+
+    <div class="member-actions">
+
+      <button
+        class="view-member-btn"
+        type="button"
+      >
+        View Profile
+      </button>
+
+    </div>
+
   `;
 
-  mentorCard.querySelector(".member-avatar").textContent =
-    getInitial(mentorName);
 
-  mentorCard.querySelector("h3").textContent =
-    mentorName;
-
-  mentorCard.querySelector("p").textContent =
-    mentorOrganization;
-
-  grid.appendChild(mentorCard);
+  const viewButton =
+    card.querySelector(
+      ".view-member-btn"
+    );
 
 
-  /* -----------------------------
-     STUDENT / RESEARCHER MEMBERS
-  ----------------------------- */
+  viewButton.addEventListener(
+    "click",
+    () => openMember(member)
+  );
 
-  members.forEach(member => {
 
-    if (!member) return;
+  return card;
+}
 
-    const memberName =
-      safeText(member.name, "Member");
 
-    const memberRole =
-      roleLabels[member.role] || "Solver";
+/* =========================================================
+   PROJECT TEAM
+   ========================================================= */
 
-    const memberLocation =
-      safeText(
-        member.profile?.location,
-        "JAN SETU Member"
-      );
+function renderProjectTeam(project) {
 
+  const members =
+    Array.isArray(project.members)
+      ? project.members
+      : [];
+
+
+  const students =
+    members.filter(member =>
+      member &&
+      (
+        member.role === "student" ||
+        member.role === "researcher"
+      )
+    );
+
+
+  const mentors =
+    members.filter(member =>
+      member &&
+      member.role === "company"
+    );
+
+
+  const studentCount =
+    Number.isFinite(project.student_count)
+      ? project.student_count
+      : students.length;
+
+
+  const mentorCount =
+    Number.isFinite(project.mentor_count)
+      ? project.mentor_count
+      : mentors.length;
+
+
+  const maxStudents =
+    Number.isFinite(project.max_students)
+      ? project.max_students
+      : 4;
+
+
+  const maxMentors =
+    Number.isFinite(project.max_mentors)
+      ? project.max_mentors
+      : 2;
+
+
+  const projectWrapper =
+    document.createElement("div");
+
+
+  projectWrapper.className =
+    "team-project-wrapper";
+
+
+  /* =======================================================
+     PROJECT BANNER
+     ======================================================= */
+
+  const banner =
+    document.createElement("div");
+
+
+  banner.className =
+    "team-project-banner";
+
+
+  banner.innerHTML = `
+
+    <div>
+
+      <span>
+        ${escapeHTML(
+          project.workflow_status === "SOLVED"
+            ? "SOLVED PROJECT"
+            : "ACTIVE PROJECT"
+        )}
+      </span>
+
+      <h2>
+        ${escapeHTML(
+          project.title ||
+          "Untitled Project"
+        )}
+      </h2>
+
+      <p>
+        <i class="fa-solid fa-location-dot"></i>
+        ${escapeHTML(
+          project.location ||
+          project.district ||
+          "Jharkhand"
+        )}
+      </p>
+
+    </div>
+
+  `;
+
+
+  projectWrapper.appendChild(banner);
+
+
+  /* =======================================================
+     PROJECT META
+     ======================================================= */
+
+  const meta =
+    document.createElement("div");
+
+
+  meta.className =
+    "public-problem-meta";
+
+
+  meta.innerHTML = `
+
+    <span>
+
+      <i class="fa-solid fa-layer-group"></i>
+
+      ${escapeHTML(
+        project.category ||
+        "Civic Problem"
+      )}
+
+    </span>
+
+
+    <span>
+
+      <i class="fa-solid fa-user-graduate"></i>
+
+      ${studentCount}/${maxStudents}
+      Students
+
+    </span>
+
+
+    <span>
+
+      <i class="fa-solid fa-building"></i>
+
+      ${mentorCount}/${maxMentors}
+      Mentors
+
+    </span>
+
+  `;
+
+
+  projectWrapper.appendChild(meta);
+
+
+  /* =======================================================
+     TEAM GRID
+     ======================================================= */
+
+  const grid =
+    document.createElement("div");
+
+
+  grid.className =
+    "team-grid";
+
+
+  /* ================= STUDENTS ================= */
+
+  students.forEach(member => {
+
+    grid.appendChild(
+      createMemberCard(member)
+    );
+
+  });
+
+
+  /* ================= MENTORS ================= */
+
+  mentors.forEach(member => {
 
     const card =
-      document.createElement("article");
-
-    card.className =
-      "team-member-card";
+      createMemberCard(member);
 
 
-    card.innerHTML = `
-      <div class="member-avatar"></div>
-
-      <div class="team-member-info">
-        <span class="member-type"></span>
-
-        <h3></h3>
-
-        <p></p>
-      </div>
-
-      <div class="member-actions">
-
-        <button
-          class="view-member-btn"
-          type="button"
-        >
-          View Profile
-        </button>
-
-        ${
-          role === "student" || role === "researcher"
-            ? ""
-            : `
-              <button
-                class="remove-member-btn"
-                type="button"
-              >
-                Remove
-              </button>
-            `
-        }
-
-      </div>
-    `;
+    card.classList.add(
+      "mentor-card"
+    );
 
 
-    card.querySelector(".member-avatar").textContent =
-      getInitial(memberName);
-
-    card.querySelector(".member-type").textContent =
-      memberRole;
-
-    card.querySelector("h3").textContent =
-      memberName;
-
-    card.querySelector("p").textContent =
-      memberLocation;
-
-
-    /* View Profile */
-
-    const viewButton =
-      card.querySelector(".view-member-btn");
-
-    if (viewButton) {
-      viewButton.addEventListener(
-        "click",
-        () => openMember(member)
+    const type =
+      card.querySelector(
+        ".member-type"
       );
-    }
 
 
-    /* Remove Member */
-
-    const removeButton =
-      card.querySelector(".remove-member-btn");
-
-    if (removeButton) {
-
-      removeButton.addEventListener(
-        "click",
-        () => {
-
-          const all =
-            getProjectTeam();
-
-          const updated =
-            all.filter(item =>
-              !(
-                item &&
-                item.problem === member.problem &&
-                item.name === member.name
-              )
-            );
-
-          localStorage.setItem(
-            "projectTeam",
-            JSON.stringify(updated)
-          );
-
-          renderTeam();
-        }
-      );
+    if (type) {
+      type.textContent =
+        "Industry Mentor";
     }
 
 
     grid.appendChild(card);
+
   });
 
 
-  /* -----------------------------
-     EMPTY TEAM
-  ----------------------------- */
+  /* ================= NO MEMBERS ================= */
 
   if (!members.length) {
 
     const empty =
       document.createElement("div");
 
+
     empty.className =
       "team-inline-empty";
 
-    empty.innerHTML = `
-      <p>No Student / Researcher members added yet.</p>
 
-      ${
-        role === "student" || role === "researcher"
-          ? ""
-          : `
-            <a href="ai-matches-industry.html">
-              View proposals and add members
-            </a>
-          `
-      }
+    empty.innerHTML = `
+
+      <p>
+        No team members found for this project.
+      </p>
+
     `;
 
+
     grid.appendChild(empty);
+
   }
+
+
+  projectWrapper.appendChild(grid);
+
+
+  /* =======================================================
+     DESCRIPTION
+     ======================================================= */
+
+  if (project.description) {
+
+    const description =
+      document.createElement("div");
+
+
+    description.className =
+      "team-project-description";
+
+
+    description.innerHTML = `
+
+      <span>
+        PROJECT DESCRIPTION
+      </span>
+
+      <p>
+        ${escapeHTML(project.description)}
+      </p>
+
+    `;
+
+
+    projectWrapper.appendChild(
+      description
+    );
+
+  }
+
+
+  teamContent.appendChild(
+    projectWrapper
+  );
+
 }
 
 
-/* -----------------------------
+/* =========================================================
+   LOAD TEAMS
+   ========================================================= */
+
+async function loadTeams() {
+
+  if (!accountId) {
+
+    renderError();
+
+    teamContent.innerHTML = `
+
+      <div class="solver-empty">
+
+        <i class="fa-solid fa-user-lock"></i>
+
+        <h2>Solver login required</h2>
+
+        <p>
+          Please log in to view your teams.
+        </p>
+
+        <a
+          href="solver-login.html"
+          class="solver-primary-link"
+        >
+          Go to Solver Login
+        </a>
+
+      </div>
+
+    `;
+
+    return;
+  }
+
+
+  renderLoading();
+
+
+  try {
+
+    /*
+     * Relative API URL.
+     *
+     * Works locally and on Render.
+     */
+
+    const response =
+      await fetch(
+        `/api/projects?account_id=${encodeURIComponent(accountId)}`
+      );
+
+
+    if (!response.ok) {
+
+      throw new Error(
+        `Server returned ${response.status}`
+      );
+
+    }
+
+
+    const data =
+      await response.json();
+
+
+    const projects =
+      Array.isArray(data.projects)
+        ? data.projects
+        : [];
+
+
+    if (!projects.length) {
+
+      renderEmpty();
+
+      return;
+
+    }
+
+
+    teamContent.innerHTML = "";
+
+
+    teamCount.textContent =
+      `${projects.length} ${
+        projects.length === 1
+          ? "Project"
+          : "Projects"
+      }`;
+
+
+    projects.forEach(
+      renderProjectTeam
+    );
+
+
+  } catch (error) {
+
+    console.error(
+      "Failed to load teams:",
+      error
+    );
+
+
+    renderError();
+
+  }
+
+}
+
+
+/* =========================================================
    MODAL EVENTS
------------------------------ */
+   ========================================================= */
 
 memberModalClose.addEventListener(
   "click",
   closeMemberModal
 );
 
+
 memberModal.addEventListener(
   "click",
   event => {
-    if (event.target === memberModal) {
+
+    if (
+      event.target === memberModal
+    ) {
       closeMemberModal();
     }
+
   }
 );
+
 
 document.addEventListener(
   "keydown",
@@ -670,34 +993,53 @@ document.addEventListener(
       event.key === "Escape" &&
       memberModal.classList.contains("show")
     ) {
+
       closeMemberModal();
+
     }
+
   }
 );
 
 
-/* -----------------------------
+/* =========================================================
    SIDEBAR
------------------------------ */
+   ========================================================= */
 
 sidebarToggle.addEventListener(
   "click",
   () => {
 
-    sidebar.classList.toggle("collapsed");
+    const collapsed =
+      sidebar.classList.toggle(
+        "collapsed"
+      );
+
 
     document
       .querySelector(".app")
-      .classList.toggle("sidebar-collapsed");
+      .classList.toggle(
+        "sidebar-collapsed"
+      );
+
+
+    sidebarToggle.setAttribute(
+      "aria-expanded",
+      String(!collapsed)
+    );
+
   }
 );
 
 
-/* -----------------------------
-   INITIAL RENDER
------------------------------ */
+/* =========================================================
+   INITIALIZE
+   ========================================================= */
 
-renderTeam();
+setRoleAwareNavigation();
+
+loadTeams();
+
 </script>
 
 </body>
