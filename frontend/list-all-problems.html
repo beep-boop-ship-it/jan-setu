@@ -651,7 +651,7 @@
           <div class="summary-card">
             <div class="summary-icon"><i class="fa-regular fa-clock"></i></div>
             <div>
-              <span class="summary-label">Awaiting work</span>
+              <span class="summary-label">Available</span>
               <strong class="summary-value" id="yetCount">—</strong>
             </div>
           </div>
@@ -659,7 +659,7 @@
           <div class="summary-card">
             <div class="summary-icon"><i class="fa-solid fa-person-digging"></i></div>
             <div>
-              <span class="summary-label">In progress</span>
+              <span class="summary-label">Taken by team</span>
               <strong class="summary-value" id="progressCount">—</strong>
             </div>
           </div>
@@ -688,10 +688,9 @@
 
           <select class="filter" id="statusFilter" aria-label="Filter by work status">
             <option value="all">All statuses</option>
-            <option value="yet">Yet to be worked</option>
-            <option value="progress">In progress</option>
+            <option value="available">Available</option>
+            <option value="taken">Taken by team</option>
             <option value="solved">Solved</option>
-            <option value="submitted">Submitted</option>
           </select>
 
           <span class="results-label" id="resultsLabel">Loading...</span>
@@ -710,7 +709,7 @@
                 <i class="fa-solid fa-spinner fa-spin"></i>
               </div>
               <h2>Loading problems</h2>
-              <p>Fetching the latest reports from JAN SETU.</p>
+              <p>Checking the latest team status from JAN SETU.</p>
             </div>
           </div>
         </section>
@@ -769,45 +768,31 @@
       });
     }
 
-    function normalizeWorkStatus(report) {
-      const raw =
-        report?.workflow_status ??
-        report?.work_status ??
-        report?.status ??
-        "";
+    function getTeamStatus(report) {
+      /*
+       * Team status is NOT the citizen report submission status.
+       *
+       * A problem is:
+       *   AVAILABLE  -> no work/team exists yet
+       *   TAKEN      -> a work/team exists and is not solved
+       *   SOLVED     -> the work/report is solved
+       *
+       * `work` is populated below from GET /api/reports/{id}/work.
+       */
+      const work = report?.work;
+      const reportWorkflow = String(
+        report?.workflow_status || ""
+      ).trim().toUpperCase();
 
-      const value = String(raw)
-        .trim()
-        .toLowerCase()
-        .replace(/[_-]/g, " ");
-
-      if (
-        value === "yet to be worked upon" ||
-        value === "yet to work" ||
-        value === "awaiting work"
-      ) {
-        return {
-          key: "yet",
-          label: "Yet to be worked upon",
-          icon: "fa-regular fa-clock",
-          className: "status-yet"
-        };
-      }
+      const workStatus = String(
+        work?.status || ""
+      ).trim().toUpperCase();
 
       if (
-        value === "in progress" ||
-        value === "working" ||
-        value === "ongoing"
+        reportWorkflow === "SOLVED" ||
+        workStatus === "SOLVED" ||
+        workStatus === "RESOLVED"
       ) {
-        return {
-          key: "progress",
-          label: "In Progress",
-          icon: "fa-solid fa-person-digging",
-          className: "status-progress"
-        };
-      }
-
-      if (value === "solved" || value === "resolved") {
         return {
           key: "solved",
           label: "Solved",
@@ -816,45 +801,42 @@
         };
       }
 
-      if (value === "submitted") {
+      if (work) {
         return {
-          key: "submitted",
-          label: "Submitted",
-          icon: "fa-regular fa-paper-plane",
-          className: "status-submitted"
+          key: "taken",
+          label: "Taken by a team",
+          icon: "fa-solid fa-users",
+          className: "status-progress"
         };
       }
 
       return {
-        key: "unknown",
-        label: raw
-          ? String(raw)
-              .replace(/[_-]/g, " ")
-              .replace(/\b\w/g, c => c.toUpperCase())
-          : "Status unavailable",
-        icon: "fa-regular fa-circle-question",
-        className: "status-unknown"
+        key: "available",
+        label: "Available",
+        icon: "fa-regular fa-clock",
+        className: "status-yet"
       };
     }
 
     function updateSummary(reports) {
       const counts = {
         total: reports.length,
-        yet: 0,
-        progress: 0,
+        available: 0,
+        taken: 0,
         solved: 0
       };
 
       reports.forEach(report => {
-        const status = normalizeWorkStatus(report);
-        if (status.key === "yet") counts.yet++;
-        if (status.key === "progress") counts.progress++;
+        const status = getTeamStatus(report);
+
+        if (status.key === "available") counts.available++;
+        if (status.key === "taken") counts.taken++;
         if (status.key === "solved") counts.solved++;
       });
 
       totalCount.textContent = counts.total;
-      yetCount.textContent = counts.yet;
-      progressCount.textContent = counts.progress;
+      yetCount.textContent = counts.available;
+      progressCount.textContent = counts.taken;
       solvedCount.textContent = counts.solved;
     }
 
@@ -863,7 +845,7 @@
       const selectedStatus = statusFilter.value;
 
       return allReports.filter(report => {
-        const status = normalizeWorkStatus(report);
+        const status = getTeamStatus(report);
 
         const searchable = [
           report?.id,
@@ -900,14 +882,14 @@
               <i class="fa-regular fa-folder-open"></i>
             </div>
             <h2>No matching problems</h2>
-            <p>Try changing the search or status filter.</p>
+            <p>Try changing the search or team-status filter.</p>
           </div>
         `;
         return;
       }
 
       problemsList.innerHTML = reports.map(report => {
-        const status = normalizeWorkStatus(report);
+        const status = getTeamStatus(report);
 
         const location = [report?.location, report?.district]
           .map(v => String(v || "").trim())
@@ -969,6 +951,15 @@
                        </span>`
                     : ""
                 }
+
+                ${
+                  report?.work?.student_count != null
+                    ? `<span class="meta-item">
+                         <i class="fa-solid fa-user-group"></i>
+                         ${escapeHTML(report.work.student_count)} / ${escapeHTML(report.work.max_students ?? 4)} students
+                       </span>`
+                    : ""
+                }
               </div>
             </div>
 
@@ -995,12 +986,20 @@
               <i class="fa-solid fa-spinner fa-spin"></i>
             </div>
             <h2>Loading problems</h2>
-            <p>Fetching the latest reports from JAN SETU.</p>
+            <p>Checking which reported problems have been taken up by teams.</p>
           </div>
         `;
       }
 
       try {
+        /*
+         * First fetch every citizen report.
+         * Then fetch the actual work/team state for each report.
+         *
+         * GET /api/reports/{id}/work returns a Work object when a team
+         * has been created. A missing work record means the problem is
+         * still available.
+         */
         const response = await fetch(`${API_BASE}/api/reports/all`, {
           method: "GET",
           cache: "no-store"
@@ -1024,6 +1023,47 @@
           (a, b) =>
             new Date(b?.created_at || 0).getTime() -
             new Date(a?.created_at || 0).getTime()
+        );
+
+        await Promise.all(
+          allReports.map(async report => {
+            try {
+              const workResponse = await fetch(
+                `${API_BASE}/api/reports/${encodeURIComponent(report.id)}/work`,
+                {
+                  method: "GET",
+                  cache: "no-store"
+                }
+              );
+
+              if (!workResponse.ok) {
+                /*
+                 * 404/no work is expected for an available problem.
+                 * Do not treat it as a page failure.
+                 */
+                report.work = null;
+                return;
+              }
+
+              const workResult = await workResponse.json().catch(() => null);
+
+              report.work =
+                workResult?.work ||
+                (
+                  workResult &&
+                  typeof workResult === "object" &&
+                  !Array.isArray(workResult)
+                    ? workResult
+                    : null
+                );
+            } catch (error) {
+              console.warn(
+                `Could not load team state for report ${report.id}`,
+                error
+              );
+              report.work = null;
+            }
+          })
         );
 
         updateSummary(allReports);
