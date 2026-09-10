@@ -31,6 +31,7 @@ http.HandleFunc("/api/reports/{id}", getReportByID(db))
 http.HandleFunc("/api/proposals/{id}/accept", acceptProposal(db))
 http.HandleFunc("/api/proposals/{id}/reject", rejectProposal(db))
 http.HandleFunc("/api/projects", getProjects(db))
+http.HandleFunc("GET /api/track/{track_id}", getTrackProblem(db))
 http.HandleFunc("GET /api/reports/{id}/mentors", getProblemMentors(db))
 http.HandleFunc(
 	"GET /api/industry/matches/{accountID}",

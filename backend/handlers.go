@@ -1515,6 +1515,328 @@ func verifyTrackID(db *pgxpool.Pool) http.HandlerFunc {
 	}
 }
 
+
+
+// ============================================================
+// PUBLIC TRACK PROBLEM
+// ============================================================
+
+func getTrackProblem(db *pgxpool.Pool) http.HandlerFunc {
+	return func(w http.ResponseWriter, r *http.Request) {
+
+		w.Header().Set("Access-Control-Allow-Origin", "*")
+		w.Header().Set("Access-Control-Allow-Methods", "GET, OPTIONS")
+		w.Header().Set("Access-Control-Allow-Headers", "Content-Type")
+
+		if r.Method == http.MethodOptions {
+			w.WriteHeader(http.StatusNoContent)
+			return
+		}
+
+		if r.Method != http.MethodGet {
+			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+			return
+		}
+
+		trackID := strings.TrimSpace(r.PathValue("track_id"))
+
+		if trackID == "" {
+			http.Error(w, "Track ID is required", http.StatusBadRequest)
+			return
+		}
+
+		// --------------------------------------------------------
+		// Fetch problem using ONLY the Track ID
+		// --------------------------------------------------------
+
+		type Problem struct {
+			ID             int64           `json:"id"`
+			Title          string          `json:"title"`
+			Category       string          `json:"category"`
+			District       string          `json:"district"`
+			Location       string          `json:"location"`
+			PinCode        string          `json:"pin_code"`
+			Description    string          `json:"description"`
+			Status         string          `json:"status"`
+			WorkflowStatus string          `json:"workflow_status"`
+			CreatedAt      time.Time       `json:"created_at"`
+			PhotoURLs      json.RawMessage `json:"photo_urls"`
+		}
+
+		var problem Problem
+
+		err := db.QueryRow(
+			r.Context(),
+			`
+			SELECT
+				id,
+				title,
+				category,
+				district,
+				location,
+				pin_code,
+				description,
+				status,
+				workflow_status,
+				created_at,
+				photo_urls
+			FROM public.reports
+			WHERE track_id = $1
+			`,
+			trackID,
+		).Scan(
+			&problem.ID,
+			&problem.Title,
+			&problem.Category,
+			&problem.District,
+			&problem.Location,
+			&problem.PinCode,
+			&problem.Description,
+			&problem.Status,
+			&problem.WorkflowStatus,
+			&problem.CreatedAt,
+			&problem.PhotoURLs,
+		)
+
+		if err != nil {
+
+			if err == pgx.ErrNoRows {
+				http.Error(
+					w,
+					"Invalid Track ID",
+					http.StatusNotFound,
+				)
+				return
+			}
+
+			log.Println("Track problem lookup error:", err)
+
+			http.Error(
+				w,
+				"Failed to fetch tracked problem",
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		// --------------------------------------------------------
+		// Public team member structure
+		// --------------------------------------------------------
+
+		type Member struct {
+			Name  string `json:"name"`
+			Role  string `json:"role"`
+			Email string `json:"email"`
+		}
+
+		// --------------------------------------------------------
+		// Default: no team yet
+		// --------------------------------------------------------
+
+		students := make([]Member, 0)
+		mentors := make([]Member, 0)
+
+		var workID int64
+		var workStatus string
+
+		err = db.QueryRow(
+			r.Context(),
+			`
+			SELECT
+				id,
+				status
+			FROM works
+			WHERE report_id = $1
+			`,
+			problem.ID,
+		).Scan(
+			&workID,
+			&workStatus,
+		)
+
+		// No work means the problem has not been taken yet.
+		if err != nil && err != pgx.ErrNoRows {
+			log.Println("Track work lookup error:", err)
+
+			http.Error(
+				w,
+				"Failed to fetch team status",
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		workExists := err == nil
+
+		// --------------------------------------------------------
+		// Fetch students if a Work exists
+		// --------------------------------------------------------
+
+		if workExists {
+
+			studentRows, err := db.Query(
+				r.Context(),
+				`
+				SELECT
+					sa.full_name,
+					sa.role,
+					sa.email
+				FROM work_students ws
+				JOIN solver_accounts sa
+					ON sa.id = ws.student_account_id
+				WHERE ws.work_id = $1
+				ORDER BY ws.created_at ASC
+				`,
+				workID,
+			)
+
+			if err != nil {
+				http.Error(
+					w,
+					"Failed to fetch team students",
+					http.StatusInternalServerError,
+				)
+				return
+			}
+
+			defer studentRows.Close()
+
+			for studentRows.Next() {
+
+				var member Member
+
+				if err := studentRows.Scan(
+					&member.Name,
+					&member.Role,
+					&member.Email,
+				); err != nil {
+					http.Error(
+						w,
+						"Failed to read team students",
+						http.StatusInternalServerError,
+					)
+					return
+				}
+
+				students = append(students, member)
+			}
+
+			if err := studentRows.Err(); err != nil {
+				http.Error(
+					w,
+					"Failed to read team students",
+					http.StatusInternalServerError,
+				)
+				return
+			}
+		}
+
+		// --------------------------------------------------------
+		// Fetch mentors assigned to this problem
+		// --------------------------------------------------------
+
+		mentorRows, err := db.Query(
+			r.Context(),
+			`
+			SELECT
+				sa.full_name,
+				sa.role,
+				sa.email
+			FROM problem_mentors pm
+			JOIN solver_accounts sa
+				ON sa.id = pm.account_id
+			WHERE pm.report_id = $1
+			ORDER BY pm.created_at ASC
+			`,
+			problem.ID,
+		)
+
+		if err != nil {
+			http.Error(
+				w,
+				"Failed to fetch problem mentors",
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		defer mentorRows.Close()
+
+		for mentorRows.Next() {
+
+			var member Member
+
+			if err := mentorRows.Scan(
+				&member.Name,
+				&member.Role,
+				&member.Email,
+			); err != nil {
+				http.Error(
+					w,
+					"Failed to read problem mentors",
+					http.StatusInternalServerError,
+				)
+				return
+			}
+
+			mentors = append(mentors, member)
+		}
+
+		if err := mentorRows.Err(); err != nil {
+			http.Error(
+				w,
+				"Failed to read problem mentors",
+				http.StatusInternalServerError,
+			)
+			return
+		}
+
+		// --------------------------------------------------------
+		// Determine public status
+		// --------------------------------------------------------
+
+		publicStatus := "AVAILABLE"
+
+		if strings.EqualFold(problem.WorkflowStatus, "SOLVED") ||
+			strings.EqualFold(workStatus, "SOLVED") ||
+			strings.EqualFold(workStatus, "RESOLVED") {
+
+			publicStatus = "SOLVED"
+
+		} else if workExists {
+
+			publicStatus = "IN_PROGRESS"
+		}
+
+		// --------------------------------------------------------
+		// Response
+		// --------------------------------------------------------
+
+		response := map[string]any{
+			"track_id": trackID,
+
+			"problem": problem,
+
+			"status": publicStatus,
+
+			"team": map[string]any{
+				"exists":        workExists,
+				"status":        workStatus,
+				"student_count": len(students),
+				"max_students":  4,
+				"mentor_count":  len(mentors),
+				"max_mentors":   2,
+				"students":      students,
+				"mentors":       mentors,
+			},
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+
+		json.NewEncoder(w).Encode(response)
+	}
+}
+
 // ============================================================
 // GET ALL REPORTS
 // ============================================================

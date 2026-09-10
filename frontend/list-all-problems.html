@@ -47,21 +47,11 @@
     button,input,select{font:inherit}
 
     .main.problems-page{
-      /*
-       * style.css gives .main a full-width layout in some views.
-       * Because the sidebar is fixed, explicitly reserve its width here.
-       * This prevents the page content from sliding underneath the sidebar.
-       */
-      width:calc(100% - var(--sidebar));
+      width:100%;
       min-height:100vh;
-      margin-left:var(--sidebar);
+      margin-left:0;
       padding:34px 38px 60px;
       min-width:0;
-    }
-
-    .sidebar-collapsed .main.problems-page{
-      width:calc(100% - var(--sidebar-small));
-      margin-left:var(--sidebar-small);
     }
 
     .problems-shell{
@@ -285,7 +275,7 @@
 
     .list-head{
       display:grid;
-      grid-template-columns:minmax(0,1fr) 190px;
+      grid-template-columns:minmax(0,1fr) 190px 130px;
       align-items:center;
       gap:18px;
       padding:13px 20px;
@@ -309,7 +299,7 @@
 
     .problem-row{
       display:grid;
-      grid-template-columns:minmax(0,1fr) 190px;
+      grid-template-columns:minmax(0,1fr) 190px 130px;
       gap:18px;
       align-items:center;
       padding:19px 20px;
@@ -423,6 +413,36 @@
 
     .status i{font-size:10px}
 
+    .track-cell{
+      display:flex;
+      justify-content:flex-end;
+      align-items:center;
+    }
+
+    .track-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      min-height:36px;
+      padding:0 12px;
+      border:1px solid #c9ded4;
+      border-radius:9px;
+      background:var(--green-soft);
+      color:var(--green-dark);
+      text-decoration:none;
+      font-size:11px;
+      font-weight:800;
+      white-space:nowrap;
+      transition:.18s ease;
+    }
+
+    .track-btn:hover{
+      background:#dff1e7;
+      border-color:#a9cdbc;
+      transform:translateY(-1px);
+    }
+
     .status-yet{
       color:var(--amber);
       background:var(--amber-soft);
@@ -493,25 +513,20 @@
     /* Mobile */
     @media(max-width:900px){
       .main.problems-page{
-        width:calc(100% - var(--sidebar));
-        margin-left:var(--sidebar);
+        width:100%;
+        margin-left:0;
         padding:28px 22px 50px;
       }
-
-      .sidebar-collapsed .main.problems-page{
-        width:calc(100% - var(--sidebar-small));
-        margin-left:var(--sidebar-small);
-      }
       .summary-grid{grid-template-columns:repeat(2,1fr)}
-      .list-head{grid-template-columns:minmax(0,1fr) 150px}
-      .problem-row{grid-template-columns:minmax(0,1fr) 150px}
+      .list-head{grid-template-columns:minmax(0,1fr) 150px 120px}
+      .problem-row{grid-template-columns:minmax(0,1fr) 150px 120px}
       .status{width:140px}
     }
 
     @media(max-width:680px){
       .main.problems-page{
-        width:calc(100% - var(--sidebar-small));
-        margin-left:var(--sidebar-small);
+        width:100%;
+        margin-left:0;
         padding:22px 16px 40px;
       }
 
@@ -572,51 +587,6 @@
 
 <body>
   <div class="app">
-
-    <!-- SIDEBAR -->
-    <aside class="sidebar" id="sidebar">
-      <a href="index.html" class="sidebar-logo">
-        <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
-      </a>
-
-      <button class="sidebar-toggle" id="sidebarToggle" type="button" aria-label="Toggle sidebar">
-        <i class="fa-solid fa-angles-left"></i>
-      </button>
-
-      <nav class="sidebar-nav" aria-label="Main navigation">
-        <a href="index.html" class="nav-item">
-          <i class="fa-solid fa-house"></i><span>Home</span>
-        </a>
-
-        <a href="list-all-problems.html" class="nav-item active">
-          <i class="fa-solid fa-list"></i><span>Problems</span>
-        </a>
-
-        <a href="ai-matches-student.html" class="nav-item">
-          <i class="fa-solid fa-wand-magic-sparkles"></i><span>AI Matches</span>
-        </a>
-
-        <a href="projects.html" class="nav-item">
-          <i class="fa-regular fa-folder-open"></i><span>Projects</span>
-        </a>
-
-        <a href="team.html" class="nav-item">
-          <i class="fa-solid fa-users"></i><span>Team</span>
-        </a>
-
-        <a href="solver-profile.html" class="nav-item">
-          <i class="fa-solid fa-user"></i><span>Profile</span>
-        </a>
-
-        <a href="settings.html" class="nav-item">
-          <i class="fa-solid fa-gear"></i><span>Settings</span>
-        </a>
-      </nav>
-
-      <div class="sidebar-landscape">
-        <p>A STRONGER<br>JHARKHAND<br>TOGETHER</p>
-      </div>
-    </aside>
 
     <!-- MAIN -->
     <main class="main problems-page">
@@ -701,6 +671,7 @@
           <div class="list-head">
             <span>Reported civic problems</span>
             <span>Current work status</span>
+            <span>Track</span>
           </div>
 
           <div class="problem-list" id="problemsList">
@@ -721,8 +692,6 @@
   <script>
     const API_BASE = "https://jan-setu-bf03.onrender.com";
 
-    const sidebar = document.getElementById("sidebar");
-    const sidebarToggle = document.getElementById("sidebarToggle");
     const problemsList = document.getElementById("problemsList");
     const refreshBtn = document.getElementById("refreshBtn");
     const searchInput = document.getElementById("searchInput");
@@ -736,15 +705,7 @@
 
     let allReports = [];
 
-    sidebarToggle.addEventListener("click", () => {
-      sidebar.classList.toggle("collapsed");
-      document.querySelector(".app").classList.toggle("sidebar-collapsed");
 
-      sidebarToggle.querySelector("i").className =
-        sidebar.classList.contains("collapsed")
-          ? "fa-solid fa-angles-right"
-          : "fa-solid fa-angles-left";
-    });
 
     function escapeHTML(value) {
       return String(value ?? "")
@@ -968,6 +929,17 @@
                 <i class="${status.icon}"></i>
                 <span>${escapeHTML(status.label)}</span>
               </div>
+            </div>
+
+            <div class="track-cell">
+              <a
+                class="track-btn"
+                href="track-problem-final.html"
+                aria-label="Track problem #${escapeHTML(report?.id ?? "")}"
+              >
+                <i class="fa-solid fa-location-crosshairs"></i>
+                <span>Track</span>
+              </a>
             </div>
           </article>
         `;

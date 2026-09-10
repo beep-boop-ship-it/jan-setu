@@ -3,28 +3,575 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Track Problem | JAN SETU</title>
 
   <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet"
+        href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
 
-  <link
-    rel="stylesheet"
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"
-  >
+  <style>
+    :root{
+      --track-bg:#f6f8f7;
+      --track-surface:#ffffff;
+      --track-ink:#173b31;
+      --track-muted:#70807a;
+      --track-line:#dfe8e4;
+      --track-green:#1f7a4f;
+      --track-green-dark:#165d3c;
+      --track-green-soft:#eaf6ef;
+      --track-blue:#326b9b;
+      --track-blue-soft:#edf5fb;
+      --track-amber:#a87916;
+      --track-amber-soft:#fff8df;
+      --track-success:#24724e;
+      --track-success-soft:#eaf8f0;
+      --track-shadow:0 12px 34px rgba(31,61,52,.06);
+    }
+
+    *{box-sizing:border-box}
+
+    body{
+      margin:0;
+      background:var(--track-bg);
+      color:var(--track-ink);
+      font-family:Arial,sans-serif;
+    }
+
+    button,input{font:inherit}
+
+    .track-page-final{
+      width:100%;
+      min-height:calc(100vh - 72px);
+      padding:48px 24px 70px;
+    }
+
+    .track-container{
+      width:min(960px,100%);
+      margin:0 auto;
+    }
+
+    .track-intro{
+      text-align:center;
+      margin-bottom:28px;
+    }
+
+    .track-eyebrow{
+      margin:0 0 9px;
+      color:var(--track-green);
+      font-size:11px;
+      font-weight:800;
+      letter-spacing:.13em;
+      text-transform:uppercase;
+    }
+
+    .track-intro h1{
+      margin:0;
+      color:var(--track-ink);
+      font-size:34px;
+      line-height:1.12;
+      letter-spacing:-.025em;
+    }
+
+    .track-intro p{
+      margin:10px auto 0;
+      max-width:520px;
+      color:var(--track-muted);
+      font-size:14px;
+      line-height:1.55;
+    }
+
+    .track-search{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:10px;
+      margin-bottom:22px;
+      background:#fff;
+      border:1px solid var(--track-line);
+      border-radius:14px;
+      box-shadow:var(--track-shadow);
+    }
+
+    .track-input-wrap{
+      position:relative;
+      flex:1;
+      min-width:0;
+    }
+
+    .track-input-wrap i{
+      position:absolute;
+      left:14px;
+      top:50%;
+      transform:translateY(-50%);
+      color:#8b9994;
+      font-size:13px;
+      pointer-events:none;
+    }
+
+    .track-input{
+      width:100%;
+      height:44px;
+      padding:0 14px 0 38px;
+      border:1px solid var(--track-line);
+      border-radius:9px;
+      outline:none;
+      background:#fbfcfc;
+      color:var(--track-ink);
+      font-size:13px;
+    }
+
+    .track-input:focus{
+      border-color:#9fc8b5;
+      background:#fff;
+      box-shadow:0 0 0 3px rgba(31,122,79,.08);
+    }
+
+    .track-input::placeholder{color:#9aa6a2}
+
+    .track-view-btn{
+      height:44px;
+      padding:0 18px;
+      border:1px solid var(--track-green);
+      border-radius:9px;
+      background:var(--track-green);
+      color:#fff;
+      cursor:pointer;
+      font-size:13px;
+      font-weight:800;
+      white-space:nowrap;
+      transition:.18s ease;
+    }
+
+    .track-view-btn:hover{
+      background:var(--track-green-dark);
+      border-color:var(--track-green-dark);
+    }
+
+    .track-view-btn:disabled{
+      opacity:.65;
+      cursor:wait;
+    }
+
+    .track-error{
+      display:none;
+      margin:0 0 18px;
+      padding:12px 14px;
+      border:1px solid #f0cccc;
+      border-radius:10px;
+      background:#fff3f3;
+      color:#a83d3d;
+      font-size:13px;
+      line-height:1.45;
+    }
+
+    .track-error.show{display:block}
+
+    .problem-card,
+    .team-card{
+      background:var(--track-surface);
+      border:1px solid var(--track-line);
+      border-radius:16px;
+      box-shadow:var(--track-shadow);
+    }
+
+    .problem-card{
+      overflow:hidden;
+    }
+
+    .problem-top{
+      padding:28px 32px 25px;
+      border-bottom:1px solid var(--track-line);
+    }
+
+    .problem-topline{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:16px;
+      margin-bottom:12px;
+    }
+
+    .problem-label{
+      color:#83908b;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .status-badge{
+      display:inline-flex;
+      align-items:center;
+      gap:7px;
+      min-height:32px;
+      padding:0 11px;
+      border-radius:8px;
+      font-size:11px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .status-available{
+      color:var(--track-amber);
+      background:var(--track-amber-soft);
+      border:1px solid #f0dfa5;
+    }
+
+    .status-progress{
+      color:var(--track-blue);
+      background:var(--track-blue-soft);
+      border:1px solid #cfe1ef;
+    }
+
+    .status-solved{
+      color:var(--track-success);
+      background:var(--track-success-soft);
+      border:1px solid #c8e6d5;
+    }
+
+    .problem-card h2{
+      margin:0;
+      color:var(--track-ink);
+      font-size:24px;
+      line-height:1.25;
+      letter-spacing:-.015em;
+    }
+
+    .problem-description{
+      margin:14px 0 0;
+      color:#60716b;
+      font-size:14px;
+      line-height:1.75;
+      max-width:760px;
+    }
+
+    .problem-details{
+      display:grid;
+      grid-template-columns:repeat(4,1fr);
+      border-bottom:1px solid var(--track-line);
+    }
+
+    .detail{
+      min-width:0;
+      padding:21px 24px;
+      border-right:1px solid var(--track-line);
+    }
+
+    .detail:last-child{border-right:0}
+
+    .detail-label{
+      display:block;
+      margin-bottom:8px;
+      color:#8a9691;
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.08em;
+      text-transform:uppercase;
+    }
+
+    .detail-value{
+      display:block;
+      color:var(--track-ink);
+      font-size:13px;
+      font-weight:750;
+      overflow-wrap:anywhere;
+    }
+
+    .track-id-value{
+      color:var(--track-green-dark);
+      font-family:monospace;
+      font-size:12px;
+    }
+
+    .problem-actions{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:18px;
+      padding:18px 24px;
+    }
+
+    .copy-id-btn{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:8px;
+      min-width:132px;
+      height:38px;
+      padding:0 14px;
+      border:1px solid #cfded8;
+      border-radius:9px;
+      background:#f8fbf9;
+      color:var(--track-green-dark);
+      cursor:pointer;
+      font-size:11px;
+      font-weight:800;
+      white-space:nowrap;
+      transition:.18s ease;
+    }
+
+    .copy-id-btn:hover{
+      background:var(--track-green-soft);
+      border-color:#b8d5c7;
+      transform:translateY(-1px);
+    }
+
+    .copy-id-btn:active{
+      transform:translateY(0);
+    }
+
+    .team-card{
+      margin-top:22px;
+      padding:25px 28px;
+    }
+
+    .team-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:21px;
+    }
+
+    .team-eyebrow{
+      display:block;
+      margin-bottom:5px;
+      color:var(--track-green);
+      font-size:10px;
+      font-weight:800;
+      letter-spacing:.1em;
+      text-transform:uppercase;
+    }
+
+    .team-header h2{
+      margin:0;
+      color:var(--track-ink);
+      font-size:20px;
+    }
+
+    .team-capacity{
+      display:flex;
+      gap:8px;
+      flex-wrap:wrap;
+    }
+
+    .capacity{
+      padding:7px 10px;
+      border-radius:999px;
+      background:var(--track-green-soft);
+      color:var(--track-green-dark);
+      font-size:11px;
+      font-weight:800;
+      white-space:nowrap;
+    }
+
+    .team-columns{
+      display:grid;
+      grid-template-columns:repeat(2,minmax(0,1fr));
+      gap:14px;
+    }
+
+    .team-group{
+      padding:15px 16px;
+      border:1px solid #e4ebe7;
+      border-radius:12px;
+      background:#f8faf9;
+    }
+
+    .team-group h3{
+      margin:0 0 8px;
+      color:#223a50;
+      font-size:13px;
+    }
+
+    .team-group h3 i{
+      margin-right:6px;
+      color:var(--track-green);
+    }
+
+    .person{
+      display:flex;
+      align-items:center;
+      gap:10px;
+      padding:11px 0;
+      border-top:1px solid #e4ebe7;
+    }
+
+    .person:first-of-type{border-top:0}
+
+    .person-icon{
+      width:34px;
+      height:34px;
+      flex:0 0 34px;
+      display:grid;
+      place-items:center;
+      border-radius:9px;
+      background:var(--track-green-soft);
+      color:var(--track-green);
+    }
+
+    .person-info{
+      min-width:0;
+      display:flex;
+      flex-direction:column;
+      gap:3px;
+    }
+
+    .person-info strong{
+      color:var(--track-ink);
+      font-size:13px;
+    }
+
+    .person-info span,
+    .person-info a{
+      color:var(--track-muted);
+      font-size:11px;
+      overflow-wrap:anywhere;
+    }
+
+    .person-info a{
+      color:var(--track-blue);
+      text-decoration:none;
+    }
+
+    .person-info a:hover{text-decoration:underline}
+
+    .empty-team{
+      margin:0;
+      color:var(--track-muted);
+      font-size:12px;
+      line-height:1.5;
+    }
+
+    .bottom-actions{
+      display:flex;
+      justify-content:center;
+      gap:10px;
+      margin-top:22px;
+    }
+
+    .bottom-actions a{
+      display:inline-flex;
+      align-items:center;
+      justify-content:center;
+      gap:7px;
+      min-height:38px;
+      padding:0 13px;
+      border:1px solid var(--track-line);
+      border-radius:9px;
+      background:#fff;
+      color:#53645e;
+      text-decoration:none;
+      font-size:11px;
+      font-weight:750;
+    }
+
+    .bottom-actions a:hover{background:#f9fcfa}
+
+    .initial-state{
+      padding:44px 20px;
+      text-align:center;
+      background:#fff;
+      border:1px solid var(--track-line);
+      border-radius:16px;
+      box-shadow:var(--track-shadow);
+    }
+
+    .initial-state-icon{
+      width:48px;
+      height:48px;
+      margin:0 auto 13px;
+      display:grid;
+      place-items:center;
+      border-radius:14px;
+      background:var(--track-green-soft);
+      color:var(--track-green);
+      font-size:18px;
+    }
+
+    .initial-state h2{
+      margin:0 0 6px;
+      color:var(--track-ink);
+      font-size:18px;
+    }
+
+    .initial-state p{
+      margin:0 auto;
+      max-width:440px;
+      color:var(--track-muted);
+      font-size:13px;
+      line-height:1.55;
+    }
+
+    @media(max-width:760px){
+      .track-page-final{padding:32px 16px 50px}
+      .track-intro h1{font-size:29px}
+
+      .track-search{
+        flex-direction:column;
+        align-items:stretch;
+      }
+
+      .track-view-btn{width:100%}
+
+      .problem-details{
+        grid-template-columns:repeat(2,1fr);
+      }
+
+      .detail:nth-child(2){border-right:0}
+      .detail:nth-child(-n+2){border-bottom:1px solid var(--track-line)}
+
+      .team-header{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .team-columns{grid-template-columns:1fr}
+    }
+
+    @media(max-width:480px){
+      .problem-top{padding:22px 18px}
+      .problem-topline{
+        align-items:flex-start;
+        flex-direction:column;
+      }
+
+      .problem-card h2{font-size:21px}
+
+      .problem-details{
+        grid-template-columns:1fr;
+      }
+
+      .detail{
+        border-right:0!important;
+        border-bottom:1px solid var(--track-line);
+      }
+
+      .detail:last-child{border-bottom:0}
+
+      .problem-actions{
+        align-items:stretch;
+        flex-direction:column;
+      }
+
+      .copy-id-btn{
+        width:100%;
+        justify-content:center;
+      }
+    }
+  </style>
 </head>
 
 <body>
 
 <header class="navbar">
-
   <a href="index.html" class="brand">
     <img src="assets/jansetu-logo.jpg" alt="JAN SETU">
   </a>
 
   <nav class="nav-links">
     <a href="index.html">Home</a>
-    <a href="problems.html">List of Problems</a>
+    <a href="list-all-problems.html">List of Problems</a>
     <a href="index.html#about">About</a>
     <a href="index.html#initiatives">Initiatives</a>
     <a href="index.html#explore">Explore Jharkhand</a>
@@ -32,603 +579,402 @@
     <a href="index.html#resources">Resources</a>
     <a href="index.html#contact">Contact</a>
   </nav>
-
 </header>
 
-
 <main class="track-page-final">
+  <div class="track-container">
 
-  <section class="track-card-final">
+    <section class="track-intro">
+      <p class="track-eyebrow">JAN SETU · PROBLEM TRACKING</p>
+      <h1>Track a civic problem</h1>
+      <p>Enter the Track ID you received after submitting a report to see its current status and working team.</p>
+    </section>
 
-    <p class="track-eyebrow">
-      TRACK YOUR REPORT
-    </p>
-
-    <h1>
-      Your Problem is
-      <span id="trackStatusHeading">Loading...</span>
-    </h1>
-
-    <p
-      class="track-subtitle"
-      id="trackProblemTitle"
-    >
-      Loading report details...
-    </p>
-
-
-    <!-- PROBLEM ID -->
-
-    <div class="problem-id-card">
-
-      <span>Problem ID</span>
-
-      <div class="problem-id-row">
-
-        <strong id="problemId">—</strong>
-
-        <button
-          class="copy-id-btn"
-          id="copyIdBtn"
-          type="button"
-          title="Copy ID"
-          aria-label="Copy problem ID"
+    <form class="track-search" id="trackForm">
+      <div class="track-input-wrap">
+        <i class="fa-solid fa-location-crosshairs"></i>
+        <input
+          class="track-input"
+          id="trackInput"
+          type="text"
+          placeholder="Enter your Track ID · JS-2026-..."
+          autocomplete="off"
+          spellcheck="false"
+          required
         >
-          <i class="fa-regular fa-copy"></i>
-        </button>
-
       </div>
+      <button class="track-view-btn" id="trackButton" type="submit">
+        <i class="fa-solid fa-arrow-right"></i>
+        View Problem
+      </button>
+    </form>
 
-    </div>
+    <div class="track-error" id="trackError" role="alert"></div>
 
-
-    <!-- DETAILS -->
-
-    <div class="problem-details-grid">
-
-      <div class="detail-card">
-
-        <div class="detail-icon">
-          <i class="fa-solid fa-layer-group"></i>
+    <section id="resultArea">
+      <div class="initial-state">
+        <div class="initial-state-icon">
+          <i class="fa-solid fa-magnifying-glass"></i>
         </div>
-
-        <div>
-          <span>Category</span>
-          <strong id="trackCategory">—</strong>
-        </div>
-
+        <h2>Enter your Track ID</h2>
+        <p>Your Track ID lets JAN SETU retrieve the latest information about your reported civic problem.</p>
       </div>
+    </section>
 
-
-      <div class="detail-card">
-
-        <div class="detail-icon priority-icon">
-          <i class="fa-solid fa-flag"></i>
-        </div>
-
-        <div>
-          <span>Priority</span>
-          <strong id="trackPriority">—</strong>
-        </div>
-
-      </div>
-
-
-      <div class="detail-card">
-
-        <div class="detail-icon">
-          <i class="fa-regular fa-calendar"></i>
-        </div>
-
-        <div>
-          <span>Last Updated</span>
-          <strong id="trackUpdated">—</strong>
-        </div>
-
-      </div>
-
-
-      <div class="detail-card">
-
-        <div class="detail-icon">
-          <i class="fa-solid fa-location-dot"></i>
-        </div>
-
-        <div>
-          <span>Location</span>
-          <strong id="trackLocation">—</strong>
-        </div>
-
-      </div>
-
-    </div>
-
-
-    <!-- CURRENT STATUS -->
-
-    <div class="current-status-card">
-
-      <div class="status-icon">
-        <i class="fa-solid fa-gear"></i>
-      </div>
-
-      <div>
-
-        <span>Current Status</span>
-
-        <strong id="currentStatus">
-          Loading...
-        </strong>
-
-        <p id="statusMessage">
-          Fetching the latest status of your report.
-        </p>
-
-      </div>
-
-    </div>
-
-
-    <!-- TIMELINE -->
-
-    <div
-      class="progress-timeline"
-      id="progressTimeline"
-    ></div>
-
-
-    <!-- ACTIONS -->
-
-    <div class="track-actions">
-
-      <a
-        href="problems.html"
-        class="back-home-btn"
-      >
+    <div class="bottom-actions">
+      <a href="list-all-problems.html">
         <i class="fa-solid fa-list"></i>
         List of Problems
       </a>
-
-      <a
-        href="index.html"
-        class="back-home-btn"
-      >
+      <a href="index.html">
         <i class="fa-solid fa-house"></i>
         Home
       </a>
-
     </div>
 
-  </section>
-
+  </div>
 </main>
 
-<div class="track-final-landscape"></div>
-
-
 <script>
+  const API_BASE = "";
 
-/* =========================================================
-   STATUS FLOW
-   ========================================================= */
+  const trackForm = document.getElementById("trackForm");
+  const trackInput = document.getElementById("trackInput");
+  const trackButton = document.getElementById("trackButton");
+  const trackError = document.getElementById("trackError");
+  const resultArea = document.getElementById("resultArea");
 
-const steps = [
-  "Submitted",
-  "Verified",
-  "In Progress",
-  "Validation",
-  "Resolved"
-];
-
-
-const messages = {
-
-  Submitted:
-    "Your report has been submitted and is waiting for verification.",
-
-  Verified:
-    "Your problem has been verified and is ready for solver matching.",
-
-  "In Progress":
-    "A solver team is currently working on this problem.",
-
-  Validation:
-    "The proposed solution is being validated before closure.",
-
-  Resolved:
-    "The problem has been resolved and the solution has been validated."
-
-};
-
-
-/* =========================================================
-   STATUS NORMALIZATION
-   ========================================================= */
-
-function normalizeStatus(status) {
-
-  if (!status) {
-    return "Submitted";
+  function escapeHTML(value){
+    return String(value ?? "")
+      .replace(/&/g,"&amp;")
+      .replace(/</g,"&lt;")
+      .replace(/>/g,"&gt;")
+      .replace(/"/g,"&quot;")
+      .replace(/'/g,"&#039;");
   }
 
-  const value =
-    String(status)
-      .trim()
-      .toLowerCase()
-      .replace(/[_-]/g, " ");
-
-
-  const statusMap = {
-
-    submitted: "Submitted",
-
-    accepted: "Verified",
-
-    verified: "Verified",
-
-    "in progress": "In Progress",
-
-    validation: "Validation",
-
-    resolved: "Resolved"
-
-  };
-
-
-  return statusMap[value] || status;
-
-}
-
-
-/* =========================================================
-   DATE
-   ========================================================= */
-
-function formatDate(value) {
-
-  if (!value) {
-    return "Recently";
+  function getInitialTrackID(){
+    const params = new URLSearchParams(window.location.search);
+    return (
+      params.get("key") ||
+      params.get("track_id") ||
+      params.get("track") ||
+      ""
+    ).trim();
   }
 
-  const date = new Date(value);
+  function normalizeStatus(status){
+    const value = String(status || "").trim().toUpperCase();
 
-  if (Number.isNaN(date.getTime())) {
-    return "Recently";
-  }
-
-  return date.toLocaleString(
-    "en-IN",
-    {
-      day: "numeric",
-      month: "short",
-      year: "numeric",
-      hour: "numeric",
-      minute: "2-digit"
+    if(value === "SOLVED" || value === "RESOLVED"){
+      return {
+        key:"solved",
+        label:"Solved",
+        icon:"fa-solid fa-circle-check"
+      };
     }
-  );
 
-}
+    if(value === "IN_PROGRESS" || value === "IN PROGRESS"){
+      return {
+        key:"progress",
+        label:"In Progress",
+        icon:"fa-solid fa-person-digging"
+      };
+    }
 
-
-/* =========================================================
-   GET VERIFIED REPORT
-   ========================================================= */
-
-function getVerifiedReport() {
-
-  const stored =
-    sessionStorage.getItem("verifiedReport");
-
-  if (!stored) {
-    return null;
+    return {
+      key:"available",
+      label:"Available",
+      icon:"fa-regular fa-clock"
+    };
   }
 
-  try {
+  function formatDate(value){
+    if(!value) return "Not available";
 
-    return JSON.parse(stored);
+    const date = new Date(value);
+    if(Number.isNaN(date.getTime())) return "Not available";
 
-  } catch (error) {
-
-    console.error(
-      "Invalid verified report data:",
-      error
-    );
-
-    return null;
-
+    return date.toLocaleDateString("en-IN",{
+      day:"numeric",
+      month:"short",
+      year:"numeric"
+    });
   }
 
-}
+  function renderPerson(person,type){
+    const mentor = type === "mentor";
+    const icon = mentor ? "fa-building-user" : "fa-user-graduate";
+    const role = person?.role || (mentor ? "Industry Mentor" : "Student / Researcher");
+    const email = String(person?.email || "").trim();
 
-
-/* =========================================================
-   RENDER TIMELINE
-   ========================================================= */
-
-function renderTimeline(status) {
-
-  const timeline =
-    document.getElementById("progressTimeline");
-
-  timeline.innerHTML = "";
-
-
-  const currentIndex =
-    Math.max(
-      0,
-      steps.indexOf(status)
-    );
-
-
-  steps.forEach((step, index) => {
-
-    const stepNode =
-      document.createElement("div");
-
-
-    stepNode.className =
-      "progress-step " +
-      (
-        index < currentIndex
-          ? "completed"
-          : index === currentIndex
-            ? "active"
-            : ""
-      );
-
-
-    stepNode.innerHTML = `
-
-      <div class="progress-circle">
-        ${
-          index < currentIndex
-            ? "✓"
-            : index + 1
-        }
+    return `
+      <div class="person">
+        <div class="person-icon">
+          <i class="fa-solid ${icon}"></i>
+        </div>
+        <div class="person-info">
+          <strong>${escapeHTML(person?.name || "Unnamed")}</strong>
+          <span>${escapeHTML(role)}</span>
+          ${
+            email
+              ? `<a href="mailto:${escapeHTML(email)}">${escapeHTML(email)}</a>`
+              : `<span>No email available</span>`
+          }
+        </div>
       </div>
+    `;
+  }
 
-      <p>${step}</p>
+  function renderTeam(team){
+    if(!team) return "";
 
-      ${
-        index === currentIndex
-          ? '<small class="current-badge">Current</small>'
-          : ""
-      }
+    const students = Array.isArray(team.students) ? team.students : [];
+    const mentors = Array.isArray(team.mentors) ? team.mentors : [];
+    const exists = Boolean(team.exists);
 
+    return `
+      <section class="team-card">
+        <div class="team-header">
+          <div>
+            <span class="team-eyebrow">WORKING TEAM</span>
+            <h2>${exists ? "People working on this problem" : "No team yet"}</h2>
+          </div>
+
+          <div class="team-capacity">
+            <span class="capacity">${students.length}/${team.max_students ?? 4} Students</span>
+            <span class="capacity">${mentors.length}/${team.max_mentors ?? 2} Mentors</span>
+          </div>
+        </div>
+
+        ${
+          !exists
+            ? `
+              <p class="empty-team">
+                A working team has not been formed for this problem yet.
+              </p>
+            `
+            : `
+              <div class="team-columns">
+                <div class="team-group">
+                  <h3>
+                    <i class="fa-solid fa-user-graduate"></i>
+                    Students / Researchers
+                  </h3>
+
+                  ${
+                    students.length
+                      ? students.map(person => renderPerson(person,"student")).join("")
+                      : `<p class="empty-team">No students have joined yet.</p>`
+                  }
+                </div>
+
+                <div class="team-group">
+                  <h3>
+                    <i class="fa-solid fa-building-user"></i>
+                    Industry Mentors
+                  </h3>
+
+                  ${
+                    mentors.length
+                      ? mentors.map(person => renderPerson(person,"mentor")).join("")
+                      : `<p class="empty-team">No industry mentor has joined yet.</p>`
+                  }
+                </div>
+              </div>
+            `
+        }
+      </section>
+    `;
+  }
+
+  function renderProblem(data){
+    const problem = data?.problem || {};
+    const status = normalizeStatus(
+      data?.status ||
+      data?.team?.status ||
+      problem?.workflow_status
+    );
+
+    const trackID = data?.track_id || getInitialTrackID() || "—";
+    const problemID = problem?.id ?? "—";
+    const category = problem?.category || "Other";
+    const location = [problem?.location,problem?.district]
+      .map(value => String(value || "").trim())
+      .filter(Boolean)
+      .join(", ") || "Not available";
+
+    const description =
+      String(problem?.description || "").trim() ||
+      "No description provided.";
+
+    const statusClass =
+      status.key === "solved"
+        ? "status-solved"
+        : status.key === "progress"
+          ? "status-progress"
+          : "status-available";
+
+    resultArea.innerHTML = `
+      <section class="problem-card">
+        <div class="problem-top">
+          <div class="problem-topline">
+            <span class="problem-label">CIVIC PROBLEM</span>
+
+            <span class="status-badge ${statusClass}">
+              <i class="${status.icon}"></i>
+              ${escapeHTML(status.label)}
+            </span>
+          </div>
+
+          <h2>${escapeHTML(problem?.title || "Reported Community Problem")}</h2>
+
+          <p class="problem-description">
+            ${escapeHTML(description)}
+          </p>
+        </div>
+
+        <div class="problem-details">
+          <div class="detail">
+            <span class="detail-label">Track ID</span>
+            <strong class="detail-value track-id-value">${escapeHTML(trackID)}</strong>
+          </div>
+
+          <div class="detail">
+            <span class="detail-label">Problem ID</span>
+            <strong class="detail-value">#${escapeHTML(problemID)}</strong>
+          </div>
+
+          <div class="detail">
+            <span class="detail-label">Category</span>
+            <strong class="detail-value">${escapeHTML(category)}</strong>
+          </div>
+
+          <div class="detail">
+            <span class="detail-label">Location</span>
+            <strong class="detail-value">${escapeHTML(location)}</strong>
+          </div>
+        </div>
+
+        <div class="problem-actions">
+          <span class="detail-value">
+            Reported ${escapeHTML(formatDate(problem?.created_at))}
+          </span>
+
+          <button class="copy-id-btn" id="copyIdBtn" type="button">
+            <i class="fa-regular fa-copy"></i>
+            Copy Track ID
+          </button>
+        </div>
+      </section>
+
+      ${renderTeam(data?.team)}
     `;
 
+    const copyButton = document.getElementById("copyIdBtn");
 
-    timeline.appendChild(stepNode);
+    if(copyButton){
+      copyButton.addEventListener("click",async () => {
+        try{
+          await navigator.clipboard.writeText(trackID);
+          copyButton.innerHTML = '<i class="fa-solid fa-check"></i> Copied';
+          setTimeout(() => {
+            copyButton.innerHTML = '<i class="fa-regular fa-copy"></i> Copy Track ID';
+          },1500);
+        }catch(error){
+          console.error("Clipboard failed:",error);
+        }
+      });
+    }
+  }
 
+  function showError(message){
+    trackError.textContent = message;
+    trackError.classList.add("show");
+  }
 
-    if (index < steps.length - 1) {
+  function clearError(){
+    trackError.textContent = "";
+    trackError.classList.remove("show");
+  }
 
-      const line =
-        document.createElement("div");
+  async function loadProblem(trackID){
+    clearError();
 
+    trackButton.disabled = true;
+    trackButton.innerHTML =
+      '<i class="fa-solid fa-spinner fa-spin"></i> Loading';
 
-      line.className =
-        "progress-line " +
-        (
-          index < currentIndex
-            ? "completed"
-            : ""
+    try{
+      const response = await fetch(
+        `${API_BASE}/api/track/${encodeURIComponent(trackID)}`,
+        {
+          method:"GET",
+          cache:"no-store"
+        }
+      );
+
+      const data = await response.json().catch(() => null);
+
+      if(!response.ok){
+        throw new Error(
+          data?.error ||
+          data?.message ||
+          "Track ID was not found."
         );
+      }
 
+      renderProblem(data);
 
-      timeline.appendChild(line);
+      const url = new URL(window.location.href);
+      url.searchParams.set("key",trackID);
+      window.history.replaceState({}, "", url);
 
+    }catch(error){
+      console.error("[TRACK PROBLEM]",error);
+
+      resultArea.innerHTML = `
+        <div class="initial-state">
+          <div class="initial-state-icon">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+          </div>
+          <h2>Problem not found</h2>
+          <p>We could not find a report for that Track ID. Check the ID and try again.</p>
+        </div>
+      `;
+
+      showError(
+        error?.message ||
+        "Unable to load this problem right now."
+      );
+
+    }finally{
+      trackButton.disabled = false;
+      trackButton.innerHTML =
+        '<i class="fa-solid fa-arrow-right"></i> View Problem';
+    }
+  }
+
+  trackForm.addEventListener("submit",event => {
+    event.preventDefault();
+
+    const trackID = trackInput.value.trim();
+
+    if(!trackID){
+      showError("Enter your Track ID first.");
+      trackInput.focus();
+      return;
     }
 
+    loadProblem(trackID);
   });
 
-}
+  const initialTrackID = getInitialTrackID();
 
-
-/* =========================================================
-   RENDER REPORT
-   ========================================================= */
-
-function renderProblem(problem) {
-
-  const status =
-    normalizeStatus(problem.status);
-
-
-  const publicId =
-    problem.track_id ||
-    "—";
-
-
-  document.getElementById(
-    "problemId"
-  ).textContent = publicId;
-
-
-  document.getElementById(
-    "trackProblemTitle"
-  ).textContent =
-    problem.title ||
-    "Reported Community Problem";
-
-
-  document.getElementById(
-    "trackCategory"
-  ).textContent =
-    problem.category ||
-    "Other";
-
-
-  document.getElementById(
-    "trackPriority"
-  ).textContent =
-    problem.priority ||
-    "Not assigned";
-
-
-  document.getElementById(
-    "trackUpdated"
-  ).textContent =
-    formatDate(
-      problem.updated_at ||
-      problem.updatedAt ||
-      problem.created_at
-    );
-
-
-  document.getElementById(
-    "trackLocation"
-  ).textContent =
-    problem.location ||
-    problem.district ||
-    "Jharkhand";
-
-
-  document.getElementById(
-    "trackStatusHeading"
-  ).textContent =
-    status;
-
-
-  document.getElementById(
-    "currentStatus"
-  ).textContent =
-    status;
-
-
-  document.getElementById(
-    "statusMessage"
-  ).textContent =
-    messages[status] ||
-    `Your report is currently marked as ${status}.`;
-
-
-  renderTimeline(status);
-
-}
-
-
-/* =========================================================
-   ERROR STATE
-   ========================================================= */
-
-function showError(message) {
-
-  document.getElementById(
-    "trackStatusHeading"
-  ).textContent = "Unavailable";
-
-
-  document.getElementById(
-    "trackProblemTitle"
-  ).textContent = message;
-
-
-  document.getElementById(
-    "currentStatus"
-  ).textContent = "Unable to load";
-
-
-  document.getElementById(
-    "statusMessage"
-  ).textContent =
-    "Please return to the problem list and try again.";
-
-}
-
-
-/* =========================================================
-   INITIALIZE
-   ========================================================= */
-
-function initialize() {
-
-  const problem =
-    getVerifiedReport();
-
-
-  if (!problem) {
-
-    showError(
-      "No verified report was found."
-    );
-
-    return;
-
+  if(initialTrackID){
+    trackInput.value = initialTrackID;
+    loadProblem(initialTrackID);
   }
-
-
-  if (!problem.track_id) {
-
-    showError(
-      "This report does not have a valid Track ID."
-    );
-
-    return;
-
-  }
-
-
-  renderProblem(problem);
-
-}
-
-
-/* =========================================================
-   COPY ID
-   ========================================================= */
-
-document
-  .getElementById("copyIdBtn")
-  .addEventListener(
-    "click",
-    async function () {
-
-      const id =
-        document
-          .getElementById("problemId")
-          .textContent;
-
-
-      if (!id || id === "—") {
-        return;
-      }
-
-
-      try {
-
-        await navigator
-          .clipboard
-          .writeText(id);
-
-
-        this.innerHTML =
-          '<i class="fa-solid fa-check"></i>';
-
-
-        setTimeout(() => {
-
-          this.innerHTML =
-            '<i class="fa-regular fa-copy"></i>';
-
-        }, 1500);
-
-
-      } catch (error) {
-
-        console.error(
-          "Clipboard failed:",
-          error
-        );
-
-      }
-
-    }
-  );
-
-
-initialize();
-
 </script>
 
 </body>
