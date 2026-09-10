@@ -18,9 +18,7 @@ Citizens can report problems with details, location and supporting images. The s
 
 ## Demo Video
 
-[▶ Watch JAN SETU Demo]
-
-https://github.com/user-attachments/assets/ddb2223c-2945-4817-8e47-c3392d5ab797
+[▶ Watch JAN SETU Demo](https://drive.google.com/file/d/1tAJwMmWLGgclmsA_jkGiXZjNOrackfRe/view?usp=sharing)
 
 
 
