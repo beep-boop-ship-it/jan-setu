@@ -1,6 +1,13 @@
-# JAN SETU
+<p align="center">
+  <img width="180" alt="JAN SETU Logo" src="https://github.com/user-attachments/assets/5e108c6c-afad-483e-b89c-c1d65a31b96d" />
+</p>
 
-**Live Prototype:** https://jan-setu-bf03.onrender.com/
+<h1 align="center">JAN SETU</h1>
+
+<p align="center">
+  <b>Live Prototype:</b>
+  <a href="https://jan-setu-bf03.onrender.com/">jan-setu-bf03.onrender.com</a>
+</p>
 
 ## Problem Statement — PS43
 
@@ -19,10 +26,6 @@ Citizens can report problems with details, location and supporting images. The s
 ## Demo Video
 
 [▶ Watch JAN SETU Demo](https://drive.google.com/file/d/1uN_4TgApKSMdRNXsIpR6RNq43_d4HuYg/view?usp=sharing)
-
-
-
-
 
 ## Problem Flow
 
@@ -113,3 +116,4 @@ This repository contains our working prototype developed for **Smart India Hacka
 **GitHub:** https://github.com/beep-boop-ship-it/jan-setu
 
 **Team:** beep-boop-ship-it
+<img width="747" height="445" alt="jansetu-logo" src="https://github.com/user-attachments/assets/52b1d22c-9231-430b-9014-d7f9dcb316b8" />
