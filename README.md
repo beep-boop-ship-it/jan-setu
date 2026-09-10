@@ -115,5 +115,4 @@ This repository contains our working prototype developed for **Smart India Hacka
 
 **GitHub:** https://github.com/beep-boop-ship-it/jan-setu
 
-**Team:** beep-boop-ship-it
-<img width="747" height="445" alt="jansetu-logo" src="https://github.com/user-attachments/assets/52b1d22c-9231-430b-9014-d7f9dcb316b8" />
+**Team:** Null & Void
