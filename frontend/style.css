@@ -45,6 +45,8 @@ body {
     flex-shrink: 0;
     position: relative;
     top: -25px;
+    mix-blend-mode: multiply;
+    background: transparent !important;
 }
 .brand img {
     display: block;
@@ -52,6 +54,10 @@ body {
     height: auto;
     object-fit: contain;
     transform: translate(-8px, -18px);
+    margin-top: 35px;
+    mix-blend-mode: multiply;
+    background: transparent !important;
+
 }
 .nav-links {
     display: flex;
@@ -150,65 +156,15 @@ body {
 }
 
 /* ---------- MAP + STAT CARDS ---------- */
-.hero-visual {
-    position: absolute;
-    top: 20px;
-    right: 5%;
-    width: 48%;
-    height: 535px;
-    z-index: 4;
-}
+
 .jharkhand-map {
-    width: 320px;
+    width: 420px;
     height: auto;
-    transform: translateX(80px);
+    transform: translateX(120px);
     mix-blend-mode: multiply;
-    margin-top: -80px;
+    margin-top: -70px;
 }
-.stats {
-    position: absolute;
-    top: 180px;
-    right: 20px;
-    width: 305px;
-    display: flex;
-    flex-direction: column;
-    gap: 11px;
-    transform: translateX(60px);
-}
-.stat-card {
-    min-height: 73px;
-    display: flex;
-    align-items: center;
-    gap: 15px;
-    padding: 11px 17px;
-    background: rgba(255, 255, 255, 0.97);
-    border-radius: 13px;
-    box-shadow: 0 5px 17px rgba(0, 0, 0, 0.09);
-}
-.stat-icon {
-    width: 45px;
-    height: 45px;
-    flex-shrink: 0;
-    display: grid;
-    place-items: center;
-    border-radius: 50%;
-    background: #edf5ef;
-    color: var(--green);
-    font-size: 21px;
-}
-.stat-card strong {
-    display: block;
-    color: var(--green);
-    font-size: 23px;
-    line-height: 1.1;
-    font-weight: 800;
-}
-.stat-card span {
-    display: block;
-    margin-top: 4px;
-    color: #253044;
-    font-size: 13px;
-}
+
 
 /* ---------- BOTTOM LANDSCAPE ---------- */
 .landscape {
